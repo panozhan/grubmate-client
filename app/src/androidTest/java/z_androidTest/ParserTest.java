@@ -1,4 +1,4 @@
-package com.example.udacity.test;
+package z_androidTest;
 
 import android.support.test.runner.AndroidJUnit4;
 

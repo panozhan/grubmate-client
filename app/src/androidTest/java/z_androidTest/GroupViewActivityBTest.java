@@ -1,7 +1,10 @@
-package com.example.udacity.test;
+package z_androidTest;
 
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.example.udacity.test.R;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,7 +51,7 @@ public class GroupViewActivityBTest {
         String groupName = "aaa";
 
         // add a group
-        onView(withId(R.id.gvMakeGroupButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.gvMakeGroupButton)).perform(click());
         onView(withId(R.id.grpNameTextview)).perform(typeText(groupName));
         closeSoftKeyboard();
         onView(withId(R.id.mgDoneButton)).perform(click());

@@ -1,4 +1,4 @@
-package com.example.udacity.test;
+package z_test;
 
 import org.junit.Test;
 

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import filter.FilterNewsFragment;
 import group.GroupViewActivity;
+import notification.NewsFragment;
 import post.MakePostFragment;
 import profile.ProfileFragment;
 import com.example.udacity.test.R;

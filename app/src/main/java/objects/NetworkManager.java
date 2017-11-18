@@ -3,7 +3,7 @@ package objects;
 import android.os.AsyncTask;
 
 import content.NewsFeedFragment;
-import content.NewsFragment;
+import notification.NewsFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
