@@ -1,8 +1,8 @@
 alex <br>
-app id: 1380327488757247 <br>
-token: e5a2fff8dfc826ef6dd9fbde959f8c85 <br>
-ak: ak1380327488757247 <br>
-fb: fb1380327488757247 <br>
+    <string name="FACEBOOK_APP_ID">1380327488757247</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">e5a2fff8dfc826ef6dd9fbde959f8c85</string>
+    <string name="ak_login_protocol_scheme">ak1380327488757247</string>
+    <string name="fb_login_protocol_scheme">fb1380327488757247</string>
 <br>
 arfan <br>
 app id: 124754041504456 <br>
