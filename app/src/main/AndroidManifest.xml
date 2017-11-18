@@ -49,7 +49,7 @@
         </activity>
 
         <activity
-            android:name="login_account.AccountActivity"
+            android:name="login_account.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
