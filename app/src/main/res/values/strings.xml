@@ -1,0 +1,95 @@
+<resources>
+    <string name="app_name">GrubMate</string>
+    <string name="FACEBOOK_APP_ID">1380327488757247</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">e5a2fff8dfc826ef6dd9fbde959f8c85</string>
+    <string name="ak_login_protocol_scheme">ak1380327488757247</string>
+    <string name="fb_login_protocol_scheme">fb1380327488757247</string>
+    <string name="login_label">Email or Phone Number</string>
+    <string name="accountkit_button_label">Continue</string>
+    <string name="account">Account</string>
+    <string name="id_label">Account ID</string>
+    <string name="phone_label">Phone Number</string>
+    <string name="email_label">Email</string>
+    <string name="name_label">Name</string>
+    <string name="logout_label">Log Out</string>
+    <string name="location_label">Location</string>
+
+    <string name="permission_message">GrubMate requires permission to access your Facebook friend list to use Find Friends</string>
+
+    <string name="grubmate">GrubMate</string>
+    <string name="action_sign_in_phone">LOGIN WITH PHONE NUMBER</string>
+    <string name="action_sign_in_email">LOGIN WITH EMAIL</string>
+    <string name="action_sign_in_facebook">CONTINUE WITH FACEBOOK</string>
+    <string name="line1">Alex Pan is offering Pasta</string>
+    <string name="price">$5</string>
+    <string name="address">1234 Some Random Street, Los Angeles</string>
+    <string name="posttext">Hey guys I have some extra pasta. It\'s like super tasty and I spent about 20 hours making it so if you don\'t come and get it I\'m going to be really upset. Also I want $5 for it, cash only.</string>
+    <string name="postdate">10/15/17</string>
+    <string name="title_activity_scrolling_feed">Feed</string>
+    <string name="location_permission_message">SOME SHIT</string>
+
+    <string name="Team2">Team 2</string>
+    <string name="Team3">Team 3</string>
+    <string-array name="team_array">
+        <item>@string/Team2</item>
+        <item>@string/Team3</item>
+    </string-array>
+    
+    //Categories
+    <string-array
+        name="categories">
+        <item>American</item>
+        <item>Armenian</item>
+        <item>Asian</item>
+        <item>BBQ</item>
+        <item>Bangladeshi</item>
+        <item>Brazilian</item>
+        <item>Breakfast</item>
+        <item>Burgers</item>
+        <item>Cajun</item>
+        <item>Caribbean</item>
+        <item>Chinese</item>
+        <item>Dairy free</item>
+        <item>Dessert</item>
+        <item>English</item>
+        <item>Filipino</item>
+        <item>French</item>
+        <item>German</item>
+        <item>Gluten Free</item>
+        <item>Gluten free</item>
+        <item>Greek</item>
+        <item>Halal</item>
+        <item>Hawaiian</item>
+        <item>Indian</item>
+        <item>Iranian</item>
+        <item>Irish</item>
+        <item>Italian</item>
+        <item>Jamacian</item>
+        <item>Japanese</item>
+        <item>Korean</item>
+        <item>Kosher</item>
+        <item>Latin American</item>
+        <item>Malaysian</item>
+        <item>Mediterranean</item>
+        <item>Mexican</item>
+        <item>Middle Eastern</item>
+        <item>Persian</item>
+        <item>Peruvian</item>
+        <item>Pizza</item>
+        <item>Polish</item>
+        <item>Punjabi</item>
+        <item>Russian</item>
+        <item>Salad</item>
+        <item>Salvadorian</item>
+        <item>Sandwiches</item>
+        <item>Seafood</item>
+        <item>Southern</item>
+        <item>Sushi</item>
+        <item>Taiwanese</item>
+        <item>Thai</item>
+        <item>Turkish</item>
+        <item>Vegan</item>
+        <item>Vegetarian</item>
+        <item>Vietnamese</item>
+    </string-array>
+</resources>
