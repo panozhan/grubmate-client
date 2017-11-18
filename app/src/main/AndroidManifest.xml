@@ -49,7 +49,7 @@
         </activity>
 
         <activity
-            android:name="com.example.udacity.test.login.LoginActivity"
+            android:name="login_account.AccountActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
@@ -60,44 +60,44 @@
         </activity>
 
         <activity
-            android:name="com.example.udacity.test.login.AccountActivity"
+            android:name="login_account.AccountActivity"
             android:label="@string/account"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.example.udacity.test.content.ContentActivity"
+            android:name="content.ContentActivity"
             android:label="content"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
             />
         <activity
-            android:name="com.example.udacity.test.post.MakePost"
+            android:name="post.MakePost"
             android:label="content"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
             />
             
         <activity
-            android:name="com.example.udacity.test.filter.FilterNewsActivity"
+            android:name="filter.FilterNewsActivity"
             android:label="FilterNews"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
             />
 
         <activity
-            android:name="com.example.udacity.test.post.SinglePostActivity"
+            android:name="post.SinglePostActivity"
             android:label="content"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
             />
 
-        <activity android:name="com.example.udacity.test.group.MakeGroupActivity" />
-        <activity android:name="com.example.udacity.test.group.GroupViewActivity" />
+        <activity android:name="group.MakeGroupActivity" />
+        <activity android:name="group.GroupViewActivity" />
 
         <activity
-            android:name="com.example.udacity.test.subscription.SubViewActivity" />
+            android:name="subscription.SubViewActivity" />
         <activity
-            android:name="com.example.udacity.test.subscription.MakeSubActivity" />
+            android:name="subscription.MakeSubActivity" />
 
     </application>
 
