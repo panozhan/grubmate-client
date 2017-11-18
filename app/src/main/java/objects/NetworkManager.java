@@ -300,7 +300,7 @@ public class NetworkManager extends Thread {
         protected Void doInBackground(String... params) {
             try {
                 // This is getting the url from the string we passed in
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/single?postid=" + postId);
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid=" + postId);
                 // Create the urlConnection
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
