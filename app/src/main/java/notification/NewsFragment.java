@@ -1,6 +1,8 @@
 package notification;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +13,17 @@ import android.widget.TextView;
 
 import com.example.udacity.test.R;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import objects.NetworkManager;
 import objects.Notification;
+import objects.Parser;
 import objects.UserSingleton;
 
 /**
@@ -26,25 +35,150 @@ public class NewsFragment extends android.support.v4.app.Fragment {
     ListView status;
     ListView news;
     Button refresh;
-    UserSingleton owner = UserSingleton.getUserInstance();
-    NetworkManager networkManager = new NetworkManager();
     NewsFragment f = this;
     TextView pickup;
 
-    myAdapterPost requesta;
-    myAdapterPost statusa;
-    myAdapterPost newsa;
+    NotifStore store = NotifStore.getInstance();
+
+    myRequestsPost requesta;
+    MyStatusAdapter statusa;
+    MyNewsAdapter newsa;
 
     @Override
     public void onCreate(Bundle b){
         super.onCreate(b);
-
+        getNotifs();
     }
 
     public void notifyChange(){
         requesta.notifyDataSetChanged();
         statusa.notifyDataSetChanged();
         newsa.notifyDataSetChanged();
+    }
+
+    public void getNotifs(){
+        NotifStore.getInstance().clear();
+        GetNotif getNotif = new GetNotif(this);
+        getNotif.execute();
+    }
+
+    private class GetNotif extends AsyncTask<String, Void, Void> {
+        NewsFragment f;
+        public GetNotif(NewsFragment f){
+            this.f = f;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/notifications?userid=" + UserSingleton.getUserInstance().get_id());
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+                InputStream is = urlConnection.getInputStream();
+                JsonReader reader = new JsonReader(new InputStreamReader(is,"UTF-8"));
+                reader.beginArray();
+                //news
+                reader.beginArray();
+                while(reader.hasNext()){
+                    reader.beginObject();
+                    News n = new News();
+                    while(reader.hasNext()){
+                        String name = reader.nextName();
+                        System.out.println(name);
+                        switch (name){
+                            case "title":
+                                n.setTitle(reader.nextString());
+                                break;
+                            case "address":
+                                n.setAddress(reader.nextString());
+                                break;
+                            case "postid":
+                                n.setPostid(reader.nextString());
+                                break;
+                            default:
+                                reader.skipValue();
+                                break;
+                        }
+                    }
+                    NotifStore.getInstance().getNews().add(n);
+                    reader.endObject();
+                }
+                reader.endArray();
+                //requests
+                reader.beginArray();
+                while(reader.hasNext()){
+                    reader.beginObject();
+                    Requests r = new Requests();
+                    while(reader.hasNext()){
+                        String name = reader.nextName();
+                        switch (name){
+                            case "title":
+                                r.setTitle(reader.nextString());
+                                break;
+                            case "address":
+                                r.setAddress(reader.nextString());
+                                break;
+                            case "postid":
+                                r.setPostid(reader.nextString());
+                                break;
+                            case "personid":
+                                r.setPersonid(reader.nextString());
+                                break;
+                            case "status":
+                                r.setStatus(reader.nextString());
+                                break;
+                            default:
+                                reader.skipValue();
+                                break;
+                        }
+                    }
+                    NotifStore.getInstance().getRequests().add(r);
+                    reader.endObject();
+                }
+                reader.endArray();
+                //status
+                reader.beginArray();
+                while(reader.hasNext()){
+                    reader.beginObject();
+                    Statusz s = new Statusz();
+                    while(reader.hasNext()){
+                        String name = reader.nextName();
+                        switch (name){
+                            case "title":
+                                s.setTitle(reader.nextString());
+                                break;
+                            case "status":
+                                s.setStatus(reader.nextString());
+                                break;
+                            case "postid":
+                                s.setPostid(reader.nextString());
+                                break;
+                            default:
+                                reader.skipValue();
+                                break;
+                        }
+                    }
+                    NotifStore.getInstance().getStatuses().add(s);
+                    reader.endObject();
+                }
+                reader.endArray();
+                //end
+                reader.endArray();
+
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            f.notifyChange();
+        }
     }
 
     @Override
@@ -57,19 +191,18 @@ public class NewsFragment extends android.support.v4.app.Fragment {
         refresh = (Button) v.findViewById(R.id.refresh);
 
 
-        networkManager.getNotifications(owner.get_id(),f);
-
-        requesta = new myAdapterPost(owner.getRequestsNotifications(),this);
-        statusa = new myAdapterPost(owner.getStatusNotifications(),this);
-        newsa = new myAdapterPost(owner.getNewsNotifications(),this);
+        requesta = new myRequestsPost(store.getRequests());
+        statusa = new MyStatusAdapter(store.getStatuses());
+        newsa = new MyNewsAdapter(store.getNews());
 
         requests.setAdapter(requesta);
         status.setAdapter(statusa);
         news.setAdapter(newsa);
+
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                networkManager.getNotifications(owner.get_id(),f);
+                getNotifs();
             }
         });
 
@@ -97,15 +230,17 @@ public class NewsFragment extends android.support.v4.app.Fragment {
             ((TextView)convertView.findViewById(R.id.address)).setText(current.getAddress());
 
 
+
+
             return convertView;
         }
 
     }
 
-    private class MyStatusAdapter extends ArrayAdapter<Status>{
-        ArrayList<Status> statuses;
+    private class MyStatusAdapter extends ArrayAdapter<Statusz>{
+        ArrayList<Statusz> statuses;
         NewsFragment f;
-        public MyStatusAdapter(ArrayList<Status> status){
+        public MyStatusAdapter(ArrayList<Statusz> status){
             super(getActivity(),0,status);
             this.statuses = status;
         }
@@ -116,17 +251,79 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.single_notification,null);
             }
-            final Status current = statuses.get(position);
+            final Statusz current = statuses.get(position);
 
             System.out.println(current.getTitle());
             ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
-            ((TextView)convertView.findViewById(R.id.address)).setText(current.getAddress());
+            ((TextView)convertView.findViewById(R.id.address)).setVisibility(View.INVISIBLE);
             ((TextView)convertView.findViewById(R.id.status)).setText(current.getStatus());
             convertView.findViewById(R.id.pickup).setVisibility(View.GONE);
 
+            Button confirm = (Button)convertView.findViewById(R.id.confirm);
+            System.out.println(current.getTitle());
+            if(current.getStatus().equals("ended") || current.getStatus().equals("rejected")){
+                confirm.setVisibility(View.VISIBLE);
+                confirm.setText("Got It!");
+
+                convertView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);
+                        /*TODO
+                            ADD TRANSITION TO RATING ACITIVTY
+                                */
+                    }
+                });
+            }
             return convertView;
         }
 
+    }
+
+    public void confirmend(String userid, String postid, String type, String location){
+        ConfirmEnd ce = new ConfirmEnd(this,userid,postid,type,location);
+        ce.execute();
+    }
+
+    private class ConfirmEnd extends AsyncTask<String, Void, Void>{
+        NewsFragment f;
+        String userid;
+        String postid;
+        String type;
+        String location;
+        public ConfirmEnd(NewsFragment f, String userid, String postid, String type, String location){
+            this.f = f;
+            this.userid = userid;
+            this.postid = postid;
+            this.type = type;
+            this.location = location;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(type.equals("end")){
+                getNotifs();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?personid="
+                        + userid + "&postid=" + postid + "&type=" + type + (location == null? "" : "&location=" + location) );
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("PUT");
+                urlConnection.connect();
+                Parser p = new Parser();
+                System.out.println(p.convertStreamToString(urlConnection.getInputStream()));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 
@@ -154,17 +351,31 @@ public class NewsFragment extends android.support.v4.app.Fragment {
             System.out.println(current.getTitle());
             confirm.setVisibility(View.VISIBLE);
 
+            Button reject = (Button)convertView.findViewById(R.id.reject);
 
-            convertView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((Button)v).setText("End");
+            if(current.getStatus().equals("confirmed")){
+                reject.setVisibility(View.GONE);
+            }else{
+                reject.setVisibility(View.VISIBLE);
+                reject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(current.getStatus().equals("requested")){
+                            ((Button)v).setText("End");
+                            confirmend(current.getPersonid(),current.getPostid(),"confirm",null);
+                            current.setStatus("confirmed");
+                        }else if(current.getStatus().equals("confirmed")){
+                            confirmend(current.getPersonid(),current.getPostid(),"end",null);
+                        /*TODO
+                            ADD TRANSITION TO RATING ACITIVTY
+                                */
+                        }
+                    }
+                });
+            }
 
-                    f.notifyChange();
-                    networkManager.updatePost("confirm",current.getPersonid(),current.getPostId(), "dummy");
 
-                }
-            });
+
             return convertView;
         }
 

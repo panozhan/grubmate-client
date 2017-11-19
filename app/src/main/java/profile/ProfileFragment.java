@@ -63,7 +63,7 @@ public class ProfileFragment extends Fragment {
         networkManager.getUser(users);
         user = users.get(0);
 
-        networkManager.getPostsForUser(userID);
+       // networkManager.getPostsForUser(userID);
     }
 
     @Override

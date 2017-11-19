@@ -257,6 +257,7 @@ public class NetworkManager extends Thread {
 
                 userJson.put("id",owner.get_id());
 
+
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 String jsonString = postJson.toString();
                 writer.write(jsonString);
@@ -390,7 +391,7 @@ public class NetworkManager extends Thread {
         NewsFeedFragment newsfeed;
         NetworkManager networkManager;
         public GetPostsForUsers(NewsFeedFragment f){
-
+            UserSingleton.getUserInstance().getPosts().clear();
             newsfeed = f;
             networkManager = new NetworkManager(newsfeed);
         }

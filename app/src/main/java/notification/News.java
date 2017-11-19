@@ -7,6 +7,15 @@ package notification;
 public class News {
     private String title;
     private String address;
+    private String postid;
+
+    public String getPostid() {
+        return postid;
+    }
+
+    public void setPostid(String postid) {
+        this.postid = postid;
+    }
 
     public String getTitle() {
         return title;

@@ -4,10 +4,10 @@ package notification;
  * Created by Alex on 11/18/2017.
  */
 
-public class Status {
+public class Statusz {
     private String title;
     private String status;
-    private String address;
+    private String postid;
 
     public String getTitle() {
         return title;
@@ -25,11 +25,11 @@ public class Status {
         this.status = status;
     }
 
-    public String getAddress() {
-        return address;
+    public String getPostid() {
+        return postid;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setPostid(String postid) {
+        this.postid = postid;
     }
 }
