@@ -2,8 +2,9 @@ package group;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -15,28 +16,41 @@ import java.util.ArrayList;
 import objects.Group;
 import objects.UserSingleton;
 
-public class GroupViewActivity extends AppCompatActivity {
+import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
+
+public class GroupViewFragment extends android.support.v4.app.Fragment {
     ArrayList<GroupModel> groupModels;
     ListView listView;
     private GroupCustomAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_view);
-        setTitle("Groups");
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+        // setTitle("Groups");
+        View v = inflater.inflate(R.layout.fragment_group_view, container, false);
+
 
         // list of groups
         groupModels = new ArrayList<>();
         adapter = new GroupCustomAdapter(groupModels, getApplicationContext());
 
         // add listener to make group button
-        Button makeGroupButton = (Button) findViewById(R.id.gvMakeGroupButton);
+        Button makeGroupButton = (Button) v.findViewById(R.id.gvMakeGroupButton);
         makeGroupButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(GroupViewActivity.this, MakeGroupActivity.class));
+                startActivity(new Intent(getApplicationContext(), MakeGroupActivity.class));
             }
         });
+
+        return v;
     }
 
 
@@ -54,7 +68,7 @@ public class GroupViewActivity extends AppCompatActivity {
             groupModels.add(new GroupModel(g.getName(), g.getUsers()));
         }
 
-        listView = (ListView) findViewById(R.id.groupViewList);
+        listView = (ListView) getView().findViewById(R.id.groupViewList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

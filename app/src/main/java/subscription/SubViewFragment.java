@@ -2,8 +2,9 @@ package subscription;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -15,33 +16,45 @@ import java.util.ArrayList;
 import objects.Subscription;
 import objects.UserSingleton;
 
+import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
+
 /**
  * Created by ArfanR on 11/10/17.
  */
 
-public class SubViewActivity extends AppCompatActivity {
+public class SubViewFragment extends android.support.v4.app.Fragment {
 
     ArrayList<SubModel> subModels;
     ListView listView;
     private SubCustomAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sub_view);
-        setTitle("Subscriptions");
+
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+        View v = inflater.inflate(R.layout.fragment_sub_view, container, false);
 
         // list of subscriptions
         subModels = new ArrayList<>();
         adapter = new SubCustomAdapter(subModels, getApplicationContext());
 
         // add listener to make group button
-        Button makeSubButton = (Button) findViewById(R.id.gvMakeSubButton);
+        Button makeSubButton = (Button) v.findViewById(R.id.gvMakeSubButton);
         makeSubButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(SubViewActivity.this, MakeSubActivity.class));
+                startActivity(new Intent(getApplicationContext(), MakeSubActivity.class));
             }
         });
+
+        return v;
     }
 
     @Override
@@ -54,7 +67,7 @@ public class SubViewActivity extends AppCompatActivity {
             subModels.add(new SubModel(s.getType(), s.getValue()));
         }
 
-        listView = (ListView) findViewById(R.id.subViewList);
+        listView = (ListView) getView().findViewById(R.id.subViewList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

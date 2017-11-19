@@ -1,6 +1,5 @@
 package content;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,15 +9,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import filter.FilterNewsFragment;
-import group.GroupViewActivity;
+import group.GroupViewFragment;
 import notification.NewsFragment;
 import post.MakePostFragment;
 import profile.ProfileFragment;
 import com.example.udacity.test.R;
-import subscription.SubViewActivity;
 
 import objects.Group;
 import objects.UserSingleton;
+import subscription.SubViewFragment;
 
 /**
  * Created by Alex Pan on 10/17/2017.
@@ -32,9 +31,9 @@ public class ContentActivity  extends AppCompatActivity {
     TextView navnotifs;
 
     Fragment newsfeed = new NewsFeedFragment();
-    Fragment group = null;
+    Fragment group = new GroupViewFragment();
     Fragment profile = ProfileFragment.newInstance((UserSingleton.getUserInstance().get_id()));
-    Fragment subs = null;
+    Fragment subs = new SubViewFragment();
     Fragment notifs = new NewsFragment();
     Fragment makepost = new MakePostFragment();
     Fragment filter = new FilterNewsFragment();
@@ -75,15 +74,13 @@ public class ContentActivity  extends AppCompatActivity {
                     setFrame(0);
                     break;
                 case R.id.groups:
-                    Intent i = new Intent(getApplicationContext(),GroupViewActivity.class);
-                    startActivity(i);
+                    setFrame(1);
                     break;
                 case R.id.profile:
                     setFrame(2);
                     break;
                 case R.id.subs:
-                    Intent sub = new Intent(getApplicationContext(), SubViewActivity.class);
-                    startActivity(sub);
+                    setFrame(3);
                     break;
                 case R.id.notifs:
                     setFrame(4);
@@ -109,29 +106,47 @@ public class ContentActivity  extends AppCompatActivity {
                 ft.add(R.id.contentframe,newsfeed);
                 ft.add(R.id.contentframe,notifs);
                 ft.add(R.id.contentframe,profile);
+                ft.add(R.id.contentframe,group);
+                ft.add(R.id.contentframe,subs);
                 ft.hide(notifs);
+                ft.hide(group);
+                ft.hide(subs);
             case 0:
                 ft.hide(notifs);
                 ft.hide(profile);
+                ft.hide(group);
+                ft.hide(subs);
                 ft.show(newsfeed);
                 //switchto = newsfeed;
                 break;
             case 1:
-                switchto = group;
+                ft.hide(newsfeed);
+                ft.hide(notifs);
+                ft.hide(profile);
+                ft.hide(subs);
+                ft.show(group);
                 break;
             case 2:
                 ft.hide(notifs);
                 ft.hide(newsfeed);
+                ft.hide(group);
+                ft.hide(subs);
                 ft.show(profile);
                 switchto = profile;
                 break;
             case 3:
-                switchto = subs;
+                ft.hide(notifs);
+                ft.hide(newsfeed);
+                ft.hide(group);
+                ft.hide(profile);
+                ft.show(subs);
                 break;
             case 4:
                 ft.show(notifs);
                 ft.hide(profile);
                 ft.hide(newsfeed);
+                ft.hide(group);
+                ft.hide(subs);
                 break;
             default:
                 switchto = filter;

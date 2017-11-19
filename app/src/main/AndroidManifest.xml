@@ -92,12 +92,8 @@
             />
 
         <activity android:name="group.MakeGroupActivity" />
-        <activity android:name="group.GroupViewActivity" />
 
-        <activity
-            android:name="subscription.SubViewActivity" />
-        <activity
-            android:name="subscription.MakeSubActivity" />
+        <activity android:name="subscription.MakeSubActivity" />
 
     </application>
 
