@@ -1,5 +1,6 @@
 package post;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +14,14 @@ import android.widget.TextView;
 
 import com.example.udacity.test.R;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 import objects.NetworkManager;
+import objects.Parser;
 import objects.Post;
 import objects.User;
 import objects.UserSingleton;
@@ -74,15 +82,22 @@ public class SinglePostFragment extends Fragment {
         num.setText(String.valueOf(post.getAvailable()));
 
 
-        Button request = (Button) v.findViewById(R.id.request);
+        Button request = (Button) v.findViewById(R.id.requestButton);
         request.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                EditText location = (EditText) v.findViewById(R.id.location) ;
-                String loc = location.getText().toString();
-                // networkManager.updatePost("request", user.get_id(), post.get_id(), loc);
-                TextView tv = (TextView) v.findViewById(R.id.textView2);
-                tv.setText("request sent");
+                EditText location = (EditText) v.findViewById(R.id.locationEdit);
+                if(location == null){
+                    System.out.println("the fuck?");
+                }else{
+                    String loc = location.getText().toString();
+                }
+                String loc = "hi";
+                RequestNetwork rn = new RequestNetwork(UserSingleton.getUserInstance().get_id(),
+                        post.get_id(),loc);
+                rn.execute();
+                TextView tv = (TextView) v.findViewById(R.id.update);
+                //tv.setText("request sent");
             }
         });
 
@@ -99,6 +114,42 @@ public class SinglePostFragment extends Fragment {
         });
 
         return v;
+    }
+
+
+
+    private class RequestNetwork extends AsyncTask<String,Void,Void>{
+        String userid;
+        String postid;
+        String location;
+        public RequestNetwork(String userid, String postid, String location){
+            this.userid = userid;
+            this.postid = postid;
+            this.location = location;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            String urlString = String.format(
+                    "https://grubmateteam3.herokuapp.com/api/posts?personid=%s&postid=%s&type=request&location=%s",
+                    userid, postid, location);
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("PUT");
+                connection.connect();
+                Parser p = new Parser();
+                System.out.println(p.convertStreamToString(connection.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 

@@ -147,21 +147,21 @@
         android:layout_marginLeft="8dp" />
 
     <EditText
-        android:id="@+id/location"
+        android:id="@+id/locationEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/request"
+        app:layout_constraintBaseline_toBaselineOf="@+id/requestButton"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/request"
+        app:layout_constraintRight_toLeftOf="@+id/requestButton"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp" />
 
     <Button
-        android:id="@+id/request"
+        android:id="@+id/requestButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Request"
@@ -172,7 +172,7 @@
         android:layout_marginEnd="32dp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="264dp"
