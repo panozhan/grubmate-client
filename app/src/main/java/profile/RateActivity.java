@@ -60,6 +60,11 @@ public class RateActivity extends AppCompatActivity {
                 System.out.println("rated " + rating + " stars");
                 //user.addRating(rating);
 
+                // funky math
+                TextView currRating = (TextView) findViewById(R.id.currRating);
+                float newRating = rating + Float.parseFloat(currRating.getText().toString());
+                newRating /= 2;
+                setRating(newRating);
             }
         });
     }
@@ -68,14 +73,4 @@ public class RateActivity extends AppCompatActivity {
         TextView currRating = (TextView) findViewById(R.id.currRating);
         currRating.setText(String.format("%.2f", rating));
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed() {
-        if (ratingBar != null) {
-            // TODO
-            // mListener.onFragmentInteraction(uri);
-        }
-    }
-
-
 }
