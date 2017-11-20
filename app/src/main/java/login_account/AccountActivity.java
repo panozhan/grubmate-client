@@ -146,6 +146,9 @@ public class AccountActivity extends AppCompatActivity {
                 }
             });
         }
+
+        FriendsParser friendsParser = new FriendsParser();
+        friendsParser.setFriendsForOwner();
     }
 
     @Override

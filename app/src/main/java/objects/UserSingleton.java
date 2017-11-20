@@ -1,6 +1,7 @@
 package objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class UserSingleton {
@@ -19,6 +20,7 @@ public class UserSingleton {
     private ArrayList<Notification> statusNotifications = new ArrayList<Notification>();
     private ArrayList<Notification> newsNotifications = new ArrayList<Notification>();
     private ArrayList<String> notificationIds = new ArrayList<String>();
+    private HashMap<String, String> friendsMap; // <name, id>
 
 
 
@@ -175,4 +177,13 @@ public class UserSingleton {
     public void removeSubscription(int index) { subscriptions.remove(index); }
     public int getNumSubscriptions() { return subscriptions.size(); }
 
+    public HashMap<String, String> getFriends() {
+        return friendsMap;
+    }
+    public void setFriends() {
+        this.friendsMap = new HashMap<String, String>();
+    }
+    public void addFriend(String friendName, String friendID) {
+        friendsMap.put(friendName, friendID);
+    }
 }
