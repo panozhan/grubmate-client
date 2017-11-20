@@ -184,7 +184,7 @@ public class UserSingleton {
     public void setFriends() {
         this.friendsMap = new HashMap<String, String>();
     }
-    public void addFriend(String friendName, String friendID) {
+    public void addFriend(String friendID, String friendName) {
         friendsMap.put(friendID, friendName);
     }
     public String getFriendNameByID(String id){
@@ -196,6 +196,7 @@ public class UserSingleton {
     }
     public String getFriendIDByName(String name){
         for (Map.Entry<String, String> entry: friendsMap.entrySet()) {
+            System.out.println("mapz "+ entry.getKey()+ " " + entry.getValue());
             if (entry.getValue().equalsIgnoreCase(name)) {
                 return entry.getKey();
             }

@@ -39,8 +39,8 @@ public class GroupParser {
         try {
             owner = UserSingleton.getUserInstance();
 
-            GetGroupsWithUserID getGroupWithUserID = new GetGroupsWithUserID(owner.get_id());
-            getGroupWithUserID.execute();
+            GetGroupsWithUserID getGroupsWithUserID = new GetGroupsWithUserID(owner.get_id());
+            getGroupsWithUserID.execute();
 
             return true;
         } catch(Exception e){
@@ -119,7 +119,7 @@ public class GroupParser {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-                System.out.println(response.toString());
+                System.out.println("response: " +response.toString());
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -145,7 +145,7 @@ public class GroupParser {
 
                 InputStream is = urlConnection.getInputStream();
 
-                parseGroups(is);
+                parseGroupIDs(is);
 
             } catch(Exception e){
                 e.printStackTrace();
@@ -154,19 +154,51 @@ public class GroupParser {
         }
     }
 
-    public void parseGroups(InputStream is) throws IOException {
+    public void parseGroupIDs(InputStream is) throws IOException {
+        ArrayList<String> groupList = convertStreamToArray(is);
+
+        // return if empty
+        if (groupList==null || groupList.isEmpty()) {
+            System.out.println("empty group array");
+            return;
+        } else {
+
+            try {
+                    int len = groupList.size();
+                    for (int i = 0; i < len; i++) {
+                        // parse each group by id
+                        String id = groupList.get(i);
+                        System.out.println("groupid: " + id);
+
+                        GetSingleGroupWithGroupID getSingleGroupWithGroupID = new GetSingleGroupWithGroupID(id);
+                        getSingleGroupWithGroupID.execute();
+                    }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("failed parsing group ids");
+            }
+        }
+    }
+
+
+    public void parseSingleGroup(InputStream is) throws IOException {
         String jsonString = convertStreamToString(is);
 
         // return if empty
-        if (jsonString.equalsIgnoreCase("[]")) {return;}
+        if (jsonString.equalsIgnoreCase("[]")) {
+            System.out.println("empty group array");
+            return;
+        }
 
         try{
             JSONObject groupObject = new JSONObject(jsonString);
+            System.out.println("getting group: " + groupObject);
 
             // sets group name and friend list
             String groupName = groupObject.getString("name");
 
-            JSONArray jsonFriendArray = groupObject.getJSONArray("friends");
+            JSONArray jsonFriendArray = groupObject.getJSONArray("users");
             ArrayList<String> friendList = new ArrayList<String>();
             if (jsonFriendArray != null) {
                 int len = jsonFriendArray.length();
@@ -196,6 +228,44 @@ public class GroupParser {
     private String convertStreamToString(InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    private ArrayList<String> convertStreamToArray(InputStream in) throws IOException{
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        ArrayList<String> result = new ArrayList<String>();
+        reader.beginArray();
+        while (reader.hasNext()) {
+            String x = reader.nextString();
+            result.add(x);
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private class GetSingleGroupWithGroupID extends AsyncTask<String, Void, Void> {
+        private String groupid;
+        public GetSingleGroupWithGroupID(String groupid){
+            this.groupid = groupid;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try{
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlegroup?groupid="+groupid);
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+
+                parseSingleGroup(is);
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }

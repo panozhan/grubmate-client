@@ -45,7 +45,7 @@ public class MakeGroupActivity extends AppCompatActivity {
         // use friends that was pulled from database in AccountActivity
         final UserSingleton owner = UserSingleton.getUserInstance();
         for (Map.Entry<String, String> friend : owner.getFriends().entrySet()) {
-            String nameStr = friend.getKey();
+            String nameStr = friend.getValue();
             friendModels.add(new FriendModel(nameStr, false));
         }
 
@@ -73,6 +73,7 @@ public class MakeGroupActivity extends AppCompatActivity {
                 for (FriendModel fm: friendModels) {
                     if (fm.checked) {
                         String friendID = owner.getFriendIDByName(fm.name);
+                        System.out.println("friendid/name " + friendID + " " +fm.name);
                         friends.add(friendID); // adds selected friends to a list
                     }
                 }
