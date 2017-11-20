@@ -2,6 +2,7 @@ package objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class UserSingleton {
@@ -131,10 +132,6 @@ public class UserSingleton {
         this.subscriptions = subscriptions;
     }
 
-    public void setGroups(ArrayList<Group> groups) {
-        this.groups = groups;
-    }
-
     public String getName() {
         return name;
     }
@@ -155,14 +152,21 @@ public class UserSingleton {
         return requests;
     }
 
+    /********* subscriptions *********/
     public ArrayList<Subscription> getSubscriptions() {
         return subscriptions;
     }
+    public void addSubscription(Subscription sub) { subscriptions.add(sub); }
+    public void removeSubscription(int index) { subscriptions.remove(index); }
+    public int getNumSubscriptions() { return subscriptions.size(); }
 
+    /********* groups *********/
+    public void setGroups(ArrayList<Group> groups) {
+        this.groups = groups;
+    }
     public ArrayList<Group> getGroups() {
         return groups;
     }
-    
     public void addGroup(Group group) {
         groups.add(group);
     }
@@ -173,10 +177,7 @@ public class UserSingleton {
         return groups.size();
     }
 
-    public void addSubscription(Subscription sub) { subscriptions.add(sub); }
-    public void removeSubscription(int index) { subscriptions.remove(index); }
-    public int getNumSubscriptions() { return subscriptions.size(); }
-
+    /********* friends *********/
     public HashMap<String, String> getFriends() {
         return friendsMap;
     }
@@ -184,6 +185,17 @@ public class UserSingleton {
         this.friendsMap = new HashMap<String, String>();
     }
     public void addFriend(String friendName, String friendID) {
-        friendsMap.put(friendName, friendID);
+        friendsMap.put(friendID, friendName);
+    }
+    public String getFriendNameByID(String id){
+        return friendsMap.get(id);
+    }
+    public String getFriendIDByName(String name){
+        for (Map.Entry<String, String> entry: friendsMap.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(name)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }

@@ -59,8 +59,8 @@ public class ContentActivity  extends AppCompatActivity {
         navsubs.setOnClickListener(myNavListener);
         navnotifs.setOnClickListener(myNavListener);
 
-        UserSingleton.getUserInstance().addGroup(new Group("Team 3",null));
-        UserSingleton.getUserInstance().addGroup(new Group("Team 2",null));
+        //UserSingleton.getUserInstance().addGroup(new Group("Team 3",null));
+        //UserSingleton.getUserInstance().addGroup(new Group("Team 2",null));
 
         //NetworkManager nm = new NetworkManager();
         //nm.getGroups();

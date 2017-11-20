@@ -39,7 +39,7 @@ public class MakeGroupActivity extends AppCompatActivity {
         friendModels = new ArrayList<>();
 
         // use friends that was pulled from database in AccountActivity
-        UserSingleton owner = UserSingleton.getUserInstance();
+        final UserSingleton owner = UserSingleton.getUserInstance();
         for (Map.Entry<String, String> friend : owner.getFriends().entrySet()) {
             String nameStr = friend.getKey();
             friendModels.add(new FriendModel(nameStr, false));
@@ -73,8 +73,7 @@ public class MakeGroupActivity extends AppCompatActivity {
                 }
 
                 Group group = new Group(et.getText().toString(), friends);
-                NetworkManager networkManager = new NetworkManager();
-                networkManager.sendGroup(group);
+                owner.addGroup(group);
                 finish();
             }
         });

@@ -51,6 +51,7 @@ public class FriendsParser {
 
         try{
             JSONObject mainObject = new JSONObject(jsonString);
+            System.out.println(mainObject);
 
             // sets friends ids and names
             JSONArray jsonFriendArray = mainObject.getJSONArray("friends");
@@ -81,7 +82,7 @@ public class FriendsParser {
             String friendName = mainObject.getString("name");
 
             // put friend in map
-            owner.addFriend(friendName, friendID);
+            owner.addFriend(friendID, friendName);
         }catch (JSONException e){
             e.printStackTrace();
         }
