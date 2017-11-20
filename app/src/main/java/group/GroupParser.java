@@ -8,9 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,9 +29,9 @@ public class GroupParser {
     private UserSingleton owner;
     private GroupViewFragment groupViewFragment;
 
-    GroupParser(){}
+    public GroupParser(){}
 
-    GroupParser(GroupViewFragment gvf) {
+    public GroupParser(GroupViewFragment gvf) {
         this.groupViewFragment = gvf;
     }
 
@@ -48,11 +50,11 @@ public class GroupParser {
         }
     }
 
-    public boolean addGroupForOwner() {
+    public boolean addGroupForOwner(Group group) {
         try {
             owner = UserSingleton.getUserInstance();
 
-            AddGroupWithUserID addGroupWithUserID = new AddGroupWithUserID(owner.get_id());
+            AddGroupWithUserID addGroupWithUserID = new AddGroupWithUserID(owner.get_id(), group);
             addGroupWithUserID.execute();
 
             return true;
@@ -65,24 +67,61 @@ public class GroupParser {
 
     private class AddGroupWithUserID extends AsyncTask<String, Void, Void> {
         private String userid;
-        public AddGroupWithUserID(String userid){
+        private Group group;
+
+        public AddGroupWithUserID(String userid, Group group){
             this.userid = userid;
+            this.group = group;
         }
 
         @Override
         protected Void doInBackground(String... params) {
-            try{
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/group?userid="+userid);
-
+            try {
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/group");
+                // Create the urlConnection
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestMethod("POST");
                 urlConnection.connect();
 
+                // Send the post body
+                JSONObject groupJson = new JSONObject();
+                //JSONObject userJson = new JSONObject();
+                JSONArray friendsJson = new JSONArray(group.getUsers());
+
+                // making json object
+                groupJson.put("name",group.getName());
+                groupJson.put("users",friendsJson);
+
+                // debug
+                System.out.println("group json: " + groupJson);
+
+                // write to server
+                OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+                String jsonString = groupJson.toString();
+                writer.write(jsonString);
+                System.out.println(jsonString);
+                writer.flush();
+                writer.close();
+
                 InputStream is = urlConnection.getInputStream();
+                //Wrap InputStream with InputStreamReader
+                //Input stream of bytes is converted to stream of characters
+                //Buffer reading operation to improve efficiency
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-                parseGroups(is);
+                //Read all characters into String data
+                String line;
+                StringBuilder response = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                System.out.println(response.toString());
 
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;

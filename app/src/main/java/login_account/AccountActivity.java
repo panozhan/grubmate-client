@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import content.ContentActivity;
+import group.GroupParser;
 import others.FontHelper;
 import com.example.udacity.test.R;
 import com.facebook.AccessToken;
@@ -149,6 +150,9 @@ public class AccountActivity extends AppCompatActivity {
 
         FriendsParser friendsParser = new FriendsParser();
         friendsParser.setFriendsForOwner();
+
+        GroupParser groupParser = new GroupParser();
+        groupParser.getGroupForOwner();
     }
 
     @Override

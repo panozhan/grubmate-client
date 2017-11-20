@@ -24,13 +24,17 @@ import objects.UserSingleton;
 
 public class MakeGroupActivity extends AppCompatActivity {
 
-    ArrayList<FriendModel> friendModels;
-    ListView listView;
+    private ArrayList<FriendModel> friendModels;
+    private ListView listView;
     private CustomAdapter adapter;
+    private GroupParser groupParser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        groupParser = new GroupParser();
+
         setContentView(R.layout.activity_make_group);
         setTitle("Create New Group");
 
@@ -72,8 +76,14 @@ public class MakeGroupActivity extends AppCompatActivity {
                     }
                 }
 
+                // add yourself to group
+                friends.add(owner.get_id());
+
                 Group group = new Group(et.getText().toString(), friends);
                 owner.addGroup(group);
+
+                groupParser.addGroupForOwner(group);
+
                 finish();
             }
         });

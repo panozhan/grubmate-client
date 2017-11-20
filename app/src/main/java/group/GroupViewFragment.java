@@ -37,8 +37,8 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
         // setTitle("Groups");
         View v = inflater.inflate(R.layout.fragment_group_view, container, false);
 
-        GroupParser groupParser = new GroupParser(this);
-        groupParser.getGroupForOwner();
+        //GroupParser groupParser = new GroupParser(this);
+        //groupParser.getGroupForOwner();
 
         // list of groups
         groupModels = new ArrayList<>();
