@@ -72,7 +72,8 @@ public class MakeGroupActivity extends AppCompatActivity {
                 ArrayList<String>friends = new ArrayList<String>();
                 for (FriendModel fm: friendModels) {
                     if (fm.checked) {
-                        friends.add(fm.name); // adds selected friends to a list
+                        String friendID = owner.getFriendIDByName(fm.name);
+                        friends.add(friendID); // adds selected friends to a list
                     }
                 }
 
