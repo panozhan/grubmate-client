@@ -27,7 +27,7 @@ android:layout_height="match_parent">
             app:srcCompat="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/profilename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dp"
@@ -44,6 +44,7 @@ android:layout_height="match_parent">
         <RatingBar
 
             android:id="@+id/ratingBar"
+            android:isIndicator="true"
 
             android:layout_width="242dp"
             android:layout_height="57dp"

@@ -85,7 +85,7 @@ public class Parser {
         return result;
     }
 
-    private User parseUser(JsonReader reader) throws IOException {
+    public User parseUser(JsonReader reader) throws IOException {
         User result = new User();
         reader.beginObject();
         while(reader.hasNext()){

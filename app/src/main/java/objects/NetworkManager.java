@@ -1,6 +1,7 @@
 package objects;
 
 import android.os.AsyncTask;
+import android.util.JsonReader;
 
 import content.NewsFeedFragment;
 import notification.NewsFragment;
@@ -15,7 +16,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
+import profile.ProfileFragment;
 
 public class NetworkManager extends Thread {
     private Parser parser = new Parser();
@@ -180,47 +181,6 @@ public class NetworkManager extends Thread {
 
     }
 
-
-
-
-    public void getUserR(RateFragment f, String id){
-        GetUserR myuser = new GetUserR(f, id);
-        myuser.execute();
-    }
-
-    private class GetUserR extends AsyncTask<String, Void, Void>{
-        RateFragment f;
-        String userid;
-        public GetUserR(RateFragment f, String userid){
-            this.f = f;
-            this.userid = userid;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try{
-
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userid);
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                InputStream is = urlConnection.getInputStream();
-                // System.out.println("Convert"+parser.convertStreamToString(is));
-
-                JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
-                User user = parser.parseUser(reader);
-
-                f.generate(user);
-
-            } catch(Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
 
     private class GetNotifications extends AsyncTask<String,Void,Void>{
         String userid;

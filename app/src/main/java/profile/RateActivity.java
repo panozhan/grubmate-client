@@ -67,7 +67,7 @@ public class RateActivity extends AppCompatActivity {
                 System.out.println("rated " + newRating + " stars");
 
                 // send new rating to database
-                ratingParser.addRatingByID(userID, newRating, self);
+                ratingParser.addRatingByID(userID, newRating);
 
                 // sets new rating by pulling it from database
                 // ratingParser.getRatingWithID(userID, self);

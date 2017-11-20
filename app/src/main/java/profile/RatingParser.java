@@ -24,10 +24,12 @@ import objects.UserSingleton;
 
 public class RatingParser {
     private RateActivity rateActivity;
+    private ProfileFragment profileFragment;
 
     public boolean getRatingWithID(String userID, RateActivity rateActivity) {
         try {
             this.rateActivity = rateActivity;
+            this.profileFragment = null;
             GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
             parseUserFriends.execute();
             return true;
@@ -38,9 +40,22 @@ public class RatingParser {
         }
     }
 
-    public boolean addRatingByID(String userID, float rating, RateActivity rateActivity) {
+    public boolean getRatingWithID(String userID, ProfileFragment profileFragment) {
         try {
-            this.rateActivity = rateActivity;
+            this.profileFragment = profileFragment;
+            this.rateActivity = null;
+            GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
+            parseUserFriends.execute();
+            return true;
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.println("get rating parser failed");
+            return false;
+        }
+    }
+
+    public boolean addRatingByID(String userID, float rating) {
+        try {
             AddRatingToUser addRatingToUser = new AddRatingToUser(userID, rating);
             addRatingToUser.execute();
             return true;
@@ -112,7 +127,11 @@ public class RatingParser {
             float rating = Float.valueOf(mainObject.getString("rating"));
 
             // sets curr rating in activity
-            rateActivity.setRating(rating);
+            if (profileFragment == null) {
+                rateActivity.setRating(rating);
+            } else {
+                profileFragment.setRating(rating);
+            }
 
         }catch (JSONException e){
             e.printStackTrace();

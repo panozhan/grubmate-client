@@ -1,5 +1,6 @@
 package post;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import objects.Parser;
 import objects.Post;
 import objects.User;
 import objects.UserSingleton;
+import profile.ProfileActivity;
 
 
 public class SinglePostFragment extends Fragment {

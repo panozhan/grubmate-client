@@ -31,13 +31,15 @@ import post.SinglePostActivity;
 public class ProfileFragment extends Fragment {
     private static final String TEXT = "text";
     private String userID;
-    RatingBar ratingBar;
-    String userid;
-    TextView name;
-    ListView postList;
-    UserSingleton owner;
-    NetworkManager networkManager = new NetworkManager();
+    private RatingBar ratingBar;
+    private String userid;
+    private TextView name;
+    private ListView postList;
+    private UserSingleton owner;
+    private NetworkManager networkManager = new NetworkManager();
     // ProfileFragment.OnFragmentInteractionListener mListener;
+
+    private RatingParser ratingParser;
 
     public ProfileFragment(){
     }
@@ -89,8 +91,12 @@ public class ProfileFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_profile,container,false);
 
         ratingBar = (RatingBar) v.findViewById(R.id.ratingBar);
-        name = (TextView) v.findViewById(R.id.name);
+        name = (TextView) v.findViewById(R.id.profilename);
+        name.setText(owner.getName());
 
+        // get rating
+        ratingParser = new RatingParser();
+        ratingParser.getRatingWithID(owner.get_id(), this);
 
 //        Button goBack = (Button) v.findViewById(R.id.goBack);
 //        goBack.setOnClickListener(new View.OnClickListener(){
@@ -103,6 +109,18 @@ public class ProfileFragment extends Fragment {
         postList = (ListView) v.findViewById(R.id.posts);
 
         return v;
+    }
+
+    public void setRating(float rating) {
+        ratingBar.setRating(rating);
+    }
+
+    @Override
+    public void onResume() {  // After a pause OR at startup
+        super.onResume();
+
+        // refresh rating
+        ratingParser.getRatingWithID(owner.get_id(), this);
     }
 
 
