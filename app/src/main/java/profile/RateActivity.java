@@ -24,6 +24,7 @@ public class RateActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private Button submit;
     private TextView name;
+    private RateActivity self;
 
     private RatingParser ratingParser;
 
@@ -37,13 +38,19 @@ public class RateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rate);
         setTitle("Please rate this user");
 
-        Bundle b = getIntent().getExtras();
-        if(b != null)
-            userID = b.getString("userid");
+        this.self = this;
 
+        // get userid from intent
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            userID = b.getString("userid");
+        }
+
+        // pulls and sets rating on UI
         ratingParser = new RatingParser();
         ratingParser.getRatingWithID(userID, this);
 
+        // finds name of this user
         UserSingleton owner = UserSingleton.getUserInstance();
         String username = owner.getFriendNameByID(userID);
 
@@ -56,15 +63,15 @@ public class RateActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                float rating = ratingBar.getRating();
-                System.out.println("rated " + rating + " stars");
-                //user.addRating(rating);
+                float newRating = ratingBar.getRating();
+                System.out.println("rated " + newRating + " stars");
 
-                // funky math
-                TextView currRating = (TextView) findViewById(R.id.currRating);
-                float newRating = rating + Float.parseFloat(currRating.getText().toString());
-                newRating /= 2;
-                setRating(newRating);
+                // send new rating to database
+                ratingParser.addRatingByID(userID, newRating, self);
+
+                // sets new rating by pulling it from database
+                // ratingParser.getRatingWithID(userID, self);
+                finish();
             }
         });
     }

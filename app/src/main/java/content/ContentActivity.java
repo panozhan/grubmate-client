@@ -83,12 +83,11 @@ public class ContentActivity  extends AppCompatActivity {
                     break;
                 case R.id.profile:
                     //setFrame(2);
-                    /*
                     Intent intent = new Intent(getApplicationContext(), RateActivity.class);
                     Bundle b = new Bundle();
                     b.putString("userid", UserSingleton.getUserInstance().get_id()); //Your id
                     intent.putExtras(b); //Put your id to your next Intent
-                    startActivity(intent);*/
+                    startActivity(intent);
                     break;
                 case R.id.subs:
                     setFrame(3);

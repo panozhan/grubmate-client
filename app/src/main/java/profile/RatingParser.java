@@ -38,6 +38,48 @@ public class RatingParser {
         }
     }
 
+    public boolean addRatingByID(String userID, float rating, RateActivity rateActivity) {
+        try {
+            this.rateActivity = rateActivity;
+            AddRatingToUser addRatingToUser = new AddRatingToUser(userID, rating);
+            addRatingToUser.execute();
+            return true;
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.println("add rating parser failed");
+            return false;
+        }
+    }
+
+    private class AddRatingToUser extends AsyncTask<String, Void, Void> {
+        private String userID;
+        private float rating;
+        public AddRatingToUser(String userID, float rating){
+            this.userID = userID;
+            this.rating = rating;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try{
+                int rate = 3;
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userID+"?rate="+rate);
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                //urlConnection.setDoOutput(true);
+                urlConnection.setRequestMethod("PUT");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                System.out.println("add rating connect stream: "+convertStreamToString(is));
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     private class GetRatingOfUser extends AsyncTask<String, Void, Void> {
         private String userID;
         public GetRatingOfUser(String userID){
