@@ -16,46 +16,57 @@ import com.example.udacity.test.R;
 import java.util.ArrayList;
 
 import objects.User;
+import objects.UserSingleton;
 
 public class RateActivity extends AppCompatActivity {
-
-    private static final String TEXT = "text";
     private String userID;
 
     private RatingBar ratingBar;
     private Button submit;
     private TextView name;
 
-    public RateActivity(String userID) {
-        this.userID = userID;
+    private RatingParser ratingParser;
+
+    public RateActivity() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        User user = new User();
-        user.setId(userID);
-        ArrayList<User> users = new ArrayList<User>();
-        users.add(user);
-        //networkManager.getUser(users);
-        user = users.get(0);
+        setContentView(R.layout.activity_rate);
+        setTitle("Please rate this user");
+
+        Bundle b = getIntent().getExtras();
+        if(b != null)
+            userID = b.getString("userid");
+
+        ratingParser = new RatingParser();
+        ratingParser.getRatingWithID(userID, this);
+
+        UserSingleton owner = UserSingleton.getUserInstance();
+        String username = owner.getFriendNameByID(userID);
 
         // UI stuff
         ratingBar = (RatingBar) findViewById(R.id.ratingBar2);
         submit = (Button) findViewById(R.id.submit);
         name = (TextView) findViewById(R.id.userToRate);
-        name.setText("name");
-
+        name.setText(username);
 
         submit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 float rating = ratingBar.getRating();
+                System.out.println("rated " + rating + " stars");
                 //user.addRating(rating);
 
             }
         });
+    }
+
+    public void setRating(float rating) {
+        TextView currRating = (TextView) findViewById(R.id.currRating);
+        currRating.setText(String.format("%.2f", rating));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

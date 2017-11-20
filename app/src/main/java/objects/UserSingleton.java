@@ -188,7 +188,11 @@ public class UserSingleton {
         friendsMap.put(friendID, friendName);
     }
     public String getFriendNameByID(String id){
-        return friendsMap.get(id);
+        String fname = friendsMap.get(id);
+        if (fname!=null) {
+            return fname;
+        }
+        return this.name;
     }
     public String getFriendIDByName(String name){
         for (Map.Entry<String, String> entry: friendsMap.entrySet()) {

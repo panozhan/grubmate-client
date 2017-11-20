@@ -91,6 +91,14 @@
             android:theme="@style/FullscreenTheme"
             />
 
+        <activity
+            android:name="profile.RateActivity"
+            android:label="content"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme"
+            />
+
+
         <activity android:name="group.MakeGroupActivity" />
 
         <activity android:name="subscription.MakeSubActivity" />

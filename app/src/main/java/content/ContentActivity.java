@@ -1,5 +1,6 @@
 package content;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import filter.FilterNewsFragment;
 import group.GroupViewFragment;
+import group.MakeGroupActivity;
 import notification.NewsFragment;
 import post.MakePostFragment;
 import profile.ProfileFragment;
@@ -17,7 +19,10 @@ import com.example.udacity.test.R;
 
 import objects.Group;
 import objects.UserSingleton;
+import profile.RateActivity;
 import subscription.SubViewFragment;
+
+import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
 
 /**
  * Created by Alex Pan on 10/17/2017.
@@ -77,7 +82,13 @@ public class ContentActivity  extends AppCompatActivity {
                     setFrame(1);
                     break;
                 case R.id.profile:
-                    setFrame(2);
+                    //setFrame(2);
+                    Intent intent = new Intent(getApplicationContext(), RateActivity.class);
+                    //RateActivity rateActivity = new RateActivity(UserSingleton.getUserInstance().get_id());
+                    Bundle b = new Bundle();
+                    b.putString("userid", UserSingleton.getUserInstance().get_id()); //Your id
+                    intent.putExtras(b); //Put your id to your next Intent
+                    startActivity(intent);
                     break;
                 case R.id.subs:
                     setFrame(3);
