@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.udacity.test.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import objects.NetworkManager;
@@ -31,9 +32,10 @@ public class ProfileFragment extends Fragment {
     private static final String TEXT = "text";
     private String userID;
     RatingBar ratingBar;
+    String userid;
     TextView name;
     ListView postList;
-    User user;
+    UserSingleton owner;
     NetworkManager networkManager = new NetworkManager();
     // ProfileFragment.OnFragmentInteractionListener mListener;
 
@@ -49,22 +51,38 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if (getArguments() != null){
             userID = getArguments().getString(TEXT);
         }
-
-        user = new User();
-        user.setId(userID);
-        ArrayList<User> users = new ArrayList<User>();
-        users.add(user);
-        networkManager.getUser(users);
-        user = users.get(0);
-
-       // networkManager.getPostsForUser(userID);
+        owner = UserSingleton.getUserInstance();
+        networkManager.getUser(this, userID);
+        networkManager.getPostsForUser(userID);
     }
+
+
+
+    public void generate (User user){
+        name.setText(user.getName());
+        ratingBar.setRating(user.getRating());
+        userid = user.getId();
+        ArrayList<Post> posts = owner.getPosts();
+        ArrayList<Post> postsToShow = new ArrayList<Post>();
+        for (int i=0; i<posts.size(); i++){
+            Post thispost = posts.get(i);
+            String temp = thispost.getUser().getId();
+            if (temp.equals(userid) ){
+                postsToShow.add(thispost);
+            }
+        }
+
+        postList.setAdapter(new ProfileFragment.myAdapterPost(postsToShow));
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -72,19 +90,17 @@ public class ProfileFragment extends Fragment {
 
         ratingBar = (RatingBar) v.findViewById(R.id.ratingBar);
         name = (TextView) v.findViewById(R.id.name);
-        name.setText(user.getName());
-        ratingBar.setRating(user.getRating());
 
-        Button goBack = (Button) v.findViewById(R.id.goBack);
-        goBack.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                ((SinglePostActivity) getActivity()).change(true);
-            }
-        });
+
+//        Button goBack = (Button) v.findViewById(R.id.goBack);
+//        goBack.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                ((SinglePostActivity) getActivity()).change(true);
+//            }
+//        });
 
         postList = (ListView) v.findViewById(R.id.posts);
-        postList.setAdapter(new ProfileFragment.myAdapterPost(UserSingleton.getUserInstance().getPosts()));
 
         return v;
     }
@@ -111,15 +127,15 @@ public class ProfileFragment extends Fragment {
             ((TextView)convertView.findViewById(R.id.date)).setText(current.getDate());
             ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
 
-            Button editPost = (Button) convertView.findViewById(R.id.editpost);
-            editPost.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    Intent newActivity = new Intent(getActivity(), EditPost.class);
-                    newActivity.putExtra("PostIndex", position);
-                    startActivity(newActivity);
-                }
-            });
+//            Button editPost = (Button) convertView.findViewById(R.id.editpost);
+//            editPost.setOnClickListener(new View.OnClickListener(){
+//                @Override
+//                public void onClick(View v){
+//                    Intent newActivity = new Intent(getActivity(), EditPost.class);
+//                    newActivity.putExtra("PostIndex", position);
+//                    startActivity(newActivity);
+//                }
+//            });
 
             return convertView;
         }

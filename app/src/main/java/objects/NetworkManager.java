@@ -140,23 +140,23 @@ public class NetworkManager extends Thread {
         GetNotifications myGetNotification = new GetNotifications(userid,f);
         myGetNotification.execute();
     }
-
-    public void getUser(ArrayList<User> users){
-        GetUser myuser = new GetUser(users);
+    public void getUser(ProfileFragment f, String id){
+        GetUser myuser = new GetUser(f, id);
         myuser.execute();
     }
 
     private class GetUser extends AsyncTask<String, Void, Void>{
-        ArrayList<User> users;
-        public GetUser(ArrayList<User> users){
-            this.users = users;
+        ProfileFragment f;
+        String userid;
+        public GetUser(ProfileFragment f, String userid){
+            this.f = f;
+            this.userid = userid;
         }
 
         @Override
         protected Void doInBackground(String... params) {
             try{
-                User user = users.get(0);
-                String userid = user.getId();
+
                 URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userid);
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -164,9 +164,55 @@ public class NetworkManager extends Thread {
                 urlConnection.connect();
 
                 InputStream is = urlConnection.getInputStream();
-                User newUser = parser.parseUser(is);
+                // System.out.println("Convert"+parser.convertStreamToString(is));
 
-                users.add(0, newUser);
+                JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
+                User user = parser.parseUser(reader);
+
+
+                f.generate(user);
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    }
+
+
+
+
+    public void getUserR(RateFragment f, String id){
+        GetUserR myuser = new GetUserR(f, id);
+        myuser.execute();
+    }
+
+    private class GetUserR extends AsyncTask<String, Void, Void>{
+        RateFragment f;
+        String userid;
+        public GetUserR(RateFragment f, String userid){
+            this.f = f;
+            this.userid = userid;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try{
+
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userid);
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                // System.out.println("Convert"+parser.convertStreamToString(is));
+
+                JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
+                User user = parser.parseUser(reader);
+
+                f.generate(user);
 
             } catch(Exception e){
                 e.printStackTrace();
