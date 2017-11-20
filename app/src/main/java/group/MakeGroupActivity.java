@@ -11,9 +11,11 @@ import android.widget.ListView;
 import com.example.udacity.test.R;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import objects.Group;
 import objects.NetworkManager;
+import objects.UserSingleton;
 
 
 /**
@@ -36,18 +38,12 @@ public class MakeGroupActivity extends AppCompatActivity {
 
         friendModels = new ArrayList<>();
 
-        /************* TODO: GET LIST OF FRIENDS HERE ***************/
-        /*
-        for (int i=0; i<20; i++) {
-            String nameStr = "name" + i;
+        // use friends that was pulled from database in AccountActivity
+        UserSingleton owner = UserSingleton.getUserInstance();
+        for (Map.Entry<String, String> friend : owner.getFriends().entrySet()) {
+            String nameStr = friend.getKey();
             friendModels.add(new FriendModel(nameStr, false));
-        }*/
-        friendModels.add(new FriendModel("Molly He", false));
-        friendModels.add(new FriendModel("Katherine Chen", false));
-        friendModels.add(new FriendModel("Lauren Nelson", false));
-        friendModels.add(new FriendModel("Arfan Rehab", false));
-
-        /************* GET LIST OF FRIENDS HERE ***************/
+        }
 
         adapter = new CustomAdapter(friendModels, getApplicationContext());
 
