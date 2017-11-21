@@ -10,31 +10,30 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:padding="10dp"
             android:id="@+id/groupNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Enter a group name"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="16dp"
             android:textSize="28sp"
             android:textColor="@color/colorPrimary"
-            app:layout_goneMarginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/grpNameTextview"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="26sp"
             />
 
         <EditText
-            android:padding="10dp"
             android:id="@+id/grpNameTextview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Name"
             android:inputType="text"
-            tools:layout_editor_absoluteX="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/groupNameLabel"
             app:layout_constraintBottom_toTopOf="@+id/mgListview"
             app:layout_goneMarginBottom="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="24dp"
             />
 
         <Button
@@ -44,10 +43,11 @@
             android:text="Done"
             tools:layout_editor_absoluteX="280dp"
             tools:layout_editor_absoluteY="69dp"
-            app:layout_constraintTop_toBottomOf="@+id/groupNameLabel"
             app:layout_constraintLeft_toRightOf="@+id/grpNameTextview"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/mgListview"
+            app:layout_constraintTop_toBottomOf="@+id/groupNameLabel"
+
             />
 
         <ListView
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:layout_editor_absoluteX="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/grpNameTextview"
+            app:layout_constraintTop_toBottomOf="@+id/mgDoneButton"
             app:layout_constraintBottom_toBottomOf="parent"
             />
 

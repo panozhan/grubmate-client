@@ -184,6 +184,14 @@ public class UserSingleton {
         }
         return null;
     }
+    public boolean isFriendInGroup(String friendID, Group group) {
+        for (String userID: group.getUsers()) {
+            if (userID.equalsIgnoreCase(friendID)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /********* friends *********/
     public HashMap<String, String> getFriends() {
@@ -204,7 +212,6 @@ public class UserSingleton {
     }
     public String getFriendIDByName(String name){
         for (Map.Entry<String, String> entry: friendsMap.entrySet()) {
-            System.out.println("mapz "+ entry.getKey()+ " " + entry.getValue());
             if (entry.getValue().equalsIgnoreCase(name)) {
                 return entry.getKey();
             }

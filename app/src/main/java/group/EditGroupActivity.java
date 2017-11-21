@@ -59,21 +59,32 @@ public class EditGroupActivity extends AppCompatActivity {
         // set up models and adapters
         friendModels = new ArrayList<FriendModel>();
 
+
         // set title according to activity type
+        // if add, show list of people NOT in group
+        // if remove, show list of people IN group
         if (isAdd==1) {
-            setTitle("Add Users to Your Group");
-        } else {
-            setTitle("Remove Users From Your Group");
-        }
+            setTitle("Add Friends to Your Group");
 
-        for (String friendID: group.getUsers()) {
-            String nameStr = owner.getFriendNameByID(friendID);
-
-            // add everyone but yourself
-            if (!nameStr.equalsIgnoreCase(owner.getName())) {
-                friendModels.add(new FriendModel(nameStr, false));
+            for (Map.Entry<String, String> friend: owner.getFriends().entrySet()) {
+                if (!owner.isFriendInGroup(friend.getKey(), group)) {
+                    friendModels.add(new FriendModel(friend.getValue(), false));
+                }
             }
         }
+        else {
+            setTitle("Remove Users From Your Group");
+
+            for (String friendID: group.getUsers()) {
+                String nameStr = owner.getFriendNameByID(friendID);
+
+                // add everyone but yourself
+                if (!nameStr.equalsIgnoreCase(owner.getName())) {
+                    friendModels.add(new FriendModel(nameStr, false));
+                }
+            }
+        }
+
 
         adapter = new CustomAdapter(friendModels, getApplicationContext());
 
@@ -91,15 +102,14 @@ public class EditGroupActivity extends AppCompatActivity {
         // add listeners
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                /* send data to server */
                 EditText et = (EditText) findViewById(R.id.grpNameTextview);
 
-                ArrayList<String> friends = new ArrayList<String>();
+                ArrayList<String> selected = new ArrayList<String>();
                 for (FriendModel fm: friendModels) {
                     if (fm.checked) {
                         String friendID = owner.getFriendIDByName(fm.name);
                         System.out.println("selected: "+friendID+" "+fm.name);
-                        //friends.add(friendID); // adds selected friends to a list
+                        selected.add(friendID); // adds selected users to a list
                     }
                 }
 

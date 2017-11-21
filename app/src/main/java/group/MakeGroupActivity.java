@@ -83,7 +83,7 @@ public class MakeGroupActivity extends AppCompatActivity {
                 Group group = new Group(null, et.getText().toString(), friends);
                 owner.addGroup(group);
 
-                //groupParser.addGroupForOwner(group);
+                groupParser.addGroupForOwner(group);
 
                 finish();
             }

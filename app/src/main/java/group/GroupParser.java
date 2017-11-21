@@ -123,7 +123,7 @@ public class GroupParser {
 
 
                 /********* retrieves group id by calling user **********/
-                /*
+
                 URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userid);
 
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
@@ -140,10 +140,9 @@ public class GroupParser {
                     int index = owner.getNumGroups() - 1;
                     int jsonIndex = groupJArray.length() - 1;
                     // get last id in group array
-                    String groupID = groupJArray.get(jsonIndex-1).toString();
-                    System.out.println("newgroupid: "+groupID);
-                    //owner.getGroups().get(index).setId(groupID);
-                }*/
+                    String groupID = groupJArray.get(jsonIndex).toString();
+                    owner.getGroups().get(index).setId(groupID);
+                }
 
             } catch (JSONException e){
                 e.printStackTrace();
