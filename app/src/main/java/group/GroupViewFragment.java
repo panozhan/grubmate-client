@@ -65,11 +65,13 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
 
         UserSingleton owner = UserSingleton.getUserInstance();
 
+        // TODO change gm to take id, and position, move reset to adapter
         groupModels.clear();
         for (Group g: owner.getGroups()) {
             groupModels.add(new GroupModel(g.getName(), g.getUsers()));
         }
 
+        // then remove this part
         listView = (ListView) getView().findViewById(R.id.groupViewList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
