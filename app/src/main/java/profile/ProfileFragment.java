@@ -24,9 +24,7 @@ import objects.UserSingleton;
 import post.EditPost;
 import post.SinglePostActivity;
 
-/**
- * Created by Alex Pan on 10/17/2017.
- */
+/***** ProfileFragment is for owner, use ProfileActivity for poster *****/
 
 public class ProfileFragment extends Fragment {
     private static final String TEXT = "text";
@@ -36,42 +34,32 @@ public class ProfileFragment extends Fragment {
     private TextView name;
     private ListView postList;
     private UserSingleton owner;
-    private NetworkManager networkManager = new NetworkManager();
-    // ProfileFragment.OnFragmentInteractionListener mListener;
+    private NetworkManager networkManager;
 
     private RatingParser ratingParser;
 
     public ProfileFragment(){
-    }
+        this.owner = UserSingleton.getUserInstance();
+        this.networkManager = new NetworkManager();
 
-
-    public static ProfileFragment newInstance(String userID){
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(TEXT, userID);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null){
-            userID = getArguments().getString(TEXT);
-        }
-        owner = UserSingleton.getUserInstance();
         networkManager.getUser(this, userID);
         networkManager.getPostsForUser(userID);
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
 
+    }
 
     public void generate (User user){
         name.setText(user.getName());
         ratingBar.setRating(user.getRating());
         userid = user.getId();
+
+        // fetch myposts here??
         ArrayList<Post> posts = owner.getPosts();
+
         ArrayList<Post> postsToShow = new ArrayList<Post>();
         for (int i=0; i<posts.size(); i++){
             Post thispost = posts.get(i);
@@ -81,7 +69,7 @@ public class ProfileFragment extends Fragment {
             }
         }
 
-        postList.setAdapter(new ProfileFragment.myAdapterPost(postsToShow));
+        postList.setAdapter(new MyAdapterPost(postsToShow));
 
     }
 
@@ -97,14 +85,6 @@ public class ProfileFragment extends Fragment {
         // get rating
         ratingParser = new RatingParser();
         ratingParser.getRatingWithID(owner.get_id(), this);
-
-//        Button goBack = (Button) v.findViewById(R.id.goBack);
-//        goBack.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                ((SinglePostActivity) getActivity()).change(true);
-//            }
-//        });
 
         postList = (ListView) v.findViewById(R.id.posts);
 
@@ -124,9 +104,9 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private class myAdapterPost extends ArrayAdapter<Post> {
+    private class MyAdapterPost extends ArrayAdapter<Post> {
         ArrayList<Post> posts;
-        public myAdapterPost(ArrayList<Post> posts){
+        public MyAdapterPost(ArrayList<Post> posts){
             super(getActivity(),0,posts);
             this.posts = posts;
         }

@@ -66,7 +66,7 @@ public class SinglePostFragment extends Fragment {
         user = UserSingleton.getUserInstance();
         post = user.getPosts().get(PostIndex);
 
-        // TODO change stuff around cuz u know
+        // TODO change image stuff around cuz u know
         ImageView profilepic = (ImageView) v.findViewById(R.id.profilepic);
         // ImageView picture = (ImageView) findViewById(R.id.picture);
 

@@ -71,7 +71,7 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
             groupModels.add(new GroupModel(g.getName(), g.getUsers()));
         }
 
-        // then remove this part
+        // then remove this part to oncreate
         listView = (ListView) getView().findViewById(R.id.groupViewList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
