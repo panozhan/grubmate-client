@@ -1,5 +1,6 @@
 package notification;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.JsonReader;
@@ -25,6 +26,7 @@ import objects.NetworkManager;
 import objects.Notification;
 import objects.Parser;
 import objects.UserSingleton;
+import profile.RateActivity;
 
 /**
  * Created by Alex Pan on 10/27/2017.
@@ -269,9 +271,17 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                     @Override
                     public void onClick(View v) {
                         confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);
-                        /*TODO
-                            ADD TRANSITION TO RATING ACITIVTY
-                                */
+
+                        // ADD TRANSITION TO RATING ACITIVTY
+
+                        // TODO: MAKE THIS INTO A FOR LOOP IF NEEDS TO RATE MULTIPLE USERS
+                        Intent intent = new Intent(getActivity().getApplicationContext(), RateActivity.class);
+                        Bundle b = new Bundle();
+
+                        // TODO: SUB IN POSTER/REQUESTERS IDS INSTEAD OF OWNER'S
+                        b.putString("userid", UserSingleton.getUserInstance().get_id());
+                        intent.putExtras(b);
+                        startActivity(intent);
                     }
                 });
             }

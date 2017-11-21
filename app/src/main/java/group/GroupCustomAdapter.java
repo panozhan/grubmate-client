@@ -15,6 +15,7 @@ import com.example.udacity.test.R;
 
 import java.util.ArrayList;
 
+import objects.Group;
 import objects.UserSingleton;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -119,6 +120,23 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
                 b.putInt("isadd",0);
                 intent.putExtras(b);
                 mContext.startActivity(intent);
+            }
+        });
+
+        viewHolder.leaveButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                GroupParser groupParser = new GroupParser();
+                UserSingleton owner = UserSingleton.getUserInstance();
+
+                // add yourself to list of user to remove from group
+                ArrayList<String> selected = new ArrayList<String>();
+                selected.add(owner.get_id());
+
+                // find group id by name
+                Group group = owner.findGroupByName(viewHolder.grpName.getText().toString());
+
+                // remove yourself from db
+                groupParser.editUsersInGroup(selected, group.getId(), "remove");
             }
         });
 

@@ -70,7 +70,7 @@ public class RateActivity extends AppCompatActivity {
                 ratingParser.addRatingByID(userID, newRating);
 
                 // sets new rating by pulling it from database
-                // ratingParser.getRatingWithID(userID, self);
+                ratingParser.getRatingWithID(userID, self);
                 finish();
             }
         });

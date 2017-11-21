@@ -152,6 +152,7 @@ public class UserSingleton {
         return requests;
     }
 
+
     /********* subscriptions *********/
     public ArrayList<Subscription> getSubscriptions() {
         return subscriptions;
@@ -159,6 +160,7 @@ public class UserSingleton {
     public void addSubscription(Subscription sub) { subscriptions.add(sub); }
     public void removeSubscription(int index) { subscriptions.remove(index); }
     public int getNumSubscriptions() { return subscriptions.size(); }
+
 
     /********* groups *********/
     public void setGroups(ArrayList<Group> groups) {
@@ -172,6 +174,9 @@ public class UserSingleton {
     }
     public void removeGroup(int index) {
         groups.remove(index);
+    }
+    public void clearGroups() {
+        groups.clear();
     }
     public int getNumGroups() {
         return groups.size();
@@ -192,6 +197,7 @@ public class UserSingleton {
         }
         return false;
     }
+
 
     /********* friends *********/
     public HashMap<String, String> getFriends() {

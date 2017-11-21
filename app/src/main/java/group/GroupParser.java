@@ -38,6 +38,7 @@ public class GroupParser {
     public boolean getGroupForOwner() {
         try {
             owner = UserSingleton.getUserInstance();
+            owner.clearGroups(); // fresh pull
 
             GetGroupsWithUserID getGroupsWithUserID = new GetGroupsWithUserID(owner.get_id());
             getGroupsWithUserID.execute();
@@ -64,6 +65,54 @@ public class GroupParser {
             return false;
         }
     }
+
+
+    public boolean editUsersInGroup(ArrayList<String> newUserIDs, String groupID, String type) {
+        try {
+            for (String newUserID: newUserIDs) {
+                EditGroup editGroup = new EditGroup(newUserID, groupID, type);
+                editGroup.execute();
+            }
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println(type + " user to group failed");
+            return false;
+        }
+    }
+
+
+    private class EditGroup extends AsyncTask<String, Void, Void> {
+        private String userID;
+        private String groupID;
+        private String type;
+
+        public EditGroup(String userID, String groupID, String type){
+            this.userID = userID;
+            this.groupID = groupID;
+            this.type = type;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try{
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/group?groupid="+groupID+"&type="+type+"&personid="+userID);
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestMethod("PUT");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                System.out.println(type+" edit group with put: "+convertStreamToString(is));
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 
     private class AddGroupWithUserID extends AsyncTask<String, Void, Void> {
         private String userid;
@@ -240,6 +289,9 @@ public class GroupParser {
                 Group group = new Group(groupID, groupName, friendList);
                 owner.addGroup(group);
 
+                if (groupViewFragment!=null) {
+                    //groupViewFragment.refresh();
+                }
             } else {
                 System.out.println("group parser null");
             }

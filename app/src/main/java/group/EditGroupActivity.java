@@ -25,20 +25,21 @@ public class EditGroupActivity extends AppCompatActivity {
     private ArrayList<FriendModel> friendModels;
     private ListView geListView;
     private CustomAdapter adapter;
-    private GroupParser groupParser;
     private UserSingleton owner;
     private Group group;
     private Button button;
     private TextView nameLabel;
     private int isAdd;
     private String groupName;
+    private GroupParser groupParser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //groupParser = new GroupParser();
 
         setContentView(R.layout.activity_edit_group);
         owner = UserSingleton.getUserInstance();
+        groupParser = new GroupParser();
 
         // UI stuff
         geListView = (ListView) findViewById(R.id.geListview);
@@ -108,18 +109,22 @@ public class EditGroupActivity extends AppCompatActivity {
                 for (FriendModel fm: friendModels) {
                     if (fm.checked) {
                         String friendID = owner.getFriendIDByName(fm.name);
-                        System.out.println("selected: "+friendID+" "+fm.name);
                         selected.add(friendID); // adds selected users to a list
                     }
                 }
 
-                // add yourself to group
-                //friends.add(owner.get_id());
+                // add yourself if you remove everyone in group
+                if (isAdd!=1 && selected.size() == (group.getUsers().size()-1)) {
+                    selected.add(owner.get_id());
+                }
 
-                //Group group = new Group(et.getText().toString(), friends);
-                //owner.addGroup(group);
-
-                //groupParser.addGroupForOwner(group);
+                if (selected!=null && !selected.isEmpty()) {
+                    if (isAdd==1) {
+                        groupParser.editUsersInGroup(selected, group.getId(), "add");
+                    } else {
+                        groupParser.editUsersInGroup(selected, group.getId(), "remove");
+                    }
+                }
 
                 finish();
             }

@@ -77,13 +77,14 @@ public class MakeGroupActivity extends AppCompatActivity {
                     }
                 }
 
-                // add yourself to group
-                friends.add(owner.get_id());
+                // add yourself to group if something is selected
+                if (friends!=null && !friends.isEmpty()) {
+                    friends.add(owner.get_id());
+                    Group group = new Group(null, et.getText().toString(), friends);
+                    owner.addGroup(group);
 
-                Group group = new Group(null, et.getText().toString(), friends);
-                owner.addGroup(group);
-
-                groupParser.addGroupForOwner(group);
+                    groupParser.addGroupForOwner(group);
+                }
 
                 finish();
             }

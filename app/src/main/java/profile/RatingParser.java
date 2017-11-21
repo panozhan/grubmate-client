@@ -77,11 +77,10 @@ public class RatingParser {
         @Override
         protected Void doInBackground(String... params) {
             try{
-                int rate = 3;
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userID+"?rate="+rate);
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userID+"&rate="+rating);
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                //urlConnection.setDoOutput(true);
+                urlConnection.setDoOutput(true);
                 urlConnection.setRequestMethod("PUT");
                 urlConnection.connect();
 
