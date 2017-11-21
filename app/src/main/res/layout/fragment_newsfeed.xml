@@ -1,56 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/searchbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/postScrollView"
+        >
 
 
         <EditText
             android:id="@+id/searchfield"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingLeft="20dp"
             android:ems="10"
             android:background="@color/colorPrimaryDark"
             android:inputType="textPersonName"
             android:text="search"
-        />
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/refresh"
+            />
 
         <Button
             android:id="@+id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="refresh"
-            android:textSize="9dp" />
+            android:minWidth="0dp"
+            app:layout_constraintLeft_toRightOf="@+id/searchfield"
+            app:layout_constraintRight_toLeftOf="@+id/filter"
+            />
 
         <Button
             android:id="@+id/filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="9dp"
-            android:layout_weight="1"
-            android:text="filter" />
+            android:minWidth="0dp"
+            android:text="filter"
+            app:layout_constraintLeft_toRightOf="@+id/refresh"
+            app:layout_constraintRight_toLeftOf="@+id/newpost"
+            />
 
         <Button
             android:id="@+id/newpost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Post" />
+            android:minWidth="0dp"
+            android:text="Post"
+            app:layout_constraintLeft_toRightOf="@+id/filter"
+            app:layout_constraintRight_toRightOf="parent"
+            />
     </LinearLayout>
+
+
+    <HorizontalScrollView
+        android:id="@+id/postScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/searchbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
 
     <ListView
         android:id="@+id/listofposts"
-        android:layout_weight="10"
+        android:padding="6dp"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        />
+
+    </HorizontalScrollView>
 </LinearLayout>

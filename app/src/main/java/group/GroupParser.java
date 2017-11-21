@@ -96,7 +96,7 @@ public class GroupParser {
         @Override
         protected Void doInBackground(String... params) {
             try{
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/group?groupid="+groupID+"&type="+type+"&personid="+userID);
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/group?groupid="+groupID+"&type="+type+"&userid="+userID);
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);

@@ -41,8 +41,8 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
         super(context, R.layout.group_item, data);
         this.dataSet = data;
         this.mContext = context;
-
     }
+
     @Override
     public int getCount() {
         return dataSet.size();
