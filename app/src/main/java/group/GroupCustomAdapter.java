@@ -1,6 +1,8 @@
 package group;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 
 import objects.UserSingleton;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 /**
  * Created by mollyhe on 10/18/17.
  */
@@ -22,13 +26,14 @@ import objects.UserSingleton;
 public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
 
     private ArrayList<GroupModel> dataSet;
-    Context mContext;
+    private Context mContext;
 
     // View lookup cache
     private static class ViewHolder {
         TextView grpName;
         Button leaveButton;
-        Button editButton;
+        Button addButton;
+        Button removeButton;
     }
 
     public GroupCustomAdapter(ArrayList<GroupModel> data, Context context) {
@@ -59,7 +64,8 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_item, parent, false);
             viewHolder.grpName = (TextView) convertView.findViewById(R.id.groupViewName);
             viewHolder.leaveButton = (Button) convertView.findViewById(R.id.leaveViewbutton);
-            viewHolder.editButton = (Button) convertView.findViewById(R.id.editViewbutton);
+            viewHolder.addButton = (Button) convertView.findViewById(R.id.addViewbutton);
+            viewHolder.removeButton = (Button) convertView.findViewById(R.id.removeViewbutton);
 
             result=convertView;
             convertView.setTag(viewHolder);
@@ -73,7 +79,9 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
 
         viewHolder.grpName.setText(item.name);
         viewHolder.leaveButton.setText(item.leaveTxt);
-        viewHolder.editButton.setText(item.editTxt);
+        viewHolder.addButton.setText("Add");
+        viewHolder.removeButton.setText("Remove");
+
         final int positionToRemove = position;
 
         // add listeners
@@ -87,31 +95,30 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
                 owner.removeGroup(positionToRemove);
                 notifyDataSetChanged();
 
-                /*
-                // TODO: figure out how to add alert
-                AlertDialog.Builder adb=new AlertDialog.Builder(mContext.getApplicationContext());
-                adb.setTitle("Delete?");
-                adb.setMessage("Are you sure you want to leave " + viewHolder.grpName.getText() + "?");
-                adb.setNegativeButton("Cancel", null);
-                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dataSet.remove(positionToRemove);
-                        notifyDataSetChanged();
-                    }});
-                adb.show();
-                */
             }
         });
 
-        viewHolder.editButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO: Add whatever logic is necessary to make sure the groupviewedit has the proper info from the server
-                //Intent myIntent = new Intent(mContext.getApplicationContext(), GroupViewEditActivity.class);
-                //myIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                //myIntent.putExtra("groupName", viewHolder.grpName.getText()); // (key, val)
-                //mContext.getApplicationContext().startActivity(myIntent);
+                Intent intent = new Intent(mContext, EditGroupActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                Bundle b = new Bundle();
+                b.putString("groupname", viewHolder.grpName.getText().toString());
+                b.putInt("isadd",1);
+                intent.putExtras(b);
+                mContext.startActivity(intent);
+            }
+        });
 
-
+        viewHolder.removeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, EditGroupActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                Bundle b = new Bundle();
+                b.putString("groupname", viewHolder.grpName.getText().toString());
+                b.putInt("isadd",0);
+                intent.putExtras(b);
+                mContext.startActivity(intent);
             }
         });
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:padding="10dp"
+            android:id="@+id/geNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group Name"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp"
+            android:textSize="28sp"
+            android:textColor="@color/colorPrimary"
+            app:layout_goneMarginBottom="10dp"
+            app:layout_constraintRight_toLeftOf="@+id/geButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            />
+
+        <Button
+            android:id="@+id/geButton"
+            app:layout_constraintLeft_toRightOf="@+id/geNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            tools:layout_editor_absoluteX="280dp"
+            tools:layout_editor_absoluteY="69dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/geListview"
+            />
+
+
+        <ListView
+            android:padding="10dp"
+            android:id="@+id/geListview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/geNameLabel"
+            android:layout_centerInParent="true"
+            />
+
+
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/groupViewName"
+        android:text="groupname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -16,18 +17,37 @@
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/leaveViewbutton"
+        android:id="@+id/addViewbutton"
+        android:text="Add"
+        android:minWidth="75dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/editViewbutton" />
+        android:layout_toLeftOf="@+id/removeViewbutton"
+        android:backgroundTint="#ff77b300"
+        />
 
     <Button
-        android:id="@+id/editViewbutton"
+        android:id="@+id/removeViewbutton"
+        android:text="Remove"
+        android:minWidth="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/leaveViewbutton"
+        android:backgroundTint="#fff4a341"
+        />
+
+    <Button
+        android:id="@+id/leaveViewbutton"
+        android:text="Leave"
+        android:minWidth="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:backgroundTint="#ffff704d"
+        />
 
 </RelativeLayout>

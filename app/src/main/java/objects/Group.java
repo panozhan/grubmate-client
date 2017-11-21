@@ -11,20 +11,21 @@ public class Group {
     private ArrayList<String> users;
     private String id;
 
-    public String getId() {
-        return id;
-    }
-
     public Group(){
 
     }
-    public Group(String x, ArrayList<String> s){
-        name = x;
-        users = s;
+    public Group(String id, String name, ArrayList<String> users){
+        this.id = id;
+        this.name = name;
+        this.users = users;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {

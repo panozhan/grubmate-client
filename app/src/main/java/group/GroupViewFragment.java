@@ -22,6 +22,7 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
     ArrayList<GroupModel> groupModels;
     ListView listView;
     private GroupCustomAdapter adapter;
+    private Button makeGroupButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
         adapter = new GroupCustomAdapter(groupModels, getApplicationContext());
 
         // add listener to make group button
-        Button makeGroupButton = (Button) v.findViewById(R.id.gvMakeGroupButton);
+        makeGroupButton = (Button) v.findViewById(R.id.gvMakeGroupButton);
         makeGroupButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), MakeGroupActivity.class));

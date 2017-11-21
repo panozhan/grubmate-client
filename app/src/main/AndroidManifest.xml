@@ -100,6 +100,7 @@
 
 
         <activity android:name="group.MakeGroupActivity" />
+        <activity android:name="group.EditGroupActivity" />
 
         <activity android:name="subscription.MakeSubActivity" />
 

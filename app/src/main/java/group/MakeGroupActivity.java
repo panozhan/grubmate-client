@@ -73,7 +73,6 @@ public class MakeGroupActivity extends AppCompatActivity {
                 for (FriendModel fm: friendModels) {
                     if (fm.checked) {
                         String friendID = owner.getFriendIDByName(fm.name);
-                        System.out.println("friendid/name " + friendID + " " +fm.name);
                         friends.add(friendID); // adds selected friends to a list
                     }
                 }
@@ -81,10 +80,10 @@ public class MakeGroupActivity extends AppCompatActivity {
                 // add yourself to group
                 friends.add(owner.get_id());
 
-                Group group = new Group(et.getText().toString(), friends);
+                Group group = new Group(null, et.getText().toString(), friends);
                 owner.addGroup(group);
 
-                groupParser.addGroupForOwner(group);
+                //groupParser.addGroupForOwner(group);
 
                 finish();
             }

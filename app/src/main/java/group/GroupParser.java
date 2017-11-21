@@ -121,6 +121,33 @@ public class GroupParser {
                 }
                 System.out.println("response: " +response.toString());
 
+
+                /********* retrieves group id by calling user **********/
+                /*
+                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userid);
+
+                HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
+                urlConnection2.setRequestMethod("GET");
+                urlConnection2.connect();
+
+                InputStream is2 = urlConnection2.getInputStream();
+                String jsonString2 = convertStreamToString(is2);
+                JSONObject mainObject2 = new JSONObject(jsonString2);
+                JSONArray groupJArray = mainObject2.getJSONArray("groups");
+
+                // find new group id and sets it to newly created group
+                if (groupJArray != null) {
+                    int index = owner.getNumGroups() - 1;
+                    int jsonIndex = groupJArray.length() - 1;
+                    // get last id in group array
+                    String groupID = groupJArray.get(jsonIndex-1).toString();
+                    System.out.println("newgroupid: "+groupID);
+                    //owner.getGroups().get(index).setId(groupID);
+                }*/
+
+            } catch (JSONException e){
+                e.printStackTrace();
+                System.out.println("failed getting group id from user");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -182,7 +209,7 @@ public class GroupParser {
     }
 
 
-    public void parseSingleGroup(InputStream is) throws IOException {
+    public void parseSingleGroup(InputStream is, String groupID) throws IOException {
         String jsonString = convertStreamToString(is);
 
         // return if empty
@@ -205,14 +232,13 @@ public class GroupParser {
                 for (int i=0;i<len;i++){
                     // gets friends ids
                     String friendID = jsonFriendArray.get(i).toString();
-                    String friendName = owner.getFriendNameByID(friendID);
 
                     // add friend to list
-                    friendList.add(friendName);
+                    friendList.add(friendID);
                 }
 
                 // create and add new group
-                Group group = new Group(groupName, friendList);
+                Group group = new Group(groupID, groupName, friendList);
                 owner.addGroup(group);
 
             } else {
@@ -259,7 +285,7 @@ public class GroupParser {
 
                 InputStream is = urlConnection.getInputStream();
 
-                parseSingleGroup(is);
+                parseSingleGroup(is, groupid);
 
             } catch(Exception e){
                 e.printStackTrace();

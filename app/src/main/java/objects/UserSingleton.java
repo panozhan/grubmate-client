@@ -176,6 +176,14 @@ public class UserSingleton {
     public int getNumGroups() {
         return groups.size();
     }
+    public Group findGroupByName(String groupName) {
+        for (Group g: this.groups) {
+            if (g.getName().equalsIgnoreCase(groupName)) {
+                return g;
+            }
+        }
+        return null;
+    }
 
     /********* friends *********/
     public HashMap<String, String> getFriends() {
