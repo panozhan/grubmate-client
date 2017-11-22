@@ -33,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
         userid = intent.getExtras().getString("userid");
 
 
-        profileFragment = ProfileFragment.newInstance(userid);
+        profileFragment = new ProfileFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();

@@ -24,7 +24,12 @@ import objects.UserSingleton;
 import post.EditPost;
 import post.SinglePostActivity;
 
-/***** ProfileFragment is for owner, use ProfileActivity for poster *****/
+/*****
+ *
+ * ProfileFragment is for owner, use ProfileActivity for poster
+ * find and fix SinglePostActivity ProfileActivity
+ *
+ * *****/
 
 public class ProfileFragment extends Fragment {
     private static final String TEXT = "text";
@@ -37,11 +42,13 @@ public class ProfileFragment extends Fragment {
     private NetworkManager networkManager;
 
     private RatingParser ratingParser;
+    private TextView currRating;
 
     public ProfileFragment(){
         this.owner = UserSingleton.getUserInstance();
         this.networkManager = new NetworkManager();
 
+        // does this work?????
         networkManager.getUser(this, userID);
         networkManager.getPostsForUser(userID);
     }
@@ -56,8 +63,23 @@ public class ProfileFragment extends Fragment {
         name.setText(user.getName());
         ratingBar.setRating(user.getRating());
         userid = user.getId();
+    }
 
-        // fetch myposts here??
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.fragment_profile,container,false);
+
+        ratingBar = (RatingBar) v.findViewById(R.id.ratingBar);
+        name = (TextView) v.findViewById(R.id.profilename);
+        name.setText(owner.getName());
+        currRating = (TextView) v.findViewById(R.id.profileRating);
+
+        // get rating
+        ratingParser = new RatingParser();
+        ratingParser.getRatingWithID(owner.get_id(), this);
+
+        // getting posts??
         ArrayList<Post> posts = owner.getPosts();
 
         ArrayList<Post> postsToShow = new ArrayList<Post>();
@@ -69,30 +91,15 @@ public class ProfileFragment extends Fragment {
             }
         }
 
-        postList.setAdapter(new MyAdapterPost(postsToShow));
-
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_profile,container,false);
-
-        ratingBar = (RatingBar) v.findViewById(R.id.ratingBar);
-        name = (TextView) v.findViewById(R.id.profilename);
-        name.setText(owner.getName());
-
-        // get rating
-        ratingParser = new RatingParser();
-        ratingParser.getRatingWithID(owner.get_id(), this);
-
         postList = (ListView) v.findViewById(R.id.posts);
+        postList.setAdapter(new MyAdapterPost(postsToShow));
 
         return v;
     }
 
     public void setRating(float rating) {
         ratingBar.setRating(rating);
+        currRating.setText(String.format("%.2f", rating));
     }
 
     @Override

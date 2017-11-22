@@ -37,7 +37,7 @@ public class ContentActivity  extends AppCompatActivity {
 
     Fragment newsfeed = new NewsFeedFragment();
     Fragment group = new GroupViewFragment();
-    Fragment profile = ProfileFragment.newInstance((UserSingleton.getUserInstance().get_id()));
+    Fragment profile = new ProfileFragment();
     Fragment subs = new SubViewFragment();
     Fragment notifs = new NewsFragment();
     Fragment makepost = new MakePostFragment();

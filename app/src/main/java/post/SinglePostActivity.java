@@ -28,7 +28,7 @@ public class SinglePostActivity extends AppCompatActivity {
         int PostIndex = getIntent().getIntExtra("PostIndex", -1);
         Post post = UserSingleton.getUserInstance().getPosts().get(PostIndex);
         userID = post.get_id();
-        profileFragment = ProfileFragment.newInstance(userID);
+        profileFragment = new ProfileFragment();
 
 
         postFragment = SinglePostFragment.newInstance(PostIndex);

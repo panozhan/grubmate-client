@@ -27,6 +27,7 @@ public class RateActivity extends AppCompatActivity {
     private RateActivity self;
 
     private RatingParser ratingParser;
+    private TextView currRating;
 
     public RateActivity() {
     }
@@ -59,6 +60,7 @@ public class RateActivity extends AppCompatActivity {
         submit = (Button) findViewById(R.id.submit);
         name = (TextView) findViewById(R.id.userToRate);
         name.setText(username);
+        currRating = (TextView) findViewById(R.id.currRating);
 
         submit.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -77,7 +79,6 @@ public class RateActivity extends AppCompatActivity {
     }
 
     public void setRating(float rating) {
-        TextView currRating = (TextView) findViewById(R.id.currRating);
         currRating.setText(String.format("%.2f", rating));
     }
 }

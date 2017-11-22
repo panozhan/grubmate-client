@@ -6,70 +6,86 @@ xmlns:tools="http://schemas.android.com/tools"
 android:orientation="vertical" android:layout_width="match_parent"
 android:layout_height="match_parent">
 
-
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/profileCL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        tools:context="com.example.chen.grubmate.ProfileActivity">
+        android:layout_height="wrap_content"
+        tools:context="profile.ProfileFragment"
+        app:layout_constraintBottom_toTopOf="@+id/profileScrollView"
+        android:background="#ffc9dda8"
+        >
 
         <TextView
             android:id="@+id/profilename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="28dp"
-            android:text="Username"
+            android:paddingTop="14dp"
+            android:layout_marginRight="0dp"
+            android:text="FirstName LastName"
             android:textSize="24dp"
-            app:layout_constraintRight_toLeftOf="@+id/ratingBar"
+            app:layout_constraintRight_toLeftOf="@+id/profileRating"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+            />
+
+        <TextView
+            android:id="@+id/profileRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="14dp"
+
+            android:text="4.9"
+            android:textSize="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/profilename"
+            />
 
         <RatingBar
-
             android:id="@+id/ratingBar"
             android:isIndicator="true"
-            app:layout_constraintLeft_toRightOf="@+id/profilename"
-
-            android:layout_width="242dp"
-            android:layout_height="57dp"
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:numStars="5"
             android:rating="4"
             android:scaleX="0.7"
             android:scaleY="0.7"
+            tools:layout_editor_absoluteY="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/profilename"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             />
+    </android.support.constraint.ConstraintLayout>
+
+
+    <HorizontalScrollView
+            android:id="@+id/profileScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@+id/profileCL"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
 
         <ListView
             android:id="@+id/posts"
-            android:layout_width="367dp"
-            android:layout_height="432dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+            android:padding="6dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
 
-        <!--<Button-->
-            <!--android:id="@+id/goBack"-->
-            <!--android:layout_width="64dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_marginBottom="1dp"-->
-            <!--android:text="Back"-->
-            <!--app:layout_constraintBottom_toTopOf="@+id/name"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--app:layout_constraintLeft_toLeftOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent"-->
-            <!--android:layout_marginTop="8dp" />-->
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
-    </android.support.constraint.ConstraintLayout>
+    </HorizontalScrollView>
+
 
 
 </LinearLayout>
