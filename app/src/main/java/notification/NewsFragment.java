@@ -272,16 +272,13 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                     public void onClick(View v) {
                         confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);
 
-                        // ADD TRANSITION TO RATING ACITIVTY
-
-                        // TODO: MAKE THIS INTO A FOR LOOP IF NEEDS TO RATE MULTIPLE USERS
-                        Intent intent = new Intent(getActivity().getApplicationContext(), RateActivity.class);
+              /*          Intent intent = new Intent(getActivity().getApplicationContext(), RateActivity.class);
                         Bundle b = new Bundle();
 
                         // TODO: SUB IN POSTER/REQUESTERS IDS INSTEAD OF OWNER'S
-                        b.putString("userid", UserSingleton.getUserInstance().get_id());
+                        b.putString("userid", current.getPersonId());
                         intent.putExtras(b);
-                        startActivity(intent);
+                        startActivity(intent);*/
                     }
                 });
             }
@@ -312,7 +309,7 @@ public class NewsFragment extends android.support.v4.app.Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(type.equals("end")){
+            if(type.equals("end") || type.equals("reject")){
                 getNotifs();
             }
         }
@@ -367,7 +364,7 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                 reject.setVisibility(View.GONE);
             }else{
                 reject.setVisibility(View.VISIBLE);
-                reject.setOnClickListener(new View.OnClickListener() {
+                confirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(current.getStatus().equals("requested")){
@@ -376,10 +373,22 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                             current.setStatus("confirmed");
                         }else if(current.getStatus().equals("confirmed")){
                             confirmend(current.getPersonid(),current.getPostid(),"end",null);
-                        /*TODO
-                            ADD TRANSITION TO RATING ACITIVTY
-                                */
+
+                            Intent intent = new Intent(getActivity().getApplicationContext(), RateActivity.class);
+                            Bundle b = new Bundle();
+
+                            // TODO: SUB IN POSTER/REQUESTERS IDS INSTEAD OF OWNER'S
+                            b.putString("userid", current.getPersonid());
+                            intent.putExtras(b);
+                            startActivity(intent);
                         }
+                    }
+                });
+
+                reject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmend(current.getPersonid(),current.getPostid(),"reject",null);
                     }
                 });
             }

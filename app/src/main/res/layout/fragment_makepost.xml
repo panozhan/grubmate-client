@@ -66,7 +66,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="#ffffff"
                 tools:listitem="@layout/support_simple_spinner_dropdown_item"
-                android:entries="@array/team_array"
                 />
 
             <TextView

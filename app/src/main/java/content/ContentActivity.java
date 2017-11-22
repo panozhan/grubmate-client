@@ -40,7 +40,6 @@ public class ContentActivity  extends AppCompatActivity {
     Fragment profile = new ProfileFragment();
     Fragment subs = new SubViewFragment();
     Fragment notifs = new NewsFragment();
-    Fragment makepost = new MakePostFragment();
     Fragment filter = new FilterNewsFragment();
 
     int page = 1;
@@ -116,6 +115,7 @@ public class ContentActivity  extends AppCompatActivity {
                 ft.hide(notifs);
                 ft.hide(group);
                 ft.hide(subs);
+                ft.hide(profile);
             case 0:
                 ft.hide(notifs);
                 ft.hide(profile);

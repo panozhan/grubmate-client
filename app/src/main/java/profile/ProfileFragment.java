@@ -1,8 +1,10 @@
 package profile;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.JsonReader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,16 @@ import android.widget.TextView;
 
 import com.example.udacity.test.R;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import objects.NetworkManager;
+import objects.Parser;
 import objects.Post;
 import objects.User;
 import objects.UserSingleton;
@@ -49,8 +57,8 @@ public class ProfileFragment extends Fragment {
         this.networkManager = new NetworkManager();
 
         // does this work?????
-        networkManager.getUser(this, userID);
-        networkManager.getPostsForUser(userID);
+       // networkManager.getUser(this, userID);
+        //networkManager.getPostsForUser(userID);
     }
 
     @Override
@@ -58,12 +66,101 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-
+/*
     public void generate (User user){
         name.setText(user.getName());
         ratingBar.setRating(user.getRating());
         userid = user.getId();
+
+        ArrayList<Post> postsToShow = new ArrayList<>();
+
+        System.out.println(user.getPosts());
+        /* fetch myposts here??
+        //ArrayList<Post> posts = owner.getPosts();
+
+
+        for (int i=0; i<posts.size(); i++){
+            Post thispost = posts.get(i);
+            String temp = thispost.getUser().getId();
+            if (temp.equals(userid) ){
+                postsToShow.add(thispost);
+            }
+        }
+
+        postList.setAdapter(new MyAdapterPost(postsToShow));
+
+
     }
+*/
+    private class PostShit extends AsyncTask<String,Void,Void>{
+        ProfileFragment f;
+        ArrayList<Post> result = new ArrayList<>();
+        public PostShit(ProfileFragment f){
+            System.out.println("CALLING POST SHIT");
+            this.f = f;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            f.setPosts(result);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try{
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="
+                        + UserSingleton.getUserInstance().get_id());
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                JsonReader reader = new JsonReader(new InputStreamReader(is,"UTF-8"));
+                reader.beginObject();
+                ArrayList<String> postsIds = new ArrayList<>();
+                while(reader.hasNext()){
+                    String name = reader.nextName();
+                    System.out.println("postshit " + name);
+                    if(!name.equals("postsOfUser")){
+                        reader.skipValue();
+                    }else{
+                        System.out.println("postshit here");
+                        reader.beginArray();
+                        while(reader.hasNext()) {
+                            postsIds.add(reader.nextString());
+                        }
+                        reader.endArray();
+                    }
+                }
+                reader.endObject();
+
+                for(String id : postsIds){
+                    URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid="
+                        + id);
+
+                    HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();
+                    conn2.setRequestMethod("GET");
+                    conn2.connect();
+
+                    InputStream is2 = conn2.getInputStream();
+
+                    Parser p = new Parser();
+                    Post post = p.parsePost(is2);
+
+                    result.add(post);
+                }
+
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+
 
 
     @Override
@@ -79,10 +176,15 @@ public class ProfileFragment extends Fragment {
         ratingParser = new RatingParser();
         ratingParser.getRatingWithID(owner.get_id(), this);
 
-        // getting posts??
+        PostShit ps = new PostShit(this);
+        ps.execute();
+        //ArrayList<Post> postsToShow = new ArrayList<Post>();
+
+
+      /*  // getting posts??
         ArrayList<Post> posts = owner.getPosts();
 
-        ArrayList<Post> postsToShow = new ArrayList<Post>();
+
         for (int i=0; i<posts.size(); i++){
             Post thispost = posts.get(i);
             String temp = thispost.getUser().getId();
@@ -90,9 +192,9 @@ public class ProfileFragment extends Fragment {
                 postsToShow.add(thispost);
             }
         }
-
+*/
         postList = (ListView) v.findViewById(R.id.posts);
-        postList.setAdapter(new MyAdapterPost(postsToShow));
+
 
         return v;
     }
@@ -100,6 +202,10 @@ public class ProfileFragment extends Fragment {
     public void setRating(float rating) {
         ratingBar.setRating(rating);
         currRating.setText(String.format("%.2f", rating));
+    }
+
+    public void setPosts(ArrayList<Post> p){
+        postList.setAdapter(new MyAdapterPost(p));
     }
 
     @Override

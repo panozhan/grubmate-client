@@ -165,13 +165,13 @@ public class NetworkManager extends Thread {
                 urlConnection.connect();
 
                 InputStream is = urlConnection.getInputStream();
-                // System.out.println("Convert"+parser.convertStreamToString(is));
+                 System.out.println("Convert"+parser.convertStreamToString(is));
 
                 JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
                 User user = parser.parseUser(reader);
 
 
-                f.generate(user);
+               // f.generate(user);
 
             } catch(Exception e){
                 e.printStackTrace();
@@ -263,6 +263,10 @@ public class NetworkManager extends Thread {
 
                 userJson.put("id",owner.get_id());
 
+                if(post.getGroups() != null){
+                    postJson.put("groups",new JSONArray(post.getGroups()));
+                }
+
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 String jsonString = postJson.toString();
@@ -315,7 +319,10 @@ public class NetworkManager extends Thread {
 
                 InputStream is = urlConnection.getInputStream();
                 owner.getPosts().add(parser.parsePost(is));
-                newsfeed.notifyChange();
+                if(newsfeed != null){
+                    newsfeed.notifyChange();
+                }
+
 
 
             } catch (Exception e) {
