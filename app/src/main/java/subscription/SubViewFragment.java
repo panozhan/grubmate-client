@@ -76,4 +76,8 @@ public class SubViewFragment extends android.support.v4.app.Fragment {
             }
         });
     }
+
+    public void notifyChange(){
+        adapter.notifyDataSetChanged();
+    }
 }

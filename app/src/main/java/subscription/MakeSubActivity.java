@@ -10,6 +10,7 @@ import com.example.udacity.test.R;
 
 import objects.NetworkManager;
 import objects.Subscription;
+import objects.UserSingleton;
 
 /**
  * Created by ArfanR on 11/10/17.
@@ -37,7 +38,7 @@ public class MakeSubActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /* send data to server */
                 Subscription sub = new Subscription(subCategory.getText().toString(), subName.getText().toString());
-                networkManager.addSubscription(sub);
+                networkManager.addSubscription(UserSingleton.getUserInstance().get_id(), sub);
                 finish();
             }
         });

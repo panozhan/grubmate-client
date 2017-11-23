@@ -6,10 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 
 
@@ -177,6 +177,34 @@ public class Parser {
 
         }
         return result;
+    }
+
+    public ArrayList<Subscription> parseSubscriptions(InputStream inputStream) throws JSONException, IOException {
+        ArrayList<Subscription> subs = new ArrayList<>();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String s = "", temp = "";
+        while ((temp = bufferedReader.readLine()) != null) {
+            s += temp;
+        }
+        JSONArray jsonarray = new JSONArray(s);
+        for (int i = 0; i < jsonarray.length(); i++) {
+            Subscription result = new Subscription();
+            try {
+                JSONObject mainObject = jsonarray.getJSONObject(i);
+                if (mainObject.has("subtype")){
+                    result.setType(mainObject.getString("subtype"));
+                }
+                if (mainObject.has("value")){
+                    result.setValue(mainObject.getString("value"));
+                }
+            } catch (JSONException e){
+
+            }
+            //System.out.println(result);
+            subs.add(result);
+        }
+
+        return subs;
     }
 }
 

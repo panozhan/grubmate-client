@@ -3,20 +3,24 @@ package objects;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 
-import content.NewsFeedFragment;
-import notification.NewsFragment;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import content.NewsFeedFragment;
+import notification.NewsFragment;
 import profile.ProfileFragment;
+import subscription.SubViewFragment;
 
 public class NetworkManager extends Thread {
     private Parser parser = new Parser();
@@ -433,60 +437,63 @@ public class NetworkManager extends Thread {
 
     }
     
-    public void addSubscription(Subscription sub){
-        AddSubscription addSub = new AddSubscription(sub);
+    public void addSubscription(String userid, Subscription sub){
+        AddSubscription addSub = new AddSubscription(userid, sub);
         addSub.execute();
     }
     
     private class AddSubscription extends AsyncTask<String, Void, Void> {
         Subscription sub;
-        UserSingleton owner = UserSingleton.getUserInstance();
+        String userid;
         Parser parser = new Parser();
-        
-        public AddSubscription(Subscription sub){
+        SubViewFragment subView;
+
+        public AddSubscription(String userid, Subscription sub){
+            this.userid = userid;
             this.sub = sub;
-            owner.addSubscription(sub);
+            //UserSingleton.getUserInstance().addSubscription(sub);
         }
         
         @Override
         protected Void doInBackground(String... params) {
             try {
-                // This is getting the url from the string we passed in
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id());
-                // Create the urlConnection
+                String address = "https://grubmateteam3.herokuapp.com/api/subs?userid=" + userid;
+                JSONObject subJson = new JSONObject();
+                subJson.put("subtype",sub.getType());
+                subJson.put("value",sub.getValue());
+                String requestBody = subJson.toString();
+
+                URL url = new URL(address);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoInput(true);
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestProperty("Content-Type", "application/json");
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setRequestMethod("POST");
-                urlConnection.connect();
-                // Send the post body
-                JSONObject subJson = new JSONObject();
-                JSONObject userJson = new JSONObject();
-                subJson.put("type",sub.getType());
-                subJson.put("value",sub.getValue());
-                //subJson.put("user",userJson);
-                //userJson.put("id",owner.get_id());
-                
-                OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
-                String jsonString = subJson.toString();
-                writer.write(jsonString);
-                System.out.println(jsonString);
+                OutputStream outputStream = new BufferedOutputStream(urlConnection.getOutputStream());
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "utf-8"));
+                writer.write(requestBody);
                 writer.flush();
                 writer.close();
-                /*
-                 InputStream is = urlConnection.getInputStream();
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                 
-                 //Read all characters into String data
-                 String line;
-                 StringBuilder response = new StringBuilder();
-                 while ((line = reader.readLine()) != null) {
-                 response.append(line);
-                 }
-                 System.out.println(response.toString());
-                 */
+                outputStream.close();
+
+                InputStream inputStream;
+                // get stream
+                if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    inputStream = urlConnection.getInputStream();
+                } else {
+                    inputStream = urlConnection.getErrorStream();
+                }
+
+                UserSingleton owner = UserSingleton.getUserInstance();
+                ArrayList<Subscription> updates = parser.parseSubscriptions(inputStream);
+                ArrayList<Subscription> newSubs = new ArrayList<>();
+                for (Subscription s : updates) {
+                    if (!s.getType().equals("") && !s.getValue().equals("")) {
+                        newSubs.add(s);
+                    }
+                }
+                owner.setSubscriptions(newSubs);
+                for (int i = 0; i < newSubs.size(); i++) {
+                    System.out.println(newSubs.get(i));
+                }
                 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -516,9 +523,23 @@ public class NetworkManager extends Thread {
                 URL url = new URL("https://grubmateteam3.herokuapp.com/api/subs?index=" + index + "&userid=" + owner.get_id());
                 // Create the urlConnection
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("PUT");
+                urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
-                // TODO: Remove subscription from the category for the user
+
+                InputStream inputStream;
+                // get stream
+                if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    inputStream = urlConnection.getInputStream();
+                } else {
+                    inputStream = urlConnection.getErrorStream();
+                }
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String s = "", temp = "";
+                while ((temp = bufferedReader.readLine()) != null) {
+                    s += temp;
+                }
+                System.out.println(s);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
