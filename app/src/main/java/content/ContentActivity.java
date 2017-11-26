@@ -53,11 +53,6 @@ public class ContentActivity  extends AppCompatActivity {
         navsubs.setOnClickListener(myNavListener);
         navnotifs.setOnClickListener(myNavListener);
 
-        //UserSingleton.getUserInstance().addGroup(new Group("Team 3",null));
-        //UserSingleton.getUserInstance().addGroup(new Group("Team 2",null));
-
-        //NetworkManager nm = new NetworkManager();
-        //nm.getGroups();
     }
 
     private class NavListener implements View.OnClickListener{
@@ -89,9 +84,7 @@ public class ContentActivity  extends AppCompatActivity {
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        Fragment switchto;
-       // ft.remove(newsfeed);
-       // ft.remove(notifs);
+
         switch (change){
             case -1:
                 ft.add(R.id.contentframe,newsfeed);
@@ -109,7 +102,6 @@ public class ContentActivity  extends AppCompatActivity {
                 ft.hide(group);
                 ft.hide(subs);
                 ft.show(newsfeed);
-                //switchto = newsfeed;
                 break;
             case 1:
                 ft.hide(newsfeed);
@@ -124,7 +116,7 @@ public class ContentActivity  extends AppCompatActivity {
                 ft.hide(group);
                 ft.hide(subs);
                 ft.show(profile);
-                switchto = profile;
+                //profile.onResume();
                 break;
             case 3:
                 ft.hide(notifs);
@@ -145,7 +137,6 @@ public class ContentActivity  extends AppCompatActivity {
                 break;
         }
         System.out.println("Calling replace");
-        //ft.replace(R.id.contentframe,switchto);
         System.out.println("Called replace");
         ft.commitNow();
     }

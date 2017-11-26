@@ -38,24 +38,16 @@ import post.EditPost;
 
 public class ProfileFragment extends Fragment {
     private static final String TEXT = "text";
-    private String userID;
     private RatingBar ratingBar;
-    private String userid;
     private TextView name;
     private ListView postList;
     private UserSingleton owner;
-    private NetworkManager networkManager;
     private MyAdapterPost adapter;
     private RatingParser ratingParser;
     private TextView currRating;
 
     public ProfileFragment(){
         this.owner = UserSingleton.getUserInstance();
-        this.networkManager = new NetworkManager();
-
-        // does this work?????
-       // networkManager.getUser(this, userID);
-        //networkManager.getPostsForUser(userID);
     }
 
     @Override
@@ -63,36 +55,12 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-/*
-    public void generate (User user){
-        name.setText(user.getName());
-        ratingBar.setRating(user.getRating());
-        userid = user.getId();
-
-        ArrayList<Post> postsToShow = new ArrayList<>();
-
-        System.out.println(user.getPosts());
-        /* fetch myposts here??
-        //ArrayList<Post> posts = owner.getPosts();
 
 
-        for (int i=0; i<posts.size(); i++){
-            Post thispost = posts.get(i);
-            String temp = thispost.getUser().getId();
-            if (temp.equals(userid) ){
-                postsToShow.add(thispost);
-            }
-        }
-
-        postList.setAdapter(new MyAdapterPost(postsToShow));
-
-
-    }
-*/
-    private class PostShit extends AsyncTask<String,Void,Void>{
+    private class PostParser extends AsyncTask<String,Void,Void>{
         ProfileFragment f;
         ArrayList<Post> result = new ArrayList<>();
-        public PostShit(ProfileFragment f){
+        public PostParser(ProfileFragment f){
             System.out.println("CALLING POST SHIT");
             this.f = f;
         }
@@ -119,11 +87,9 @@ public class ProfileFragment extends Fragment {
                 ArrayList<String> postsIds = new ArrayList<>();
                 while(reader.hasNext()){
                     String name = reader.nextName();
-                    System.out.println("postshit " + name);
                     if(!name.equals("postsOfUser")){
                         reader.skipValue();
                     }else{
-                        System.out.println("postshit here");
                         reader.beginArray();
                         while(reader.hasNext()) {
                             postsIds.add(reader.nextString());
@@ -157,9 +123,6 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_profile,container,false);
@@ -173,23 +136,9 @@ public class ProfileFragment extends Fragment {
         ratingParser = new RatingParser();
         ratingParser.getRatingWithID(owner.get_id(), this);
 
-        PostShit ps = new PostShit(this);
-        ps.execute();
-        //ArrayList<Post> postsToShow = new ArrayList<Post>();
+        PostParser pp = new PostParser(this);
+        pp.execute();
 
-
-      /*  // getting posts??
-        ArrayList<Post> posts = owner.getPosts();
-
-
-        for (int i=0; i<posts.size(); i++){
-            Post thispost = posts.get(i);
-            String temp = thispost.getUser().getId();
-            if (temp.equals(userid) ){
-                postsToShow.add(thispost);
-            }
-        }
-*/
         postList = (ListView) v.findViewById(R.id.posts);
         postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -219,6 +168,10 @@ public class ProfileFragment extends Fragment {
 
         // refresh rating
         ratingParser.getRatingWithID(owner.get_id(), this);
+
+        // refresh posts
+        PostParser pp = new PostParser(this);
+        pp.execute();
     }
 
 
