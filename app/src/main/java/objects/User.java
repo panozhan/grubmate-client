@@ -1,12 +1,13 @@
 package objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Alex Pan on 10/17/2017.
  */
 
-public class User {
+public class User implements Serializable {
     private String name;
     private String id;
     private ArrayList<String> posts;

@@ -8,8 +8,8 @@ import android.util.JsonReader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -19,7 +19,6 @@ import com.example.udacity.test.R;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,10 +26,8 @@ import java.util.ArrayList;
 import objects.NetworkManager;
 import objects.Parser;
 import objects.Post;
-import objects.User;
 import objects.UserSingleton;
 import post.EditPost;
-import post.SinglePostActivity;
 
 /*****
  *
@@ -48,7 +45,7 @@ public class ProfileFragment extends Fragment {
     private ListView postList;
     private UserSingleton owner;
     private NetworkManager networkManager;
-
+    private MyAdapterPost adapter;
     private RatingParser ratingParser;
     private TextView currRating;
 
@@ -194,7 +191,14 @@ public class ProfileFragment extends Fragment {
         }
 */
         postList = (ListView) v.findViewById(R.id.posts);
-
+        postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent newActivity = new Intent(getActivity(), EditPost.class);
+                newActivity.putExtra("Post", (Post)parent.getAdapter().getItem(position));
+                startActivity(newActivity);
+            }
+        });
 
         return v;
     }
@@ -205,7 +209,8 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setPosts(ArrayList<Post> p){
-        postList.setAdapter(new MyAdapterPost(p));
+        adapter = new MyAdapterPost((p));
+        postList.setAdapter(adapter);
     }
 
     @Override
@@ -237,16 +242,6 @@ public class ProfileFragment extends Fragment {
             ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
             ((TextView)convertView.findViewById(R.id.date)).setText(current.getDate());
             ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
-
-//            Button editPost = (Button) convertView.findViewById(R.id.editpost);
-//            editPost.setOnClickListener(new View.OnClickListener(){
-//                @Override
-//                public void onClick(View v){
-//                    Intent newActivity = new Intent(getActivity(), EditPost.class);
-//                    newActivity.putExtra("PostIndex", position);
-//                    startActivity(newActivity);
-//                }
-//            });
 
             return convertView;
         }

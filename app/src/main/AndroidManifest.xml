@@ -76,7 +76,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
             />
-            
+        <activity
+            android:name="post.EditPost"
+            android:label="content"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme"
+            />
         <activity
             android:name="filter.FilterNewsActivity"
             android:label="FilterNews"

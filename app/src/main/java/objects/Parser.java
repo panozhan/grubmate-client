@@ -186,6 +186,7 @@ public class Parser {
         while ((temp = bufferedReader.readLine()) != null) {
             s += temp;
         }
+        System.out.println(s);
         JSONArray jsonarray = new JSONArray(s);
         for (int i = 0; i < jsonarray.length(); i++) {
             Subscription result = new Subscription();
@@ -200,7 +201,6 @@ public class Parser {
             } catch (JSONException e){
 
             }
-            //System.out.println(result);
             subs.add(result);
         }
 

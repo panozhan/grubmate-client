@@ -44,11 +44,16 @@ public class SubViewFragment extends android.support.v4.app.Fragment {
 
         // list of subscriptions
         subModels = new ArrayList<>();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        for (Subscription s: owner.getSubscriptions()) {
+            subModels.add(new SubModel(s.getType(), s.getValue()));
+        }
         adapter = new SubCustomAdapter(subModels, getApplicationContext());
+        notifyChange();
 
         // add listener to make group button
-        Button makeSubButton = (Button) v.findViewById(R.id.gvMakeSubButton);
-        makeSubButton.setOnClickListener(new View.OnClickListener() {
+        Button addSubButton = (Button) v.findViewById(R.id.gvMakeSubButton);
+        addSubButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), MakeSubActivity.class));
             }
@@ -56,6 +61,7 @@ public class SubViewFragment extends android.support.v4.app.Fragment {
 
         return v;
     }
+
 
     @Override
     public void onResume() {  // After a pause OR at startup
@@ -75,6 +81,7 @@ public class SubViewFragment extends android.support.v4.app.Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+
     }
 
     public void notifyChange(){

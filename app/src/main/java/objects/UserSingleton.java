@@ -152,6 +152,14 @@ public class UserSingleton {
         return requests;
     }
 
+    public Post getPostByID(String id) {
+        for (int i = 0; i < this.posts.size(); i++) {
+            if (posts.get(i).get_id().equals(id)) {
+                return posts.get(i);
+            }
+        }
+        return null;
+    }
 
     /********* subscriptions *********/
     public ArrayList<Subscription> getSubscriptions() {

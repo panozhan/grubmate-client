@@ -134,13 +134,6 @@ public class NetworkManager extends Thread {
 
     }
 
-    //type = "request", "confirm", "end"
-    public void updatePost(String type, String personid,String postid, String loc){
-        System.out.println("hello");
-        UpdatePost myUpdatePost = new UpdatePost(type,personid,postid, loc);
-        myUpdatePost.execute();
-    }
-
     public void getNotifications(String userid,NewsFragment f){
         GetNotifications myGetNotification = new GetNotifications(userid,f);
         myGetNotification.execute();
@@ -368,40 +361,6 @@ public class NetworkManager extends Thread {
         }
     }
 
-    private class UpdatePost extends AsyncTask<String,Void,Void>{
-        String personid;
-        String type;
-        String postid;
-        String loc;
-        public UpdatePost(String type,String personid, String postid, String loc){
-            this.type = type;
-            this.personid = personid;
-            this.postid = postid;
-            this.loc = loc;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-                // This is getting the url from the string we passed in
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?type=" + type + "&personid=" + 2 + "&postid=" + postid + "&location=" + loc);
-                // Create the urlConnection
-                System.out.println("https://grubmateteam3.herokuapp.com/api/posts?type=" + type + "&personid=" + personid + "&postid=" + postid + "&location=" + loc);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoOutput(true);
-                urlConnection.setRequestMethod("PUT");
-                urlConnection.connect();
-
-                InputStream is = urlConnection.getInputStream();
-                System.out.println(parser.convertStreamToString(is));
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
     private class GetPostsForUsers extends AsyncTask<String, Void, Void> {
         Parser parser = new Parser();
         UserSingleton owner = UserSingleton.getUserInstance();
@@ -436,7 +395,88 @@ public class NetworkManager extends Thread {
         }
 
     }
-    
+
+    //type = "request", "confirm", "end"
+    public void editPost(String type, String personid, String postid, Post post){
+        EditPost myUpdatePost = new EditPost(type, personid, postid, post);
+        myUpdatePost.execute();
+    }
+
+    private class EditPost extends AsyncTask<String,Void,Void>{
+        String userid;
+        String type;
+        String postid;
+        Post post;
+
+        public EditPost(String type, String personid, String postid, Post post){
+            this.type = type;
+            this.userid = personid;
+            this.postid = postid;
+            this.post = post;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?type=" + type + "&postid=" + postid + "&userid=" + userid);
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestMethod("PUT");
+                urlConnection.connect();
+
+                JSONObject postJson = new JSONObject();
+                postJson.put("title", post.getTitle());
+                postJson.put("description", post.getDescription());
+                postJson.put("location", post.getLocation());
+                postJson.put("category",post.getCategory());
+                postJson.put("tag", post.getDescription());
+                postJson.put("numAvailable", post.getNumAvailable());
+                JSONObject userJson = new JSONObject();
+                userJson.put("id", userid);
+                postJson.put("user", userJson);
+                postJson.put("price", post.getPrice());
+                postJson.put("timestart", post.getTimestart());
+                postJson.put("timeend", post.getTimeend());
+
+                if (post.getGroups() != null){
+                    postJson.put("groups", new JSONArray(post.getGroups()));
+                }
+
+                OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+                String jsonString = postJson.toString();
+                writer.write(jsonString);
+                System.out.println(jsonString);
+                writer.flush();
+                writer.close();
+
+                InputStream inputStream;
+                // get stream
+                if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    inputStream = urlConnection.getInputStream();
+                } else {
+                    inputStream = urlConnection.getErrorStream();
+                }
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String s = "", temp = "";
+                while ((temp = bufferedReader.readLine()) != null) {
+                    s += temp;
+                }
+                System.out.println(s);
+                bufferedReader.close();
+                urlConnection.disconnect();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     public void addSubscription(String userid, Subscription sub){
         AddSubscription addSub = new AddSubscription(userid, sub);
         addSub.execute();
@@ -451,7 +491,6 @@ public class NetworkManager extends Thread {
         public AddSubscription(String userid, Subscription sub){
             this.userid = userid;
             this.sub = sub;
-            //UserSingleton.getUserInstance().addSubscription(sub);
         }
         
         @Override
@@ -467,12 +506,15 @@ public class NetworkManager extends Thread {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestProperty("Content-Type", "application/json");
-                OutputStream outputStream = new BufferedOutputStream(urlConnection.getOutputStream());
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "utf-8"));
-                writer.write(requestBody);
-                writer.flush();
-                writer.close();
-                outputStream.close();
+
+                if (!sub.getType().equals("") && !sub.getValue().equals("")) {
+                    OutputStream outputStream = new BufferedOutputStream(urlConnection.getOutputStream());
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "utf-8"));
+                    writer.write(requestBody);
+                    writer.flush();
+                    writer.close();
+                    outputStream.close();
+                }
 
                 InputStream inputStream;
                 // get stream
@@ -490,7 +532,7 @@ public class NetworkManager extends Thread {
                         newSubs.add(s);
                     }
                 }
-                owner.setSubscriptions(newSubs);
+                UserSingleton.getUserInstance().setSubscriptions(newSubs);
                 for (int i = 0; i < newSubs.size(); i++) {
                     System.out.println(newSubs.get(i));
                 }
@@ -514,17 +556,41 @@ public class NetworkManager extends Thread {
         
         public DeleteSubscription(int index){
             this.index = index;
-            owner.removeSubscription(index);
+            System.out.println(index);
+            //owner.removeSubscription(index);
         }
         
         @Override
         protected Void doInBackground(String... params) {
             try {
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/subs?index=" + index + "&userid=" + owner.get_id());
+                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?index=" + String.valueOf(index) + "&userid=" + owner.get_id());
                 // Create the urlConnection
+                HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
+                urlConnection2.setRequestProperty("Content-Type", "application/json");
+                urlConnection2.setDoOutput(true);
+                urlConnection2.setRequestMethod("PUT");
+                urlConnection2.connect();
+
+                InputStream inputStream;
+                // get stream
+                if (urlConnection2.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    inputStream = urlConnection2.getInputStream();
+                } else {
+                    inputStream = urlConnection2.getErrorStream();
+                }
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String s = "", temp = "";
+                while ((temp = bufferedReader.readLine()) != null) {
+                    s += temp;
+                }
+                System.out.println(s);
+                /*
+                String address = "https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id();
+                URL url = new URL(address);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
 
                 InputStream inputStream;
                 // get stream
@@ -533,12 +599,28 @@ public class NetworkManager extends Thread {
                 } else {
                     inputStream = urlConnection.getErrorStream();
                 }
+
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 String s = "", temp = "";
                 while ((temp = bufferedReader.readLine()) != null) {
                     s += temp;
                 }
                 System.out.println(s);
+
+                ArrayList<Subscription> updates = parser.parseSubscriptions(inputStream);
+                ArrayList<Subscription> newSubs = new ArrayList<>();
+                int index = 0;
+                for (Subscription sub : updates) {
+                    if (index != this.index) {
+                        newSubs.add(sub);
+                    }
+                    index++;
+                }
+                owner.setSubscriptions(newSubs);
+                for (int i = 0; i < newSubs.size(); i++) {
+                    System.out.println(newSubs.get(i));
+                }
+                */
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -19,14 +19,26 @@
         app:layout_constraintTop_toTopOf="parent"
         android:backgroundTint="#ffffdba2"/>
 
-    <ListView
-        android:id="@+id/subViewList"
+    <HorizontalScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/gvMakeSubButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_alignParentBottom="true"
-        android:padding="0dp"
-        android:layout_width="344dp"
-        android:layout_height="495dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_centerInParent="true"
+        android:paddingBottom="25sp"
+        android:paddingTop="25sp"
+        android:fillViewport="true" >
+
+        <ListView
+            android:id="@+id/subViewList"
+            android:padding="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp" />
+    </HorizontalScrollView>
 
 </android.support.constraint.ConstraintLayout>

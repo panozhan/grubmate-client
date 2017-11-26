@@ -78,13 +78,10 @@ public class SubCustomAdapter extends ArrayAdapter<SubModel> {
         viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // removes subscription
-                dataSet.remove(positionToRemove);
+                //dataSet.remove(positionToRemove);
                 NetworkManager networkManager = new NetworkManager();
                 networkManager.deleteSubscription(positionToRemove);
                 notifyDataSetChanged();
-                // notify server to delete subscription
-
             }
         });
 

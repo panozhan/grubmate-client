@@ -1,6 +1,5 @@
 package content;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,20 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import filter.FilterNewsFragment;
-import group.GroupViewFragment;
-import group.MakeGroupActivity;
-import notification.NewsFragment;
-import post.MakePostFragment;
-import profile.ProfileFragment;
 import com.example.udacity.test.R;
 
-import objects.Group;
-import objects.UserSingleton;
-import profile.RateActivity;
+import filter.FilterNewsFragment;
+import group.GroupViewFragment;
+import notification.NewsFragment;
+import profile.ProfileFragment;
 import subscription.SubViewFragment;
-
-import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
 
 /**
  * Created by Alex Pan on 10/17/2017.
@@ -145,6 +137,7 @@ public class ContentActivity  extends AppCompatActivity {
                 ft.hide(group);
                 ft.hide(profile);
                 ft.show(subs);
+                subs.onResume();
                 break;
             case 4:
                 ft.show(notifs);

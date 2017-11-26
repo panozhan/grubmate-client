@@ -1,12 +1,13 @@
 package objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Alex Pan on 10/17/2017.
  */
 
-public class Post {
+public class Post implements Serializable {
     private String _id;
     private String location;
     private String title;
