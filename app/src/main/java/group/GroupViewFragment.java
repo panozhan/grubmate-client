@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import objects.Group;
 import objects.UserSingleton;
+import profile.ProfileActivity;
 
 import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
 
@@ -49,7 +50,15 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
         makeGroupButton = (Button) v.findViewById(R.id.gvMakeGroupButton);
         makeGroupButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MakeGroupActivity.class));
+                //startActivity(new Intent(getApplicationContext(), MakeGroupActivity.class));
+
+                Intent intent = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                Bundle b = new Bundle();
+
+                // testing purpose
+                b.putString("userid", "2");
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
 

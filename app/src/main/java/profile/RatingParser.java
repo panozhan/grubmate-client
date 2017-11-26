@@ -25,11 +25,13 @@ import objects.UserSingleton;
 public class RatingParser {
     private RateActivity rateActivity;
     private ProfileFragment profileFragment;
+    private ProfileActivity profileActivity;
 
     public boolean getRatingWithID(String userID, RateActivity rateActivity) {
         try {
             this.rateActivity = rateActivity;
             this.profileFragment = null;
+            this.profileActivity = null;
             GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
             parseUserFriends.execute();
             return true;
@@ -43,6 +45,22 @@ public class RatingParser {
     public boolean getRatingWithID(String userID, ProfileFragment profileFragment) {
         try {
             this.profileFragment = profileFragment;
+            this.rateActivity = null;
+            this.profileActivity = null;
+            GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
+            parseUserFriends.execute();
+            return true;
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.println("get rating parser failed");
+            return false;
+        }
+    }
+
+    public boolean getRatingWithID(String userID, ProfileActivity profileActivity) {
+        try {
+            this.profileActivity = profileActivity;
+            this.profileFragment = null;
             this.rateActivity = null;
             GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
             parseUserFriends.execute();
@@ -125,10 +143,12 @@ public class RatingParser {
             JSONObject mainObject = new JSONObject(jsonString);
             float rating = Float.valueOf(mainObject.getString("rating"));
 
-            // sets curr rating in activity
-            if (profileFragment == null) {
+            // sets curr rating in corresponding view
+            if (profileFragment == null && profileActivity == null) {
                 rateActivity.setRating(rating);
-            } else {
+            } else if (rateActivity == null && profileFragment == null)  {
+                profileActivity.setRating(rating);
+            } else if (rateActivity == null && profileActivity == null)  {
                 profileFragment.setRating(rating);
             }
 
