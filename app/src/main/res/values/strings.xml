@@ -28,12 +28,6 @@
     <string name="title_activity_scrolling_feed">Feed</string>
     <string name="location_permission_message">SOME SHIT</string>
 
-    <string name="Team2">Team 2</string>
-    <string name="Team3">Team 3</string>
-    <string-array name="team_array">
-        <item>@string/Team2</item>
-        <item>@string/Team3</item>
-    </string-array>
     
     //Categories
     <string-array
