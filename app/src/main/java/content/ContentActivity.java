@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.udacity.test.R;
 
-import filter.FilterNewsFragment;
 import group.GroupViewFragment;
 import notification.NewsFragment;
 import profile.ProfileFragment;
@@ -32,7 +31,6 @@ public class ContentActivity  extends AppCompatActivity {
     Fragment profile = new ProfileFragment();
     Fragment subs = new SubViewFragment();
     Fragment notifs = new NewsFragment();
-    Fragment filter = new FilterNewsFragment();
 
     int page = 1;
 
@@ -80,9 +78,6 @@ public class ContentActivity  extends AppCompatActivity {
                     break;
                 case R.id.notifs:
                     setFrame(4);
-                    break;
-                case R.id.filter:
-                    setFrame(6);
                     break;
             }
         }
@@ -147,7 +142,6 @@ public class ContentActivity  extends AppCompatActivity {
                 ft.hide(subs);
                 break;
             default:
-                switchto = filter;
                 break;
         }
         System.out.println("Calling replace");

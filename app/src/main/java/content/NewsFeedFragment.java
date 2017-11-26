@@ -15,15 +15,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import post.MakePost;
 import com.example.udacity.test.R;
-import post.SinglePostActivity;
 
 import java.util.ArrayList;
 
+import filter.FilterNewsActivity;
 import objects.NetworkManager;
 import objects.Post;
 import objects.UserSingleton;
+import post.MakePost;
+import post.SinglePostActivity;
 
 public class NewsFeedFragment extends android.support.v4.app.Fragment{
     UserSingleton owner;
@@ -112,6 +113,8 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.filter:
+                    Intent intent = new Intent(getActivity(), FilterNewsActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.newpost:
                     Intent i = new Intent(getActivity(),MakePost.class);

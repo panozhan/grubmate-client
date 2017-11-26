@@ -396,6 +396,104 @@ public class NetworkManager extends Thread {
 
     }
 
+    //gets a string of post ids for the user with the id
+    public void getFilteredPostsForUser(String userId, String category){
+        UserSingleton.getUserInstance().getPosts().clear();
+        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category);
+        task.execute();
+    }
+
+    //gets a single post from the server
+    public void getFilteredPost(String postId, String category){
+        if(this.newsfeed == null){
+            System.out.println("FUCK NEWSFEED NULL SDFEWREQWRRQWERWQEWQ");
+        }
+        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category);
+        getSinglePost.execute();
+
+    }
+
+    private class GetSingleFilteredPost extends AsyncTask<String, Void, Void> {
+        NewsFeedFragment newsfeed;
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        private String postId, category;
+
+        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category){
+            postId = id;
+            newsfeed = f;
+            this.category = category;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid=" + postId);
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                Post post = parser.parsePost(is);
+                if (post.getCategory() == null) {
+                    owner.getPosts().add(post);
+                    if(newsfeed != null){
+                        newsfeed.notifyChange();
+                    }
+                }
+                else if (post.getCategory().equals(category)) {
+                    owner.getPosts().add(post);
+                    if(newsfeed != null){
+                        newsfeed.notifyChange();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    private class FilterPostsForUsers extends AsyncTask<String, Void, Void> {
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        NewsFeedFragment newsfeed;
+        NetworkManager networkManager;
+        String category;
+
+        public FilterPostsForUsers(NewsFeedFragment f, String category){
+            UserSingleton.getUserInstance().getPosts().clear();
+            newsfeed = f;
+            networkManager = new NetworkManager(newsfeed);
+            this.category = category;
+        }
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                System.out.println("Calling");
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?userid=" + owner.get_id());
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                ArrayList<String> postIds = parser.parseStringArrayJson(is);
+                owner.setPostIds(postIds);
+                for(int i = 0; i < postIds.size(); ++i){
+                    networkManager.getFilteredPost(postIds.get(i), category);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    }
+
     //type = "request", "confirm", "end"
     public void editPost(String type, String personid, String postid, Post post){
         EditPost myUpdatePost = new EditPost(type, personid, postid, post);
