@@ -441,8 +441,9 @@ public class NetworkManager extends Thread {
                 Post post = parser.parsePost(is);
                 int timeStart = post.getTimestart() != null ? Integer.valueOf(post.getTimestart()) : 0;
                 int timeEnd = post.getTimeend() != null ? Integer.valueOf(post.getTimeend()) : 0;
-                int from = this.from != null ? Integer.valueOf(this.from) : 0;
-                int to = this.to != null ? Integer.valueOf(this.to) : 0;
+                int from = !this.from.equals("") ? Integer.valueOf(this.from) : 0;
+                int to = !this.to.equals("") ? Integer.valueOf(this.to) : 0;
+                System.out.println(post.getTitle());
 
                 if (post.getCategory() == null) {
                     if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
@@ -758,4 +759,110 @@ public class NetworkManager extends Thread {
         
     }
 
+    //gets a string of post ids for the user with the id
+    public void searchPostsForUser(String userId, String keyword) {
+        UserSingleton.getUserInstance().getPosts().clear();
+        SearchPostsForUser task = new SearchPostsForUser(newsfeed, keyword);
+        task.execute();
+    }
+
+    //gets a single post from the server
+    public void getSearchPost(String postId, String keyword) {
+        GetSearchPost getSinglePost = new GetSearchPost(postId, newsfeed, keyword);
+        getSinglePost.execute();
+
+    }
+
+    private class GetSearchPost extends AsyncTask<String, Void, Void> {
+        NewsFeedFragment newsfeed;
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        String postId, category;
+        String keyword;
+
+        public GetSearchPost(String id, NewsFeedFragment f, String keyword){
+            postId = id;
+            newsfeed = f;
+            this.keyword = keyword;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid=" + postId);
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                Post post = parser.parsePost(is);
+
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(post.getTitle());
+                list.add(post.getDescription());
+                list.add(post.getCategory());
+                list.add(post.getTag());
+                list.add(post.getLocation());
+
+                for (String s: list) {
+                    if (s == null) {
+
+                    }
+                    else {
+                        if (s.toLowerCase().contains(keyword)) {
+                            System.out.println(s);
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) {
+                                newsfeed.notifyChange();
+                            }
+                        }
+                    }
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    private class SearchPostsForUser extends AsyncTask<String, Void, Void> {
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        NewsFeedFragment newsfeed;
+        NetworkManager networkManager;
+        String key;
+
+        public SearchPostsForUser(NewsFeedFragment f, String keyword){
+            UserSingleton.getUserInstance().getPosts().clear();
+            newsfeed = f;
+            networkManager = new NetworkManager(newsfeed);
+            key = keyword;
+        }
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                System.out.println("Calling");
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?userid=" + owner.get_id());
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                ArrayList<String> postIds = parser.parseStringArrayJson(is);
+                owner.setPostIds(postIds);
+                for(int i = 0; i < postIds.size(); ++i){
+                    networkManager.getSearchPost(postIds.get(i), key);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    }
 }

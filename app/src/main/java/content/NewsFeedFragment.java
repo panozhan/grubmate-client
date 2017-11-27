@@ -68,6 +68,7 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
         filter.setOnClickListener(myButtonHandler);
         newpost.setOnClickListener(myButtonHandler);
         refresh.setOnClickListener(myButtonHandler);
+
         return v;
     }
 
@@ -122,6 +123,9 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
                     break;
                 case R.id.refresh:
                     networkManager.getPostsForUser(owner.get_id());
+                    if (searchfield.getText().toString().length() > 0) {
+                        networkManager.searchPostsForUser(owner.get_id(), searchfield.getText().toString());
+                    }
                     break;
             }
         }
