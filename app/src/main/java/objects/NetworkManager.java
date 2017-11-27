@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -398,135 +399,6 @@ public class NetworkManager extends Thread {
 
     }
 
-    //gets a string of post ids for the user with the id
-    public void getFilteredPostsForUser(String userId, String category, String from, String to){
-        UserSingleton.getUserInstance().getPosts().clear();
-        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category, from, to);
-        task.execute();
-    }
-
-    //gets a single post from the server
-    public void getFilteredPost(String postId, String category, String from, String to){
-        if(this.newsfeed == null){
-            System.out.println("FUCK NEWSFEED NULL SDFEWREQWRRQWERWQEWQ");
-        }
-        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category, from, to);
-        getSinglePost.execute();
-
-    }
-
-    private class GetSingleFilteredPost extends AsyncTask<String, Void, Void> {
-        NewsFeedFragment newsfeed;
-        Parser parser = new Parser();
-        UserSingleton owner = UserSingleton.getUserInstance();
-        String postId, category;
-        String from, to;
-
-        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category, String from, String to){
-            postId = id;
-            newsfeed = f;
-            this.category = category;
-            this.from = from;
-            this.to = to;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-                // This is getting the url from the string we passed in
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid=" + postId);
-                // Create the urlConnection
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.connect();
-
-                InputStream is = urlConnection.getInputStream();
-                Post post = parser.parsePost(is);
-                int timeStart = post.getTimestart() != null ? Integer.valueOf(post.getTimestart()) : 0;
-                int timeEnd = post.getTimeend() != null ? Integer.valueOf(post.getTimeend()) : 0;
-                int from = !this.from.equals("") ? Integer.valueOf(this.from) : 0;
-                int to = !this.to.equals("") ? Integer.valueOf(this.to) : 0;
-                System.out.println(post.getTitle());
-
-                if (post.getCategory() == null) {
-                    if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
-                        if (timeStart >= from && timeEnd <= to) {
-                            owner.getPosts().add(post);
-                            if (newsfeed != null) {
-                                newsfeed.notifyChange();
-                            }
-                        }
-                    }
-                    else {
-                        owner.getPosts().add(post);
-                        if (newsfeed != null) {
-                            newsfeed.notifyChange();
-                        }
-                    }
-                }
-                else if (post.getCategory().equals(category)) {
-                    if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
-                        if (timeStart >= from && timeEnd <= to) {
-                            owner.getPosts().add(post);
-                            if (newsfeed != null) {
-                                newsfeed.notifyChange();
-                            }
-                        }
-                    }
-                    else {
-                        owner.getPosts().add(post);
-                        if (newsfeed != null) {
-                            newsfeed.notifyChange();
-                        }
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
-    private class FilterPostsForUsers extends AsyncTask<String, Void, Void> {
-        Parser parser = new Parser();
-        UserSingleton owner = UserSingleton.getUserInstance();
-        NewsFeedFragment newsfeed;
-        NetworkManager networkManager;
-        String category, from, to;
-
-        public FilterPostsForUsers(NewsFeedFragment f, String category, String from, String to){
-            UserSingleton.getUserInstance().getPosts().clear();
-            newsfeed = f;
-            networkManager = new NetworkManager(newsfeed);
-            this.category = category;
-            this.from = from;
-            this.to = to;
-        }
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-                System.out.println("Calling");
-                // This is getting the url from the string we passed in
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?userid=" + owner.get_id());
-                // Create the urlConnection
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                InputStream is = urlConnection.getInputStream();
-                ArrayList<String> postIds = parser.parseStringArrayJson(is);
-                owner.setPostIds(postIds);
-                for(int i = 0; i < postIds.size(); ++i){
-                    networkManager.getFilteredPost(postIds.get(i), category, from, to);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
-
     //type = "request", "confirm", "end"
     public void editPost(String type, String personid, String postid, Post post){
         EditPost myUpdatePost = new EditPost(type, personid, postid, post);
@@ -694,7 +566,7 @@ public class NetworkManager extends Thread {
         @Override
         protected Void doInBackground(String... params) {
             try {
-                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id() + "&index=" + String.valueOf(index));
+                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id() + "&index=" + String.valueOf(index+1));
                 // Create the urlConnection
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
                 urlConnection2.setDoOutput(true);
@@ -749,18 +621,154 @@ public class NetworkManager extends Thread {
         
     }
 
-    //gets a string of post ids for the user with the id
+    //gets a single post from the server
+    public void addNewsPost(String userid, String postId, String location) {
+        AddNewsPost newsPost = new AddNewsPost(userid, postId, location);
+        newsPost.execute();
+    }
+
+    private class AddNewsPost extends AsyncTask<String,Void,Void> {
+        String userid;
+        String postid;
+        String location;
+
+        public AddNewsPost(String userid, String postid, String location){
+            this.userid = userid;
+            this.postid = postid;
+            this.location = location;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            String urlString = String.format(
+                    "https://grubmateteam3.herokuapp.com/api/posts?personid=%s&postid=%s&type=news&location=%s",
+                    userid, postid, location);
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("PUT");
+                connection.connect();
+                Parser p = new Parser();
+                System.out.println(p.convertStreamToString(connection.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
+    public void getSubPost(String postId, String keyword) {
+        GetSubPost getSinglePost = new GetSubPost(postId, keyword);
+        getSinglePost.execute();
+    }
+
+    private class GetSubPost extends AsyncTask<String, Void, Void> {
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        String postId, category;
+        String keyword;
+
+        public GetSubPost(String id, String keyword){
+            postId = id;
+            this.keyword = keyword;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid=" + postId);
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                Post post = parser.parsePost(is);
+
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(post.getTitle());
+                list.add(post.getDescription());
+                list.add(post.getCategory());
+                list.add(post.getTag());
+                list.add(post.getLocation());
+
+                for (String s: list) {
+                    if (s == null) {
+
+                    }
+                    else {
+                        if (s.toLowerCase().contains(keyword.toLowerCase())) {
+                            System.out.println(s);
+                            addNewsPost(owner.get_id(), post.get_id(), post.getLocation());
+                        }
+                    }
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public void searchSubsForUser(String keyword) {
+        UserSingleton.getUserInstance().getPosts().clear();
+        SearchSubsForUser task = new SearchSubsForUser(keyword);
+        task.execute();
+    }
+
+    private class SearchSubsForUser extends AsyncTask<String, Void, Void> {
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        NetworkManager networkManager;
+        String key;
+
+        public SearchSubsForUser(String keyword){
+            UserSingleton.getUserInstance().getPosts().clear();
+            networkManager = new NetworkManager(newsfeed);
+            key = keyword;
+        }
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                System.out.println("Calling");
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?userid=" + owner.get_id());
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                ArrayList<String> postIds = parser.parseStringArrayJson(is);
+                owner.setPostIds(postIds);
+                for(int i = 0; i < postIds.size(); ++i){
+                    networkManager.getSubPost(postIds.get(i), key);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    }
+
     public void searchPostsForUser(String userId, String keyword) {
         UserSingleton.getUserInstance().getPosts().clear();
         SearchPostsForUser task = new SearchPostsForUser(newsfeed, keyword);
         task.execute();
     }
 
-    //gets a single post from the server
     public void getSearchPost(String postId, String keyword) {
         GetSearchPost getSinglePost = new GetSearchPost(postId, newsfeed, keyword);
         getSinglePost.execute();
-
     }
 
     private class GetSearchPost extends AsyncTask<String, Void, Void> {
@@ -800,7 +808,7 @@ public class NetworkManager extends Thread {
 
                     }
                     else {
-                        if (s.toLowerCase().contains(keyword)) {
+                        if (s.toLowerCase().contains(keyword.toLowerCase())) {
                             System.out.println(s);
                             owner.getPosts().add(post);
                             if (newsfeed != null) {
@@ -847,6 +855,137 @@ public class NetworkManager extends Thread {
                 owner.setPostIds(postIds);
                 for(int i = 0; i < postIds.size(); ++i){
                     networkManager.getSearchPost(postIds.get(i), key);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    }
+
+    //gets a string of post ids for the user with the id
+    public void getFilteredPostsForUser(String userId, String category, String from, String to){
+        UserSingleton.getUserInstance().getPosts().clear();
+        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category, from, to);
+        task.execute();
+    }
+
+    //gets a single post from the server
+    public void getFilteredPost(String postId, String category, String from, String to){
+        if(this.newsfeed == null){
+            System.out.println("FUCK NEWSFEED NULL SDFEWREQWRRQWERWQEWQ");
+        }
+        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category, from, to);
+        getSinglePost.execute();
+
+    }
+
+    private class GetSingleFilteredPost extends AsyncTask<String, Void, Void> {
+        NewsFeedFragment newsfeed;
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        String postId, category;
+        String from, to;
+
+        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category, String from, String to){
+            postId = id;
+            newsfeed = f;
+            this.category = category;
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid=" + postId);
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                Post post = parser.parsePost(is);
+                int timeStart = post.getTimestart() != null ? Integer.valueOf(post.getTimestart()) : 0;
+                int timeEnd = post.getTimeend() != null ? Integer.valueOf(post.getTimeend()) : 0;
+                int from = !this.from.equals("") ? Integer.valueOf(this.from) : 0;
+                int to = !this.to.equals("") ? Integer.valueOf(this.to) : 0;
+                System.out.println(post.getTitle());
+
+                /*
+                if (post.getCategory() == null) {
+                    if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
+                        if (timeStart >= from && timeEnd <= to) {
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) {
+                                newsfeed.notifyChange();
+                            }
+                        }
+                    }
+                    else {
+                        owner.getPosts().add(post);
+                        if (newsfeed != null) {
+                            newsfeed.notifyChange();
+                        }
+                    }
+                }
+                */
+                if (post.getCategory().equals(category)) {
+                    if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
+                        if (timeStart >= from && timeEnd <= to) {
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) {
+                                newsfeed.notifyChange();
+                            }
+                        }
+                    }
+                    else {
+                        owner.getPosts().add(post);
+                        if (newsfeed != null) {
+                            newsfeed.notifyChange();
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    private class FilterPostsForUsers extends AsyncTask<String, Void, Void> {
+        Parser parser = new Parser();
+        UserSingleton owner = UserSingleton.getUserInstance();
+        NewsFeedFragment newsfeed;
+        NetworkManager networkManager;
+        String category, from, to;
+
+        public FilterPostsForUsers(NewsFeedFragment f, String category, String from, String to){
+            UserSingleton.getUserInstance().getPosts().clear();
+            newsfeed = f;
+            networkManager = new NetworkManager(newsfeed);
+            this.category = category;
+            this.from = from;
+            this.to = to;
+        }
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                System.out.println("Calling");
+                // This is getting the url from the string we passed in
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?userid=" + owner.get_id());
+                // Create the urlConnection
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                ArrayList<String> postIds = parser.parseStringArrayJson(is);
+                owner.setPostIds(postIds);
+                for(int i = 0; i < postIds.size(); ++i){
+                    networkManager.getFilteredPost(postIds.get(i), category, from, to);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

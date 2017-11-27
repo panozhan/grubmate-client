@@ -18,12 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import objects.NetworkManager;
-import objects.Notification;
 import objects.Parser;
 import objects.UserSingleton;
 import profile.RateActivity;
@@ -230,9 +228,6 @@ public class NewsFragment extends android.support.v4.app.Fragment {
             System.out.println(current.getTitle());
             ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
             ((TextView)convertView.findViewById(R.id.address)).setText(current.getAddress());
-
-
-
 
             return convertView;
         }
