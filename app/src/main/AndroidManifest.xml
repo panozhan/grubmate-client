@@ -107,7 +107,6 @@
         <activity android:name="group.MakeGroupActivity" />
         <activity android:name="group.EditGroupActivity" />
         <activity android:name="profile.ProfileActivity" />
-
         <activity android:name="subscription.MakeSubActivity" />
 
     </application>

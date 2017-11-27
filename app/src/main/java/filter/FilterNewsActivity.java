@@ -62,8 +62,10 @@ public class FilterNewsActivity extends AppCompatActivity{
     public void filterNews(){
         //get current value of spinner
         currentspinner = String.valueOf(spinner.getSelectedItem());
+        totextstring = totext.getText().toString();
+        fromtextstring = fromtext.getText().toString();
         NetworkManager networkManager = new NetworkManager();
-        networkManager.getFilteredPostsForUser(owner.get_id(), currentspinner);
+        networkManager.getFilteredPostsForUser(owner.get_id(), currentspinner, fromtextstring, totextstring);
     }
 
     //add listeners

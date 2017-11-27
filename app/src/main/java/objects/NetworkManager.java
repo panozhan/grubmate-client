@@ -397,18 +397,18 @@ public class NetworkManager extends Thread {
     }
 
     //gets a string of post ids for the user with the id
-    public void getFilteredPostsForUser(String userId, String category){
+    public void getFilteredPostsForUser(String userId, String category, String from, String to){
         UserSingleton.getUserInstance().getPosts().clear();
-        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category);
+        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category, from, to);
         task.execute();
     }
 
     //gets a single post from the server
-    public void getFilteredPost(String postId, String category){
+    public void getFilteredPost(String postId, String category, String from, String to){
         if(this.newsfeed == null){
             System.out.println("FUCK NEWSFEED NULL SDFEWREQWRRQWERWQEWQ");
         }
-        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category);
+        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category, from, to);
         getSinglePost.execute();
 
     }
@@ -417,12 +417,15 @@ public class NetworkManager extends Thread {
         NewsFeedFragment newsfeed;
         Parser parser = new Parser();
         UserSingleton owner = UserSingleton.getUserInstance();
-        private String postId, category;
+        String postId, category;
+        String from, to;
 
-        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category){
+        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category, String from, String to){
             postId = id;
             newsfeed = f;
             this.category = category;
+            this.from = from;
+            this.to = to;
         }
 
         @Override
@@ -436,16 +439,41 @@ public class NetworkManager extends Thread {
 
                 InputStream is = urlConnection.getInputStream();
                 Post post = parser.parsePost(is);
+                int timeStart = post.getTimestart() != null ? Integer.valueOf(post.getTimestart()) : 0;
+                int timeEnd = post.getTimeend() != null ? Integer.valueOf(post.getTimeend()) : 0;
+                int from = this.from != null ? Integer.valueOf(this.from) : 0;
+                int to = this.to != null ? Integer.valueOf(this.to) : 0;
+
                 if (post.getCategory() == null) {
-                    owner.getPosts().add(post);
-                    if(newsfeed != null){
-                        newsfeed.notifyChange();
+                    if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
+                        if (timeStart >= from && timeEnd <= to) {
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) {
+                                newsfeed.notifyChange();
+                            }
+                        }
+                    }
+                    else {
+                        owner.getPosts().add(post);
+                        if (newsfeed != null) {
+                            newsfeed.notifyChange();
+                        }
                     }
                 }
                 else if (post.getCategory().equals(category)) {
-                    owner.getPosts().add(post);
-                    if(newsfeed != null){
-                        newsfeed.notifyChange();
+                    if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
+                        if (timeStart >= from && timeEnd <= to) {
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) {
+                                newsfeed.notifyChange();
+                            }
+                        }
+                    }
+                    else {
+                        owner.getPosts().add(post);
+                        if (newsfeed != null) {
+                            newsfeed.notifyChange();
+                        }
                     }
                 }
 
@@ -461,13 +489,15 @@ public class NetworkManager extends Thread {
         UserSingleton owner = UserSingleton.getUserInstance();
         NewsFeedFragment newsfeed;
         NetworkManager networkManager;
-        String category;
+        String category, from, to;
 
-        public FilterPostsForUsers(NewsFeedFragment f, String category){
+        public FilterPostsForUsers(NewsFeedFragment f, String category, String from, String to){
             UserSingleton.getUserInstance().getPosts().clear();
             newsfeed = f;
             networkManager = new NetworkManager(newsfeed);
             this.category = category;
+            this.from = from;
+            this.to = to;
         }
         @Override
         protected Void doInBackground(String... params) {
@@ -484,7 +514,7 @@ public class NetworkManager extends Thread {
                 ArrayList<String> postIds = parser.parseStringArrayJson(is);
                 owner.setPostIds(postIds);
                 for(int i = 0; i < postIds.size(); ++i){
-                    networkManager.getFilteredPost(postIds.get(i), category);
+                    networkManager.getFilteredPost(postIds.get(i), category, from, to);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
