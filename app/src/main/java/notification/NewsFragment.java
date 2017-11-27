@@ -202,7 +202,18 @@ public class NewsFragment extends android.support.v4.app.Fragment {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                for (Subscription sub : UserSingleton.getUserInstance().getSubscriptions()) {
+                    if (sub.getType() == null) {}
+                    else {
+                        NetworkManager networkManager = new NetworkManager();
+                        System.out.println(sub.getType());
+                        networkManager.searchSubsForUser(sub.getType());
+                    }
+                }
+                */
                 getNotifs();
+                newsa.notifyDataSetChanged();
             }
         });
 

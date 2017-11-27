@@ -319,11 +319,6 @@ public class NetworkManager extends Thread {
 
                 InputStream is = urlConnection.getInputStream();
                 owner.getPosts().add(parser.parsePost(is));
-                if(newsfeed != null){
-                    newsfeed.notifyChange();
-                }
-
-
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -802,6 +797,8 @@ public class NetworkManager extends Thread {
                 list.add(post.getCategory());
                 list.add(post.getTag());
                 list.add(post.getLocation());
+                owner.getPosts().clear();
+                //newsfeed.notifyChange();
 
                 for (String s: list) {
                     if (s == null) {
@@ -811,9 +808,6 @@ public class NetworkManager extends Thread {
                         if (s.toLowerCase().contains(keyword.toLowerCase())) {
                             System.out.println(s);
                             owner.getPosts().add(post);
-                            if (newsfeed != null) {
-                                newsfeed.notifyChange();
-                            }
                         }
                     }
                 }
@@ -912,9 +906,11 @@ public class NetworkManager extends Thread {
                 int from = !this.from.equals("") ? Integer.valueOf(this.from) : 0;
                 int to = !this.to.equals("") ? Integer.valueOf(this.to) : 0;
                 System.out.println(post.getTitle());
+                owner.getPosts().clear();
+                //newsfeed.notifyChange();
 
-                /*
                 if (post.getCategory() == null) {
+                    /*
                     if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
                         if (timeStart >= from && timeEnd <= to) {
                             owner.getPosts().add(post);
@@ -929,22 +925,16 @@ public class NetworkManager extends Thread {
                             newsfeed.notifyChange();
                         }
                     }
+                    */
                 }
-                */
-                if (post.getCategory().equals(category)) {
+                else if (post.getCategory().equals(category)) {
                     if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
                         if (timeStart >= from && timeEnd <= to) {
                             owner.getPosts().add(post);
-                            if (newsfeed != null) {
-                                newsfeed.notifyChange();
-                            }
                         }
                     }
                     else {
                         owner.getPosts().add(post);
-                        if (newsfeed != null) {
-                            newsfeed.notifyChange();
-                        }
                     }
                 }
 

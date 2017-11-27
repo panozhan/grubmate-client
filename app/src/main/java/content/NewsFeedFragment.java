@@ -116,15 +116,20 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
                 case R.id.filter:
                     Intent intent = new Intent(getActivity(), FilterNewsActivity.class);
                     startActivity(intent);
+                    notifyChange();
                     break;
                 case R.id.newpost:
                     Intent i = new Intent(getActivity(),MakePost.class);
                     startActivity(i);
                     break;
                 case R.id.refresh:
-                    networkManager.getPostsForUser(owner.get_id());
                     if (searchfield.getText().toString().length() > 0) {
                         networkManager.searchPostsForUser(owner.get_id(), searchfield.getText().toString());
+                        notifyChange();
+                    }
+                    else {
+                        networkManager.getPostsForUser(owner.get_id());
+                        notifyChange();
                     }
                     break;
             }
