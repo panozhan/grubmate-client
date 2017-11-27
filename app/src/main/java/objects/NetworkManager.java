@@ -22,6 +22,8 @@ import notification.NewsFragment;
 import profile.ProfileFragment;
 import subscription.SubViewFragment;
 
+import static android.R.attr.type;
+
 public class NetworkManager extends Thread {
     private Parser parser = new Parser();
     private NewsFeedFragment newsfeed;
@@ -686,35 +688,23 @@ public class NetworkManager extends Thread {
         public DeleteSubscription(int index){
             this.index = index;
             System.out.println(index);
-            //owner.removeSubscription(index);
+            owner.removeSubscription(index);
         }
         
         @Override
         protected Void doInBackground(String... params) {
             try {
-                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?index=" + String.valueOf(index) + "&userid=" + owner.get_id());
+                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id() + "&index=" + String.valueOf(index));
                 // Create the urlConnection
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
-                urlConnection2.setRequestProperty("Content-Type", "application/json");
                 urlConnection2.setDoOutput(true);
                 urlConnection2.setRequestMethod("PUT");
                 urlConnection2.connect();
 
-                InputStream inputStream;
-                // get stream
-                if (urlConnection2.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
-                    inputStream = urlConnection2.getInputStream();
-                } else {
-                    inputStream = urlConnection2.getErrorStream();
-                }
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String s = "", temp = "";
-                while ((temp = bufferedReader.readLine()) != null) {
-                    s += temp;
-                }
-                System.out.println(s);
+                InputStream is = urlConnection2.getInputStream();
+                System.out.println(type+" delete subs with put: "+parser.convertStreamToString(is));
                 /*
+
                 String address = "https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id();
                 URL url = new URL(address);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
