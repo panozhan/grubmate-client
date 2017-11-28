@@ -75,7 +75,8 @@
             android:label="content"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
-            />
+            android:windowSoftInputMode="adjustPan"
+        />
         <activity
             android:name="post.EditPost"
             android:label="content"
