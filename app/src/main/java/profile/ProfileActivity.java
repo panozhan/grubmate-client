@@ -74,10 +74,22 @@ public class ProfileActivity extends AppCompatActivity {
         postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: MAKE POSTS CLICKABLE
                 //Intent newActivity = new Intent(this.getClass(), EditPost.class);
                 //newActivity.putExtra("Post", (Post)parent.getAdapter().getItem(position));
                 //startActivity(newActivity);
+            }
+        });
+
+        // see reviews
+        // for text reviews, click on number rating
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
+                Bundle b = new Bundle();
+                b.putString("userid", userID);
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
     }

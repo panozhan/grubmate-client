@@ -288,6 +288,13 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                             startActivity(intent);
                         }
                     });
+                } else if(current.getStatus().equals("rejected")){
+                    convertView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);
+                        }
+                    });
                 }
             }
             return convertView;

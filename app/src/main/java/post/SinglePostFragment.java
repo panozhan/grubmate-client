@@ -103,6 +103,10 @@ public class SinglePostFragment extends Fragment {
                 rn.execute();
                 TextView tv = (TextView) v.findViewById(R.id.update);
                 //tv.setText("request sent");
+
+                // collapse the view
+                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().finish();
             }
         });
 
