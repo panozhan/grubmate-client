@@ -324,7 +324,7 @@ public class NewsFragment extends android.support.v4.app.Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(type.equals("end") || type.equals("reject")){
+            if(type.equals("end") || type.equals("reject") || type.equals("remove")){
                 getNotifs();
             }
         }
