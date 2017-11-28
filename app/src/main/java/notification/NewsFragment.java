@@ -155,6 +155,9 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                             case "postid":
                                 s.setPostid(reader.nextString());
                                 break;
+                            case "personid":
+                                s.setPersonId(reader.nextString());
+                                break;
                             default:
                                 reader.skipValue();
                                 break;
