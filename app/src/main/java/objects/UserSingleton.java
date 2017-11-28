@@ -205,6 +205,28 @@ public class UserSingleton {
         }
         return false;
     }
+    public void addUsersToGroup(String groupID, ArrayList<String> selected) {
+        int groupIndex = 0;
+        for (int i = 0; i<this.groups.size(); i++) {
+            if (this.groups.get(i).getId().equalsIgnoreCase(groupID)) {
+                groupIndex = i;
+                break;
+            }
+        }
+
+        this.groups.get(groupIndex).addUsers(selected);
+    }
+    public void removeUsersFromGroup(String groupID, ArrayList<String> selected) {
+        int groupIndex = 0;
+        for (int i = 0; i<this.groups.size(); i++) {
+            if (this.groups.get(i).getId().equalsIgnoreCase(groupID)) {
+                groupIndex = i;
+                break;
+            }
+        }
+
+        this.groups.get(groupIndex).removeUsers(selected);
+    }
 
 
     /********* friends *********/

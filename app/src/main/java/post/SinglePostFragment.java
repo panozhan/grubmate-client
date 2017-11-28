@@ -82,7 +82,9 @@ public class SinglePostFragment extends Fragment {
         TextView address = (TextView) v.findViewById(R.id.address);
         address.setText(post.getLocation());
         TextView num = (TextView) v.findViewById(R.id.numAvailable);
-        num.setText(String.valueOf(post.getAvailable()));
+
+        //num.setText(String.valueOf(post.getAvailable()));
+        num.setText("5");
 
 
         Button request = (Button) v.findViewById(R.id.requestButton);
@@ -95,7 +97,7 @@ public class SinglePostFragment extends Fragment {
                 }else{
                     String loc = location.getText().toString();
                 }
-                String loc = "hi";
+                String loc = "starbucks";
                 RequestNetwork rn = new RequestNetwork(UserSingleton.getUserInstance().get_id(),
                         post.get_id(),loc);
                 rn.execute();
@@ -109,15 +111,16 @@ public class SinglePostFragment extends Fragment {
         profilepic.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-//                User op = post.getUser();
-//                String userID = op.getId();
-//
-//                ((SinglePostActivity) getActivity()).change(false);
 
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                // checking out op's profile
+                Intent intent = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
                 User op = post.getUser();
                 String userID = op.getId();
-                intent.putExtra("userid", userID);
+
+                Bundle b = new Bundle();
+
+                b.putString("userid", userID);
+                intent.putExtras(b);
                 startActivity(intent);
             }
 

@@ -24,6 +24,7 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
     ListView listView;
     private GroupCustomAdapter adapter;
     private Button makeGroupButton;
+    private UserSingleton owner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,12 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
-        // setTitle("Groups");
+        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_group_view, container, false);
+
+        owner = UserSingleton.getUserInstance();
+
 
         //GroupParser groupParser = new GroupParser(this);
         //groupParser.getGroupForOwner();
@@ -50,15 +53,7 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
         makeGroupButton = (Button) v.findViewById(R.id.gvMakeGroupButton);
         makeGroupButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //startActivity(new Intent(getApplicationContext(), MakeGroupActivity.class));
-
-                Intent intent = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
-                Bundle b = new Bundle();
-
-                // testing purpose
-                b.putString("userid", "2");
-                intent.putExtras(b);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), MakeGroupActivity.class));
             }
         });
 
@@ -72,7 +67,6 @@ public class GroupViewFragment extends android.support.v4.app.Fragment {
 
         //Refresh your stuff here
 
-        UserSingleton owner = UserSingleton.getUserInstance();
 
         // TODO change gm to take id, and position, move reset to adapter
         groupModels.clear();

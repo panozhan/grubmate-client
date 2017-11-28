@@ -121,8 +121,14 @@ public class EditGroupActivity extends AppCompatActivity {
                 if (selected!=null && !selected.isEmpty()) {
                     if (isAdd==1) {
                         groupParser.editUsersInGroup(selected, group.getId(), "add");
+
+                        // add selected to be in this group
+                        owner.addUsersToGroup(group.getId(), selected);
                     } else {
                         groupParser.editUsersInGroup(selected, group.getId(), "remove");
+
+                        // remove selected from this group
+                        owner.removeUsersFromGroup(group.getId(), selected);
                     }
                 }
 

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import objects.Parser;
 import objects.Post;
 import objects.UserSingleton;
-import post.EditPost;
 
 public class ProfileActivity extends AppCompatActivity {
     private RatingBar ratingBar;
@@ -49,6 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(b != null) {
             userID = b.getString("userid");
         }
+        System.out.println("wtfid "+userID);
 
         owner = UserSingleton.getUserInstance();
 
@@ -67,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
         setTitle(username + "'s Profile");
 
         // get posts
-        PostParser pp = new PostParser(this);
+        PostParser pp = new PostParser(this, userID);
         pp.execute();
 
         postList = (ListView) findViewById(R.id.posts);
@@ -95,9 +95,11 @@ public class ProfileActivity extends AppCompatActivity {
     private class PostParser extends AsyncTask<String,Void,Void> {
         private ProfileActivity pa;
         private ArrayList<Post> result = new ArrayList<>();
+        private String posterID;
 
-        public PostParser(ProfileActivity pa){
+        public PostParser(ProfileActivity pa, String posterID){
             this.pa = pa;
+            this.posterID = posterID;
         }
 
         @Override
@@ -110,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
         protected Void doInBackground(String... strings) {
             try{
                 URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="
-                        + UserSingleton.getUserInstance().get_id());
+                        + posterID);
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -160,14 +162,19 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private class MyAdapterPost extends ArrayAdapter<Post> {
-        ArrayList<Post> posts;
+        private ArrayList<Post> posts;
+        private ProfileActivity pa;
         public MyAdapterPost(ProfileActivity pa, ArrayList<Post> posts){
             super(pa, 0, posts);
             this.posts = posts;
+            this.pa = pa;
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent){
+            if(convertView == null){
+                convertView = pa.getLayoutInflater().inflate(R.layout.single_post, null);
+            }
             final Post current = posts.get(position);
 
             ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
