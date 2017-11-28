@@ -28,7 +28,13 @@
     <string name="title_activity_scrolling_feed">Feed</string>
     <string name="location_permission_message">SOME SHIT</string>
 
-    
+    //homemade shit
+    <string-array
+        name="homeorrestarray">
+    <item>Restaurant</item>
+    <item>Homemade</item>
+    </string-array>
+
     //Categories
     <string-array
         name="categories">
