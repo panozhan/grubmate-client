@@ -116,7 +116,7 @@ public class ContentActivity  extends AppCompatActivity {
                 ft.hide(group);
                 ft.hide(subs);
                 ft.show(profile);
-                //profile.onResume();
+                profile.onResume();
                 break;
             case 3:
                 ft.hide(notifs);

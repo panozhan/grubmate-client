@@ -87,6 +87,9 @@ public class MakePost extends AppCompatActivity {
                 NetworkManager networkManager = new NetworkManager();
                 networkManager.postPost(post);
 
+                // updates in profile
+                UserSingleton.getUserInstance().addPost(post);
+
                 finish();
             }
         });

@@ -124,6 +124,16 @@ public class UserSingleton {
         this.posts = posts;
     }
 
+    public void addPost(Post post) {
+        if (post!=null) {
+            this.posts.add(post);
+        }
+    }
+
+    public int getNumPosts(){
+        return this.posts.size();
+    }
+
     public void setRequests(ArrayList<String> requests) {
         this.requests = requests;
     }

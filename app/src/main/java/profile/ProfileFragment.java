@@ -47,6 +47,7 @@ public class ProfileFragment extends Fragment {
     private MyAdapterPost adapter;
     private RatingParser ratingParser;
     private TextView currRating;
+    private int numPosts;
 
     public ProfileFragment(){
         this.owner = UserSingleton.getUserInstance();
@@ -138,6 +139,7 @@ public class ProfileFragment extends Fragment {
         name = (TextView) v.findViewById(R.id.profilename);
         name.setText(owner.getName());
         currRating = (TextView) v.findViewById(R.id.profileRating);
+        numPosts = 0;
 
         // get rating
         ratingParser = new RatingParser();
@@ -190,6 +192,9 @@ public class ProfileFragment extends Fragment {
                 startActivity(newActivity);
             }
         });
+
+        // updates num posts
+        numPosts = p.size();
     }
 
     @Override
@@ -198,14 +203,28 @@ public class ProfileFragment extends Fragment {
 
         // refresh rating
         ratingParser.getRatingWithID(owner.get_id(), this);
-    }
 
+        // adds post if necessary
+        int currNumPosts = owner.getNumPosts();
+        if (numPosts<currNumPosts) {
+            Post newPost = owner.getPosts().get(currNumPosts-1);
+            adapter.addPost(newPost);
+            numPosts+=1;
+        }
+    }
 
     private class MyAdapterPost extends ArrayAdapter<Post> {
         ArrayList<Post> posts;
         public MyAdapterPost(ArrayList<Post> posts){
             super(getActivity(),0,posts);
             this.posts = posts;
+        }
+
+        public void addPost(Post post) {
+            if (post!=null) {
+                this.posts.add(post);
+                notifyDataSetChanged();
+            }
         }
 
         @Override
