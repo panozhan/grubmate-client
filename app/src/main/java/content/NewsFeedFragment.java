@@ -114,9 +114,9 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.filter:
+                    owner.getPosts().clear();
                     Intent intent = new Intent(getActivity(), FilterNewsActivity.class);
                     startActivity(intent);
-                    notifyChange();
                     break;
                 case R.id.newpost:
                     Intent i = new Intent(getActivity(),MakePost.class);
@@ -124,10 +124,12 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
                     break;
                 case R.id.refresh:
                     if (searchfield.getText().toString().length() > 0) {
+                        owner.getPosts().clear();
                         networkManager.searchPostsForUser(owner.get_id(), searchfield.getText().toString());
                         notifyChange();
                     }
                     else {
+                        owner.getPosts().clear();
                         networkManager.getPostsForUser(owner.get_id());
                         notifyChange();
                     }

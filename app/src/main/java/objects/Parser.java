@@ -52,6 +52,9 @@ public class Parser {
                 case "title":
                     result.setTitle(reader.nextString());
                     break;
+                case "category":
+                    result.setCategory(reader.nextString());
+                    break;
                 case "tag":
                     result.setTag(reader.nextString());
                     break;

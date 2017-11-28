@@ -14,7 +14,7 @@
             android:id="@+id/subCategoryLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="sub category"
+            android:hint="category/tag"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="16dp"
             android:textSize="28sp"
