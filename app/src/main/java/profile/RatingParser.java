@@ -21,17 +21,20 @@ import objects.Notification;
 import objects.Post;
 import objects.User;
 import objects.UserSingleton;
+import post.SinglePostFragment;
 
 public class RatingParser {
     private RateActivity rateActivity;
     private ProfileFragment profileFragment;
     private ProfileActivity profileActivity;
+    private SinglePostFragment singlePostFragment;
 
     public boolean getRatingWithID(String userID, RateActivity rateActivity) {
         try {
             this.rateActivity = rateActivity;
             this.profileFragment = null;
             this.profileActivity = null;
+            this.singlePostFragment = null;
             GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
             parseUserFriends.execute();
             return true;
@@ -47,6 +50,23 @@ public class RatingParser {
             this.profileFragment = profileFragment;
             this.rateActivity = null;
             this.profileActivity = null;
+            this.singlePostFragment = null;
+            GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
+            parseUserFriends.execute();
+            return true;
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.println("get rating parser failed");
+            return false;
+        }
+    }
+
+    public boolean getRatingWithID(String userID, SinglePostFragment singlePostFragment) {
+        try {
+            this.profileFragment = null;
+            this.rateActivity = null;
+            this.profileActivity = null;
+            this.singlePostFragment = singlePostFragment;
             GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
             parseUserFriends.execute();
             return true;
@@ -62,6 +82,7 @@ public class RatingParser {
             this.profileActivity = profileActivity;
             this.profileFragment = null;
             this.rateActivity = null;
+            this.singlePostFragment = null;
             GetRatingOfUser parseUserFriends = new GetRatingOfUser(userID);
             parseUserFriends.execute();
             return true;
@@ -144,12 +165,14 @@ public class RatingParser {
             float rating = Float.valueOf(mainObject.getString("rating"));
 
             // sets curr rating in corresponding view
-            if (profileFragment == null && profileActivity == null) {
+            if (profileFragment == null && profileActivity == null && singlePostFragment == null) {
                 rateActivity.setRating(rating);
-            } else if (rateActivity == null && profileFragment == null)  {
+            } else if (rateActivity == null && profileFragment == null && singlePostFragment == null)  {
                 profileActivity.setRating(rating);
-            } else if (rateActivity == null && profileActivity == null)  {
+            } else if (rateActivity == null && profileActivity == null && singlePostFragment == null)  {
                 profileFragment.setRating(rating);
+            } else if (rateActivity == null && profileActivity == null && profileFragment == null)  {
+                singlePostFragment.setRateOnDesc(rating);
             }
 
         }catch (JSONException e){

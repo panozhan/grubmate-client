@@ -264,4 +264,14 @@ public class UserSingleton {
         }
         return null;
     }
+
+    // for reviews
+    private boolean hasRated = false;
+    public void setHasRated(boolean hasRated) {
+        this.hasRated = hasRated;
+    }
+
+    public boolean hasRated() {
+        return hasRated;
+    }
 }

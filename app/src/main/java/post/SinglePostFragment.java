@@ -27,6 +27,7 @@ import objects.Post;
 import objects.User;
 import objects.UserSingleton;
 import profile.ProfileActivity;
+import profile.RatingParser;
 
 
 public class SinglePostFragment extends Fragment {
@@ -130,10 +131,18 @@ public class SinglePostFragment extends Fragment {
 
         });
 
+
+        // use description for rating
+        RatingParser ratingParser = new RatingParser();
+        ratingParser.getRatingWithID(post.getUser().getId(), this);
+
         return v;
     }
 
-
+    public void setRateOnDesc(float rating) {
+        TextView description = (TextView) getView().findViewById(R.id.description);
+        description.setText("Rating: " + String.format("%.2f", rating));
+    }
 
     private class RequestNetwork extends AsyncTask<String,Void,Void>{
         String userid;

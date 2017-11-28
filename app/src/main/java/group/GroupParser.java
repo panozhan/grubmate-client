@@ -281,8 +281,12 @@ public class GroupParser {
                     // gets friends ids
                     String friendID = jsonFriendArray.get(i).toString();
 
-                    // add friend to list
-                    friendList.add(friendID);
+                    // add friend to list if it's not null
+                    if (friendID!=null) {
+                        friendList.add(friendID);
+                    } else {
+                        System.out.println("groupfriendnull");
+                    }
                 }
 
                 // create and add new group

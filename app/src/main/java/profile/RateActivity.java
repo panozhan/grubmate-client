@@ -52,7 +52,7 @@ public class RateActivity extends AppCompatActivity {
         ratingParser.getRatingWithID(userID, this);
 
         // finds name of this user
-        UserSingleton owner = UserSingleton.getUserInstance();
+        final UserSingleton owner = UserSingleton.getUserInstance();
         String username = owner.getFriendNameByID(userID);
 
         // UI stuff
@@ -73,6 +73,12 @@ public class RateActivity extends AppCompatActivity {
 
                 // sets new rating by pulling it from database
                 ratingParser.getRatingWithID(userID, self);
+
+                // add in review
+                // to op: nice, great
+                // to requester: cool, wonderful
+                owner.setHasRated(true);
+
                 finish();
             }
         });

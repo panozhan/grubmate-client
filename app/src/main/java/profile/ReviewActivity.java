@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 import objects.Parser;
 import objects.Post;
@@ -33,6 +34,7 @@ public class ReviewActivity extends AppCompatActivity {
     private String userID;
     private UserSingleton owner;
     private Button backButton;
+    private ArrayList<String> randomReviews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,29 @@ public class ReviewActivity extends AppCompatActivity {
             // molly
             reviews.add("food looks great");
             reviews.add("nice person");
+        }
+
+
+        // add a review after rating
+        if (owner.hasRated() && userID.equalsIgnoreCase(owner.get_id())) {
+            if (userID.equalsIgnoreCase("2")) {
+                // lauren
+                reviews.add("great");
+            } else if (userID.equalsIgnoreCase("907460246074182")) {
+                // katherine
+                reviews.add("great");
+            } else if (userID.equalsIgnoreCase("1583333221705311")) {
+                // alex
+                reviews.add("cool");
+            } else if (userID.equalsIgnoreCase("1687165621302390")) {
+                // arfan
+                reviews.add("nice");
+            } else if (userID.equalsIgnoreCase("1032002353603911")) {
+                // molly
+                reviews.add("wonderful");
+            }
+
+            owner.setHasRated(false);
         }
 
         adapter = new MyAdapterReview(this, reviews);
