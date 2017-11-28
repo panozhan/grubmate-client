@@ -155,6 +155,9 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                             case "postid":
                                 s.setPostid(reader.nextString());
                                 break;
+                            case "personid":
+                                s.setPersonId(reader.nextString());
+                                break;
                             default:
                                 reader.skipValue();
                                 break;
@@ -288,6 +291,13 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                             startActivity(intent);
                         }
                     });
+                } else if(current.getStatus().equals("rejected")){
+                    convertView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);
+                        }
+                    });
                 }
             }
             return convertView;
@@ -317,7 +327,7 @@ public class NewsFragment extends android.support.v4.app.Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(type.equals("end") || type.equals("reject")){
+            if(type.equals("end") || type.equals("reject") || type.equals("remove")){
                 getNotifs();
             }
         }

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import objects.NetworkManager;
 import objects.Parser;
 import objects.Post;
+import objects.User;
 import objects.UserSingleton;
 import post.EditPost;
 
@@ -146,6 +147,20 @@ public class ProfileFragment extends Fragment {
                 Intent newActivity = new Intent(getActivity(), EditPost.class);
                 newActivity.putExtra("Post", (Post)parent.getAdapter().getItem(position));
                 startActivity(newActivity);
+            }
+        });
+
+        // for text reviews, click on number rating
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getActivity().getApplicationContext(), ReviewActivity.class);
+                Bundle b = new Bundle();
+                b.putString("userid", owner.get_id());
+                intent.putExtras(b);
+                startActivity(intent);
+
             }
         });
 
