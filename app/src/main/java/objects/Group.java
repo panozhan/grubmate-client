@@ -43,4 +43,28 @@ public class Group {
     public void setUsers(ArrayList<String> users) {
         this.users = users;
     }
+
+    public void addUsers(ArrayList<String> users) {
+        for (String user: users) {
+            this.users.add(user);
+        }
+    }
+
+    public void removeUsers(ArrayList<String> selected) {
+        for (String userID: selected) {
+            int userIndex = findUserIndex(userID);
+            if (userIndex>=0 && userIndex<this.users.size()) {
+                this.users.remove(userIndex);
+            }
+        }
+    }
+
+    private int findUserIndex(String userID) {
+        for (int i=0; i<this.users.size(); i++) {
+            if (this.users.get(i).equalsIgnoreCase(userID)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

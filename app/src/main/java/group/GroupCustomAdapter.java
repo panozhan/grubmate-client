@@ -25,7 +25,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  */
 
 public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
-
+    private UserSingleton owner;
     private ArrayList<GroupModel> dataSet;
     private Context mContext;
 
@@ -41,6 +41,7 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
         super(context, R.layout.group_item, data);
         this.dataSet = data;
         this.mContext = context;
+        this.owner = UserSingleton.getUserInstance();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
 
 
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
 
         final ViewHolder viewHolder;
         final View result;
@@ -86,19 +87,6 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
         final int positionToRemove = position;
 
         // add listeners
-        viewHolder.leaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // removes group
-
-                dataSet.remove(positionToRemove);
-                UserSingleton owner = UserSingleton.getUserInstance();
-                owner.removeGroup(positionToRemove);
-                notifyDataSetChanged();
-
-            }
-        });
-
         viewHolder.addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, EditGroupActivity.class);
@@ -126,7 +114,6 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
         viewHolder.leaveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 GroupParser groupParser = new GroupParser();
-                UserSingleton owner = UserSingleton.getUserInstance();
 
                 // add yourself to list of user to remove from group
                 ArrayList<String> selected = new ArrayList<String>();
@@ -137,6 +124,11 @@ public class GroupCustomAdapter extends ArrayAdapter<GroupModel> {
 
                 // remove yourself from db
                 groupParser.editUsersInGroup(selected, group.getId(), "remove");
+
+                // updating UI
+                owner.removeGroup(positionToRemove);
+                dataSet.remove(positionToRemove);
+                notifyDataSetChanged();
             }
         });
 

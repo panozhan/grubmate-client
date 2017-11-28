@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import objects.Parser;
 import objects.Post;
 import objects.UserSingleton;
-import post.EditPost;
 
 public class ProfileActivity extends AppCompatActivity {
     private RatingBar ratingBar;
