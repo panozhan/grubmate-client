@@ -1,5 +1,6 @@
 package profile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -69,6 +70,11 @@ public class ProfileFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (result==null || result.isEmpty()) {
+                System.out.println("resultisfucked");
+            } else {
+                System.out.println("resultismorefucked");
+            }
             f.setPosts(result);
         }
 
@@ -172,9 +178,18 @@ public class ProfileFragment extends Fragment {
         currRating.setText(String.format("%.2f", rating));
     }
 
-    public void setPosts(ArrayList<Post> p){
+    private void setPosts(ArrayList<Post> p){
+        postList = (ListView) getView().findViewById(R.id.posts);
         adapter = new MyAdapterPost((p));
         postList.setAdapter(adapter);
+        postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent newActivity = new Intent(getActivity(), EditPost.class);
+                newActivity.putExtra("Post", (Post)parent.getAdapter().getItem(position));
+                startActivity(newActivity);
+            }
+        });
     }
 
     @Override
@@ -183,10 +198,6 @@ public class ProfileFragment extends Fragment {
 
         // refresh rating
         ratingParser.getRatingWithID(owner.get_id(), this);
-
-        // refresh posts
-        PostParser pp = new PostParser(this);
-        pp.execute();
     }
 
 

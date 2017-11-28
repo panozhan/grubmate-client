@@ -85,7 +85,7 @@ public class ReviewActivity extends AppCompatActivity {
             reviews.add("cool person");
         } else if (userID.equalsIgnoreCase("1032002353603911")) {
             // molly
-            reviews.add("food is ok");
+            reviews.add("food looks great");
             reviews.add("nice person");
         }
 
