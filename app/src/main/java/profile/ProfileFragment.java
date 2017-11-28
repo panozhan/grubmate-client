@@ -24,10 +24,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import objects.NetworkManager;
 import objects.Parser;
 import objects.Post;
-import objects.User;
 import objects.UserSingleton;
 import post.EditPost;
 
@@ -71,11 +69,6 @@ public class ProfileFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (result==null || result.isEmpty()) {
-                System.out.println("resultisfucked");
-            } else {
-                System.out.println("resultismorefucked");
-            }
             f.setPosts(result);
         }
 

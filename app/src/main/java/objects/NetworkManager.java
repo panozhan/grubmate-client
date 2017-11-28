@@ -258,7 +258,7 @@ public class NetworkManager extends Thread {
                 postJson.put("tag",post.getDescription());
                 postJson.put("numAvailable",post.getNumAvailable());
                 postJson.put("user",userJson);
-                postJson.put("location",post.getDescription());
+                //postJson.put("description",post.getDescription());
                 postJson.put("price",post.getPrice());
 
                 userJson.put("id",owner.get_id());
