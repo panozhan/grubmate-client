@@ -28,9 +28,9 @@ public class Post implements Serializable {
 
     private String date;
     private int numAvailable;
-    private ArrayList<String> pending;
-    private ArrayList<String> confirmed;
-    private ArrayList<String> groups;
+    private ArrayList<String> pending = new ArrayList<>();
+    private ArrayList<String> confirmed = new ArrayList<>();
+    private ArrayList<String> groups = new ArrayList<>();
     private boolean readyToShow;
     private String description;
     private String price;

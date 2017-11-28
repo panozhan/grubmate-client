@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -40,83 +41,6 @@ public class MakePost extends AppCompatActivity {
     Button postNow;
     Spinner groupSpinner;
 
-    private class myAdapter implements SpinnerAdapter{
-        ArrayList<Group> g;
-        public myAdapter(ArrayList<Group> g){
-            this.g = g;
-        }
-
-        @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
-
-        }
-
-        @Override
-        public int getCount() {
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return false;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return 0;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return 0;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = getLayoutInflater()
-                        .inflate(R.layout.row_item,null);
-            }
-            TextView text = (TextView) convertView.findViewById(R.id.txtName);
-            text.setText(g.get(position).getName());
-            convertView.findViewById(R.id.checkBox).setVisibility(View.GONE);
-
-            return convertView;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = getLayoutInflater()
-                        .inflate(R.layout.row_item,null);
-            }
-            TextView text = (TextView) convertView.findViewById(R.id.txtName);
-            text.setText(g.get(position).getName());
-            convertView.findViewById(R.id.checkBox).setVisibility(View.GONE);
-
-            return convertView;
-        }
-
-        @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
-
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +57,16 @@ public class MakePost extends AppCompatActivity {
         postNow = (Button)findViewById(R.id.postnow);
         location = (EditText)findViewById(R.id.editlocation);
         groupSpinner = (Spinner)findViewById(R.id.groupspinner);
-        groupSpinner.setAdapter(new myAdapter(UserSingleton.getUserInstance().getGroups()));
+        ArrayList<Group> gs = UserSingleton.getUserInstance().getGroups();
+        ArrayList<String> groupNames = new ArrayList<>();
+        for(Group g : gs){
+            groupNames.add(g.getName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, groupNames);
+        groupSpinner.setAdapter(adapter);
+
+        //groupSpinner.setAdapter(new myAdapter(UserSingleton.getUserInstance().getGroups()));
 
         postNow.setOnClickListener(new View.OnClickListener() {
             @Override

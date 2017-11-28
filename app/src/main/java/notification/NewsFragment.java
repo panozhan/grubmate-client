@@ -273,20 +273,22 @@ public class NewsFragment extends android.support.v4.app.Fragment {
                 confirm.setVisibility(View.VISIBLE);
                 confirm.setText("Got It!");
 
-                convertView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);
+                if(current.getStatus().equals("ended")){
+                    convertView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);
 
-              /*          Intent intent = new Intent(getActivity().getApplicationContext(), RateActivity.class);
-                        Bundle b = new Bundle();
+                            Intent intent = new Intent(getActivity().getApplicationContext(), RateActivity.class);
+                            Bundle b = new Bundle();
 
-                        // TODO: SUB IN POSTER/REQUESTERS IDS INSTEAD OF OWNER'S
-                        b.putString("userid", current.getPersonId());
-                        intent.putExtras(b);
-                        startActivity(intent);*/
-                    }
-                });
+                            // TODO: SUB IN POSTER/REQUESTERS IDS INSTEAD OF OWNER'S
+                            b.putString("userid", current.getPersonId());
+                            intent.putExtras(b);
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
             return convertView;
         }
