@@ -109,15 +109,16 @@ public class SinglePostFragment extends Fragment {
         profilepic.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-//                User op = post.getUser();
-//                String userID = op.getId();
-//
-//                ((SinglePostActivity) getActivity()).change(false);
 
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                // checking out op's profile
+                Intent intent = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
                 User op = post.getUser();
                 String userID = op.getId();
-                intent.putExtra("userid", userID);
+
+                Bundle b = new Bundle();
+
+                b.putString("userid", userID);
+                intent.putExtras(b);
                 startActivity(intent);
             }
 
