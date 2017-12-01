@@ -29,36 +29,37 @@ public class NetworkManager extends Thread {
     private Parser parser = new Parser();
     private NewsFeedFragment newsfeed;
 
-    public NetworkManager(NewsFeedFragment f){
+    public NetworkManager(NewsFeedFragment f) {
         System.out.println("setting fragment");
         newsfeed = f;
-        if(newsfeed == null){
+        if (newsfeed == null) {
             System.out.println("My Fragment is null =(");
         }
     }
 
-    public NetworkManager(){
+    public NetworkManager() {
     }
 
-    public void getGroups(){
+    public void getGroups() {
         GetGroups myclass = new GetGroups(UserSingleton.getUserInstance().get_id());
         myclass.execute();
     }
-    
+
     public void sendGroup(Group group) {
         SendGroup sendGroupObj = new SendGroup(group);
         sendGroupObj.execute();
     }
-    
+
     private class SendGroup extends AsyncTask<String, Void, Void> {
         Group group;
         UserSingleton owner = UserSingleton.getUserInstance();
         private int groupId;
-        public SendGroup(Group group){
+
+        public SendGroup(Group group) {
             this.group = group;
             owner.addGroup(group);
         }
-        
+
         @Override
         protected Void doInBackground(String... params) {
             try {
@@ -72,16 +73,16 @@ public class NetworkManager extends Thread {
                 urlConnection.setRequestMethod("GET");
                 // urlConnection.setRequestMethod("POST");
                 urlConnection.connect();
-                
+
                 // Send the post body
                 JSONObject groupJson = new JSONObject();
                 //JSONObject userJson = new JSONObject();
                 JSONArray friendsJson = new JSONArray(group.getUsers());
-                
+
                 // making json object
-                groupJson.put("name",group.getName());
-                groupJson.put("users",friendsJson);
-                
+                groupJson.put("name", group.getName());
+                groupJson.put("users", friendsJson);
+
                 // write to server
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 String jsonString = groupJson.toString();
@@ -89,13 +90,13 @@ public class NetworkManager extends Thread {
                 System.out.println(jsonString);
                 writer.flush();
                 writer.close();
-                
+
                 InputStream is = urlConnection.getInputStream();
                 //Wrap InputStream with InputStreamReader
                 //Input stream of bytes is converted to stream of characters
                 //Buffer reading operation to improve efficiency
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                
+
                 //Read all characters into String data
                 String line;
                 StringBuilder response = new StringBuilder();
@@ -103,24 +104,24 @@ public class NetworkManager extends Thread {
                     response.append(line);
                 }
                 System.out.println(response.toString());
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
-        
+
     }
 
     //packages post object into a json file, and uses POST method to send to server
     //receives no response
-    public void postPost(Post post){
+    public void postPost(Post post) {
         PostPost postPostObj = new PostPost(post);
         postPostObj.execute();
     }
 
     //gets a string of post ids for the user with the id
-    public void getPostsForUser(String userId){
+    public void getPostsForUser(String userId) {
         UserSingleton.getUserInstance().getPosts().clear();
         System.out.println("Calling1");
         GetPostsForUsers task = new GetPostsForUsers(newsfeed);
@@ -128,52 +129,54 @@ public class NetworkManager extends Thread {
     }
 
     //gets a single post from the server
-    public void getPost(String postId){
-        if(this.newsfeed == null){
+    public void getPost(String postId) {
+        if (this.newsfeed == null) {
             System.out.println("FUCK NEWSFEED NULL SDFEWREQWRRQWERWQEWQ");
         }
-        GetSinglePost getSinglePost = new GetSinglePost(postId,newsfeed);
+        GetSinglePost getSinglePost = new GetSinglePost(postId, newsfeed);
         getSinglePost.execute();
 
     }
 
-    public void getNotifications(String userid,NewsFragment f){
-        GetNotifications myGetNotification = new GetNotifications(userid,f);
+    public void getNotifications(String userid, NewsFragment f) {
+        GetNotifications myGetNotification = new GetNotifications(userid, f);
         myGetNotification.execute();
     }
-    public void getUser(ProfileFragment f, String id){
+
+    public void getUser(ProfileFragment f, String id) {
         GetUser myuser = new GetUser(f, id);
         myuser.execute();
     }
 
-    private class GetUser extends AsyncTask<String, Void, Void>{
+    private class GetUser extends AsyncTask<String, Void, Void> {
         ProfileFragment f;
         String userid;
-        public GetUser(ProfileFragment f, String userid){
+
+        public GetUser(ProfileFragment f, String userid) {
             this.f = f;
             this.userid = userid;
         }
 
         @Override
         protected Void doInBackground(String... params) {
-            try{
+            try {
 
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userid);
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid=" + userid);
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
                 InputStream is = urlConnection.getInputStream();
-                 System.out.println("Convert"+parser.convertStreamToString(is));
+                System.out.println("Convert" + parser.convertStreamToString(is));
 
                 JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
                 User user = parser.parseUser(reader);
 
 
-               // f.generate(user);
+                // f.generate(user);
 
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -182,11 +185,12 @@ public class NetworkManager extends Thread {
     }
 
 
-    private class GetNotifications extends AsyncTask<String,Void,Void>{
+    private class GetNotifications extends AsyncTask<String, Void, Void> {
         String userid;
         Parser parser = new Parser();
         NewsFragment f;
-        public GetNotifications(String userid, NewsFragment f){
+
+        public GetNotifications(String userid, NewsFragment f) {
             this.userid = userid;
             this.f = f;
         }
@@ -207,7 +211,7 @@ public class NetworkManager extends Thread {
 
                 ArrayList<Notification> notifications = new ArrayList<Notification>();
 
-                for(String id : owner.getNotificationIds()){
+                for (String id : owner.getNotificationIds()) {
                     System.out.println(id);
                     URL url1 = new URL("https://grubmateteam3.herokuapp.com/api/singlenotif?notifid=" + id);
                     HttpURLConnection urlConnection1 = (HttpURLConnection) url1.openConnection();
@@ -232,7 +236,8 @@ public class NetworkManager extends Thread {
         UserSingleton owner = UserSingleton.getUserInstance();
         Parser parser = new Parser();
         private String postId;
-        public PostPost(Post post){
+
+        public PostPost(Post post) {
             this.post = post;
         }
 
@@ -247,24 +252,24 @@ public class NetworkManager extends Thread {
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("GET");
-               // urlConnection.setRequestMethod("POST");
+                // urlConnection.setRequestMethod("POST");
                 urlConnection.connect();
                 // Send the post body
                 JSONObject postJson = new JSONObject();
                 JSONObject userJson = new JSONObject();
-                postJson.put("location",post.getLocation());
-                postJson.put("title",post.getTitle());
-                postJson.put("category",post.getCategory());
-                postJson.put("tag",post.getDescription());
-                postJson.put("numAvailable",post.getNumAvailable());
-                postJson.put("user",userJson);
+                postJson.put("location", post.getLocation());
+                postJson.put("title", post.getTitle());
+                postJson.put("category", post.getCategory());
+                postJson.put("tag", post.getDescription());
+                postJson.put("numAvailable", post.getNumAvailable());
+                postJson.put("user", userJson);
                 //postJson.put("description",post.getDescription());
-                postJson.put("price",post.getPrice());
+                postJson.put("price", post.getPrice());
 
-                userJson.put("id",owner.get_id());
+                userJson.put("id", owner.get_id());
 
-                if(post.getGroups() != null){
-                    postJson.put("groups",new JSONArray(post.getGroups()));
+                if (post.getGroups() != null) {
+                    postJson.put("groups", new JSONArray(post.getGroups()));
                 }
 
 
@@ -302,7 +307,8 @@ public class NetworkManager extends Thread {
         Parser parser = new Parser();
         UserSingleton owner = UserSingleton.getUserInstance();
         private String postId;
-        public GetSinglePost(String id,NewsFeedFragment f){
+
+        public GetSinglePost(String id, NewsFeedFragment f) {
             postId = id;
             newsfeed = f;
         }
@@ -327,15 +333,16 @@ public class NetworkManager extends Thread {
         }
     }
 
-    private class GetGroups extends  AsyncTask<String,Void,Void>{
+    private class GetGroups extends AsyncTask<String, Void, Void> {
         String userid;
-        public GetGroups(String userid){
+
+        public GetGroups(String userid) {
             this.userid = userid;
         }
 
         @Override
         protected Void doInBackground(String... params) {
-            try{
+            try {
         /*        URL url = new URL("https://grubmateteam3.herokuapp.com/api/group?userid=" + userid);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.connect();
@@ -351,7 +358,7 @@ public class NetworkManager extends Thread {
                     owner.getGroups().add(parser.parseGroup(urlConnection2.getInputStream()));
                 }
 */
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -364,11 +371,13 @@ public class NetworkManager extends Thread {
         UserSingleton owner = UserSingleton.getUserInstance();
         NewsFeedFragment newsfeed;
         NetworkManager networkManager;
-        public GetPostsForUsers(NewsFeedFragment f){
+
+        public GetPostsForUsers(NewsFeedFragment f) {
             UserSingleton.getUserInstance().getPosts().clear();
             newsfeed = f;
             networkManager = new NetworkManager(newsfeed);
         }
+
         @Override
         protected Void doInBackground(String... params) {
             try {
@@ -383,7 +392,7 @@ public class NetworkManager extends Thread {
                 InputStream is = urlConnection.getInputStream();
                 ArrayList<String> postIds = parser.parseStringArrayJson(is);
                 owner.setPostIds(postIds);
-                for(int i = 0; i < postIds.size(); ++i){
+                for (int i = 0; i < postIds.size(); ++i) {
                     networkManager.getPost(postIds.get(i));
                 }
             } catch (Exception e) {
@@ -395,18 +404,18 @@ public class NetworkManager extends Thread {
     }
 
     //type = "request", "confirm", "end"
-    public void editPost(String type, String personid, String postid, Post post){
+    public void editPost(String type, String personid, String postid, Post post) {
         EditPost myUpdatePost = new EditPost(type, personid, postid, post);
         myUpdatePost.execute();
     }
 
-    private class EditPost extends AsyncTask<String,Void,Void>{
+    private class EditPost extends AsyncTask<String, Void, Void> {
         String userid;
         String type;
         String postid;
         Post post;
 
-        public EditPost(String type, String personid, String postid, Post post){
+        public EditPost(String type, String personid, String postid, Post post) {
             this.type = type;
             this.userid = personid;
             this.postid = postid;
@@ -430,7 +439,7 @@ public class NetworkManager extends Thread {
                 postJson.put("title", post.getTitle());
                 postJson.put("description", post.getDescription());
                 postJson.put("location", post.getLocation());
-                postJson.put("category",post.getCategory());
+                postJson.put("category", post.getCategory());
                 postJson.put("tag", post.getDescription());
                 postJson.put("numAvailable", post.getNumAvailable());
                 JSONObject userJson = new JSONObject();
@@ -440,7 +449,7 @@ public class NetworkManager extends Thread {
                 postJson.put("timestart", post.getTimestart());
                 postJson.put("timeend", post.getTimeend());
 
-                if (post.getGroups() != null){
+                if (post.getGroups() != null) {
                     postJson.put("groups", new JSONArray(post.getGroups()));
                 }
 
@@ -475,29 +484,29 @@ public class NetworkManager extends Thread {
         }
     }
 
-    public void addSubscription(String userid, Subscription sub){
+    public void addSubscription(String userid, Subscription sub) {
         AddSubscription addSub = new AddSubscription(userid, sub);
         addSub.execute();
     }
-    
+
     private class AddSubscription extends AsyncTask<String, Void, Void> {
         Subscription sub;
         String userid;
         Parser parser = new Parser();
         SubViewFragment subView;
 
-        public AddSubscription(String userid, Subscription sub){
+        public AddSubscription(String userid, Subscription sub) {
             this.userid = userid;
             this.sub = sub;
         }
-        
+
         @Override
         protected Void doInBackground(String... params) {
             try {
                 String address = "https://grubmateteam3.herokuapp.com/api/subs?userid=" + userid;
                 JSONObject subJson = new JSONObject();
-                subJson.put("subtype",sub.getType());
-                subJson.put("value",sub.getValue());
+                subJson.put("subtype", sub.getType());
+                subJson.put("value", sub.getValue());
                 String requestBody = subJson.toString();
 
                 URL url = new URL(address);
@@ -534,34 +543,34 @@ public class NetworkManager extends Thread {
                 for (int i = 0; i < newSubs.size(); i++) {
                     System.out.println(newSubs.get(i));
                 }
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
     }
-    
-    public void deleteSubscription(int index){
+
+    public void deleteSubscription(int index) {
         DeleteSubscription deleteSub = new DeleteSubscription(index);
         deleteSub.execute();
     }
-    
+
     private class DeleteSubscription extends AsyncTask<String, Void, Void> {
         UserSingleton owner = UserSingleton.getUserInstance();
         Parser parser = new Parser();
         int index;
-        
-        public DeleteSubscription(int index){
+
+        public DeleteSubscription(int index) {
             this.index = index;
             System.out.println(index);
             owner.removeSubscription(index);
         }
-        
+
         @Override
         protected Void doInBackground(String... params) {
             try {
-                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id() + "&index=" + String.valueOf(index+1));
+                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id() + "&index=" + String.valueOf(index + 1));
                 // Create the urlConnection
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
                 urlConnection2.setDoOutput(true);
@@ -569,7 +578,7 @@ public class NetworkManager extends Thread {
                 urlConnection2.connect();
 
                 InputStream is = urlConnection2.getInputStream();
-                System.out.println(type+" delete subs with put: "+parser.convertStreamToString(is));
+                System.out.println(type + " delete subs with put: " + parser.convertStreamToString(is));
                 /*
 
                 String address = "https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id();
@@ -613,7 +622,7 @@ public class NetworkManager extends Thread {
             }
             return null;
         }
-        
+
     }
 
     //gets a single post from the server
@@ -622,12 +631,12 @@ public class NetworkManager extends Thread {
         newsPost.execute();
     }
 
-    private class AddNewsPost extends AsyncTask<String,Void,Void> {
+    private class AddNewsPost extends AsyncTask<String, Void, Void> {
         String userid;
         String postid;
         String location;
 
-        public AddNewsPost(String userid, String postid, String location){
+        public AddNewsPost(String userid, String postid, String location) {
             this.userid = userid;
             this.postid = postid;
             this.location = location;
@@ -669,7 +678,7 @@ public class NetworkManager extends Thread {
         String postId, category;
         String keyword;
 
-        public GetSubPost(String id, String keyword){
+        public GetSubPost(String id, String keyword) {
             postId = id;
             this.keyword = keyword;
         }
@@ -693,11 +702,10 @@ public class NetworkManager extends Thread {
                 list.add(post.getTag());
                 list.add(post.getLocation());
 
-                for (String s: list) {
+                for (String s : list) {
                     if (s == null) {
 
-                    }
-                    else {
+                    } else {
                         if (s.toLowerCase().contains(keyword.toLowerCase())) {
                             System.out.println(s);
                             addNewsPost(owner.get_id(), post.get_id(), post.getLocation());
@@ -725,11 +733,12 @@ public class NetworkManager extends Thread {
         NetworkManager networkManager;
         String key;
 
-        public SearchSubsForUser(String keyword){
+        public SearchSubsForUser(String keyword) {
             UserSingleton.getUserInstance().getPosts().clear();
             networkManager = new NetworkManager(newsfeed);
             key = keyword;
         }
+
         @Override
         protected Void doInBackground(String... params) {
             try {
@@ -744,7 +753,7 @@ public class NetworkManager extends Thread {
                 InputStream is = urlConnection.getInputStream();
                 ArrayList<String> postIds = parser.parseStringArrayJson(is);
                 owner.setPostIds(postIds);
-                for(int i = 0; i < postIds.size(); ++i){
+                for (int i = 0; i < postIds.size(); ++i) {
                     networkManager.getSubPost(postIds.get(i), key);
                 }
             } catch (Exception e) {
@@ -774,7 +783,7 @@ public class NetworkManager extends Thread {
         String keyword;
         Post post;
 
-        public GetSearchPost(String id, NewsFeedFragment f, String keyword){
+        public GetSearchPost(String id, NewsFeedFragment f, String keyword) {
             postId = id;
             newsfeed = f;
             this.keyword = keyword;
@@ -810,11 +819,10 @@ public class NetworkManager extends Thread {
             list.add(post.getTag());
             list.add(post.getLocation());
 
-            for (String s: list) {
+            for (String s : list) {
                 if (s == null) {
 
-                }
-                else {
+                } else {
                     if (s.toLowerCase().contains(keyword.toLowerCase())) {
                         System.out.println(s);
                         owner.getPosts().add(post);
@@ -832,12 +840,13 @@ public class NetworkManager extends Thread {
         NetworkManager networkManager;
         String key;
 
-        public SearchPostsForUser(NewsFeedFragment f, String keyword){
+        public SearchPostsForUser(NewsFeedFragment f, String keyword) {
             UserSingleton.getUserInstance().getPosts().clear();
             newsfeed = f;
             networkManager = new NetworkManager(newsfeed);
             key = keyword;
         }
+
         @Override
         protected Void doInBackground(String... params) {
             try {
@@ -852,7 +861,7 @@ public class NetworkManager extends Thread {
                 InputStream is = urlConnection.getInputStream();
                 ArrayList<String> postIds = parser.parseStringArrayJson(is);
                 owner.setPostIds(postIds);
-                for(int i = 0; i < postIds.size(); ++i){
+                for (int i = 0; i < postIds.size(); ++i) {
                     networkManager.getSearchPost(postIds.get(i), key);
                 }
             } catch (Exception e) {
@@ -864,18 +873,18 @@ public class NetworkManager extends Thread {
     }
 
     //gets a string of post ids for the user with the id
-    public void getFilteredPostsForUser(String userId, String category, String from, String to){
+    public void getFilteredPostsForUser(String category, int fromHour, int fromMin, int toHour, int toMin) {
         UserSingleton.getUserInstance().getPosts().clear();
-        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category, from, to);
+        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category, fromHour, fromMin, toHour, toMin);
         task.execute();
     }
 
     //gets a single post from the server
-    public void getFilteredPost(String postId, String category, String from, String to){
-        if(this.newsfeed == null){
+    public void getFilteredPost(String postId, String category, int fromHour, int fromMin, int toHour, int toMin) {
+        if (this.newsfeed == null) {
             System.out.println("FUCK NEWSFEED NULL SDFEWREQWRRQWERWQEWQ");
         }
-        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category, from, to);
+        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category, fromHour, fromMin, toHour, toMin);
         getSinglePost.execute();
 
     }
@@ -885,15 +894,17 @@ public class NetworkManager extends Thread {
         Parser parser = new Parser();
         UserSingleton owner = UserSingleton.getUserInstance();
         String postId, category;
-        String from, to;
+        int fromHour, fromMinute, toHour, toMinute;
         Post post;
 
-        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category, String from, String to){
+        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category, int fromHour, int fromMin, int toHour, int toMin) {
             postId = id;
             newsfeed = f;
             this.category = category;
-            this.from = from;
-            this.to = to;
+            this.fromHour = fromHour;
+            this.fromMinute = fromMin;
+            this.toHour = toHour;
+            this.toMinute = toMin;
         }
 
         @Override
@@ -904,12 +915,9 @@ public class NetworkManager extends Thread {
                 // Create the urlConnection
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.connect();
-
                 InputStream is = urlConnection.getInputStream();
                 post = parser.parsePost(is);
-
                 return post;
-
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -920,46 +928,83 @@ public class NetworkManager extends Thread {
         @Override
         protected void onPostExecute(Post post) {
             super.onPostExecute(post);
-            int timeStart = post.getTimestart() != null ? Integer.valueOf(post.getTimestart()) : 0;
-            int timeEnd = post.getTimeend() != null ? Integer.valueOf(post.getTimeend()) : 0;
-            int from = !this.from.equals("") ? Integer.valueOf(this.from) : 0;
-            int to = !this.to.equals("") ? Integer.valueOf(this.to) : 0;
 
-            if (post.getCategory() == null) {
-
-            }
-            else if (post.getCategory().equals(category)) {
-                if (timeStart != 0 && from != 0 && timeEnd != 0 && to != 0) {
-                    if (timeStart >= from && timeEnd <= to) {
-                        owner.getPosts().add(post);
+            // filter by category and time
+            if (fromHour != -1 && fromMinute != -1 && toHour != -1 && toMinute != -1) {
+                if (post.getTimestart() == null || post.getTimeend() == null) {
+                    /*
+                    if (post.getCategory() == null) {}
+                    else {
+                        if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) {
+                                newsfeed.notifyChange();
+                            }
+                        }
                     }
+                    */
                 }
                 else {
-                    owner.getPosts().add(post);
+                    String[] splitStart = post.getTimestart().split(":");
+                    int hourStart = Integer.valueOf(splitStart[1]);
+                    int minStart = Integer.valueOf(splitStart[2]);
+
+                    String[] splitEnd = post.getTimeend().split(":");
+                    int hourEnd = Integer.valueOf(splitEnd[1]);
+                    int minEnd = Integer.valueOf(splitEnd[2]);
+
+                    if (post.getCategory() == null) {}
+                    else {
+                        if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
+                            if ( ((hourStart == fromHour && minStart >= fromMinute) || hourStart > fromHour)
+                                    && ((hourEnd == toHour && minEnd <= toMinute) || hourEnd < toHour) ) {
+                                owner.getPosts().add(post);
+                                if (newsfeed != null) {
+                                    newsfeed.notifyChange();
+                                }
+                            }
+                        }
+                    }
                 }
-                System.out.println(post.getCategory());
             }
-            if (newsfeed != null) { newsfeed.notifyChange(); }
+            // filter by category only if there's no time
+            else {
+                if (post.getCategory() == null) {}
+                else {
+                    if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
+                        System.out.println(post.getCategory());
+                        owner.getPosts().add(post);
+                        if (newsfeed != null) {
+                            newsfeed.notifyChange();
+                        }
+                    }
+                }
+            }
+
         }
+
     }
 
-    private class FilterPostsForUsers extends AsyncTask<String, Void, String> {
+    private class FilterPostsForUsers extends AsyncTask<String, Void, Void> {
         Parser parser = new Parser();
         UserSingleton owner = UserSingleton.getUserInstance();
         NewsFeedFragment newsfeed;
         NetworkManager networkManager;
-        String category, from, to;
+        String category;
+        int fromHour, fromMinute, toHour, toMinute;
 
-        public FilterPostsForUsers(NewsFeedFragment f, String category, String from, String to){
-            UserSingleton.getUserInstance().getPosts().clear();
+        public FilterPostsForUsers(NewsFeedFragment f, String category, int fromHour, int fromMin, int toHour, int toMin) {
             newsfeed = f;
             networkManager = new NetworkManager(newsfeed);
             this.category = category;
-            this.from = from;
-            this.to = to;
+            this.fromHour = fromHour;
+            this.fromMinute = fromMin;
+            this.toHour = toHour;
+            this.toMinute = toMin;
         }
+
         @Override
-        protected String doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
             try {
                 System.out.println("Calling");
                 // This is getting the url from the string we passed in
@@ -972,21 +1017,16 @@ public class NetworkManager extends Thread {
                 InputStream is = urlConnection.getInputStream();
                 ArrayList<String> postIds = parser.parseStringArrayJson(is);
                 owner.setPostIds(postIds);
-                for(int i = 0; i < postIds.size(); ++i){
-                    networkManager.getFilteredPost(postIds.get(i), category, from, to);
+                for (int i = 0; i < postIds.size(); ++i) {
+                    networkManager.getFilteredPost(postIds.get(i), category, fromHour, fromMinute, toHour, toMinute);
                 }
 
-                return category;
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-        }
-
     }
+
 }

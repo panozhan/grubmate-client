@@ -44,7 +44,6 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
         super.onCreate(b);
         owner = UserSingleton.getUserInstance();
         networkManager = new NetworkManager(this);
-        ArrayList<String> postIds = owner.getPostIds();
 
         adapter = new myAdapterPost(owner.getPosts());
         networkManager.getPostsForUser(owner.get_id());
@@ -96,10 +95,10 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
         @Override
         public View getView(final int position, View convertView, ViewGroup parent){
             if(convertView == null){
-                convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.single_post,null);
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.single_post,null);
             }
-            final Post current = posts.get(position);
+
+            Post current = posts.get(position);
 
             ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
             ((TextView)convertView.findViewById(R.id.description)).setText(current.getDescription());
@@ -110,8 +109,7 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
             convertView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     Intent newActivity = new Intent(getActivity(), SinglePostActivity.class);
                     newActivity.putExtra("PostIndex", position);
                     startActivity(newActivity);
@@ -128,7 +126,8 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.filter:
-                    owner.getPosts().clear();
+                    //owner.getPosts().clear();
+                    //notifyChange();
                     Intent intent = new Intent(getActivity(), FilterNewsActivity.class);
                     startActivity(intent);
                     break;
@@ -152,8 +151,15 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
         }
     }
 
+    @Override
+    public void onResume() {  // After a pause OR at startup
+        super.onResume();
+
+        adapter.notifyDataSetChanged();
+    }
+
+
     public void notifyChange(){
-        System.out.println("Called");
         adapter.notifyDataSetChanged();
     }
 
