@@ -7,9 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 
@@ -39,13 +41,25 @@ public class Parser {
     }
 
     public Post parsePost(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        String x = convertStreamToString(in);
+        if(x.equals("null")){
+            return null;
+        }
+        InputStream stream = new ByteArrayInputStream(x.getBytes(StandardCharsets.UTF_8.name()));
+
+        JsonReader reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
 
         Post result = new Post();
         reader.beginObject();
         while(reader.hasNext()){
             String name = reader.nextName();
             switch (name){
+                case "numAvailable":
+                    result.setNumAvailable(reader.nextInt());
+                    break;
+                case "kind":
+                    result.setKind(reader.nextString());
+                    break;
                 case "_id":
                     result.set_id(reader.nextString());
                     break;
@@ -69,6 +83,9 @@ public class Parser {
                     break;
                 case "price":
                     result.setPrice(reader.nextString());
+                    break;
+                case "description":
+                    result.setDescription(reader.nextString());
                     break;
                 case "user":
                     User user = new User();
