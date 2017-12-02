@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
     private RatingParser ratingParser;
     private TextView currRating;
     private int numPosts;
-    private ArrayList<Post> posts;
+    final private ArrayList<Post> posts = new ArrayList<>();
     private final ProfileFragment f = this;
     private Context context;
 
@@ -68,16 +68,18 @@ public class ProfileFragment extends Fragment {
 
     private class PostParser extends AsyncTask<String,Void,Void>{
         ProfileFragment f;
-        ArrayList<Post> result = new ArrayList<>();
-        public PostParser(ProfileFragment f){
+        ArrayList<Post> result;
+        public PostParser(ProfileFragment f, ArrayList<Post> result){
             System.out.println("CALLING POST SHIT");
             this.f = f;
+            this.result = result;
+            result.clear();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            f.setPosts(result);
+            f.setPosts();
         }
 
         @Override
@@ -126,6 +128,7 @@ public class ProfileFragment extends Fragment {
                         Post post = p.parsePost(is2);
 
                         if(post != null){
+                            System.out.println("added");
                             result.add(post);
                         }
                     }catch(FileNotFoundException e){
@@ -156,7 +159,7 @@ public class ProfileFragment extends Fragment {
         ratingParser = new RatingParser();
         ratingParser.getRatingWithID(owner.get_id(), this);
 
-        PostParser pp = new PostParser(this);
+        PostParser pp = new PostParser(this,posts);
         pp.execute();
 
         postList = (ListView) v.findViewById(R.id.posts);
@@ -173,16 +176,16 @@ public class ProfileFragment extends Fragment {
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(getActivity().getApplicationContext(), ReviewActivity.class);
                 Bundle b = new Bundle();
                 b.putString("userid", owner.get_id());
                 intent.putExtras(b);
                 startActivity(intent);
-
             }
         });
-
+        postList = (ListView) v.findViewById(R.id.posts);
+        adapter = new MyAdapterPost(posts);
+        postList.setAdapter(adapter);
         return v;
     }
 
@@ -191,22 +194,11 @@ public class ProfileFragment extends Fragment {
         currRating.setText(String.format("%.2f", rating));
     }
 
-    private void setPosts(ArrayList<Post> p){
-        this.posts = p;
-        postList = (ListView) getView().findViewById(R.id.posts);
-        adapter = new MyAdapterPost((p));
-        postList.setAdapter(adapter);
-        postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent newActivity = new Intent(getActivity(), EditPost.class);
-                newActivity.putExtra("Post", (Post)parent.getAdapter().getItem(position));
-                startActivity(newActivity);
-            }
-        });
-
+    private void setPosts(){
+        adapter.notifyDataSetChanged();
+        System.out.println("done");
         // updates num posts
-        numPosts = p.size();
+        numPosts = posts.size();
     }
 
     @Override
@@ -214,8 +206,9 @@ public class ProfileFragment extends Fragment {
         super.onResume();
 
         // refresh rating
+        System.out.println("in on resume");
+        ratingParser = new RatingParser();
         ratingParser.getRatingWithID(owner.get_id(), this);
-
 
     }
 
@@ -255,6 +248,15 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent newActivity = new Intent(getActivity(), EditPost.class);
+                    newActivity.putExtra("Post", current);
+                    startActivity(newActivity);
+                }
+            });
+
 
             return convertView;
         }
@@ -285,7 +287,7 @@ public class ProfileFragment extends Fragment {
 
                 InputStream is = urlConnection.getInputStream();
                 String x = new Parser().convertStreamToString(is);
-                
+
                 return x;
             }catch (IOException e){
                 e.printStackTrace();
@@ -298,7 +300,7 @@ public class ProfileFragment extends Fragment {
             if(b != null && b.equals("0")){
                 Toast toast = Toast.makeText(context, "You can't remove this post because there have been confirmed requests already!", Toast.LENGTH_SHORT);
                 toast.show();
-            }else if(b != null && b.equals(1)){
+            }else if(b != null && b.equals("1")){
                 f.removeAPostFromCurrentPostsArray(index);
             }else{
                 if(b == null){

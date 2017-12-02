@@ -78,12 +78,6 @@ public class Parser {
                 case "endTime":
                     result.setTimeend(reader.nextString());
                     break;
-                case "description":
-                    result.setDescription(reader.nextString());
-                    break;
-                case "numAvailable":
-                    result.setNumAvailable(Integer.valueOf(reader.nextString()));
-                    break;
                 case "location":
                     result.setLocation(reader.nextString());
                     break;
