@@ -174,13 +174,14 @@
         android:id="@+id/spamButton"
         android:layout_width="80dp"
         android:layout_height="36dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="Spam"
+        app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.776"
-        app:layout_constraintStart_toEndOf="@+id/address"
-        tools:layout_editor_absoluteY="29dp" />
+        app:layout_constraintStart_toEndOf="@+id/address" />
 
 
 </android.support.constraint.ConstraintLayout>
