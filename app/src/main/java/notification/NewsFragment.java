@@ -1,5 +1,6 @@
 package notification;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,10 +32,11 @@ import profile.RateActivity;
  */
 
 public class NewsFragment extends android.support.v4.app.Fragment {
+    Context c ;
     @Override
     public void onCreate(Bundle b){
         super.onCreate(b);
-
+        c = getActivity();
     }
 
     @Override
@@ -53,7 +55,7 @@ public class NewsFragment extends android.support.v4.app.Fragment {
     private class MyListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            Intent i = new Intent();
+            Intent i = new Intent(c,NewsActivity.class);
             switch (v.getId()){
                 case R.id.news:
                     i.putExtra("display","news");

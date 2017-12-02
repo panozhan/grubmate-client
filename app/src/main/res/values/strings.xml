@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">GrubMate</string>
-    <string name="FACEBOOK_APP_ID">124754041504456</string>
-    <string name="ACCOUNT_KIT_CLIENT_TOKEN">d3ddad1b655ef50d7066d553226781d9</string>
-    <string name="ak_login_protocol_scheme">ak124754041504456</string>
-    <string name="fb_login_protocol_scheme">fb124754041504456</string>
+    <string name="FACEBOOK_APP_ID">1380327488757247</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">e5a2fff8dfc826ef6dd9fbde959f8c85</string>
+    <string name="ak_login_protocol_scheme">ak1380327488757247</string>
+    <string name="fb_login_protocol_scheme">fb1380327488757247</string>
     <string name="login_label">Email or Phone Number</string>
     <string name="accountkit_button_label">Continue</string>
     <string name="account">Account</string>
