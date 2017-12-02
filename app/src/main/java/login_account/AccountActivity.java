@@ -151,6 +151,10 @@ public class AccountActivity extends AppCompatActivity {
         FriendsParser friendsParser = new FriendsParser();
         friendsParser.setFriendsForOwner();
 
+        //TODO: Uncomment this when blocked user works properly in the server shit
+        //BlockedParser blockedParser = new BlockedParser();
+        //blockedParser.setFriendsForOwner();
+
         GroupParser groupParser = new GroupParser();
         groupParser.getGroupForOwner();
     }

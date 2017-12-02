@@ -22,6 +22,7 @@ public class UserSingleton {
     private ArrayList<Notification> newsNotifications = new ArrayList<Notification>();
     private ArrayList<String> notificationIds = new ArrayList<String>();
     private HashMap<String, String> friendsMap; // <name, id>
+    private HashMap<String, String> blockedMap; //<name, id>
 
 
 
@@ -258,6 +259,26 @@ public class UserSingleton {
     }
     public String getFriendIDByName(String name){
         for (Map.Entry<String, String> entry: friendsMap.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(name)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    //~~ Blocked Users ~~
+    public HashMap<String, String> getBlocked() { return blockedMap; }
+    public void setBlocked() {this.blockedMap = new HashMap<String, String>(); }
+    public void addBlocked(String blockID, String blockName) { blockedMap.put(blockID, blockName);}
+    public String getBlockedNameByID(String id) {
+        String bname = blockedMap.get(id);
+        if (bname!=null) {
+            return bname;
+        }
+        return this.name;
+    }
+    public String getBlockedIDByName(String name) {
+        for (Map.Entry<String, String> entry: blockedMap.entrySet()) {
             if (entry.getValue().equalsIgnoreCase(name)) {
                 return entry.getKey();
             }
