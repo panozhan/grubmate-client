@@ -222,7 +222,7 @@ public class NetworkManager extends Thread {
                 }
 
                 owner.setAllNotifications(notifications);
-                f.notifyChange();
+                //f.notifyChange();
 
             } catch (Exception e) {
                 e.printStackTrace();

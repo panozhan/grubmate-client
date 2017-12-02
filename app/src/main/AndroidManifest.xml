@@ -104,6 +104,14 @@
             android:theme="@style/FullscreenTheme"
             />
 
+        <activity
+            android:name="notification.NewsActivity"
+            android:label="content"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme"
+            />
+
+
 
         <activity android:name="group.MakeGroupActivity" />
         <activity android:name="group.EditGroupActivity" />
