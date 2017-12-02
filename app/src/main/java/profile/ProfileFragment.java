@@ -65,7 +65,10 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    public void crap(){
+        System.out.println(posts.size());
 
+    }
     private class PostParser extends AsyncTask<String,Void,Void>{
         ProfileFragment f;
         ArrayList<Post> result;
@@ -96,6 +99,7 @@ public class ProfileFragment extends Fragment {
                 JsonReader reader = new JsonReader(new InputStreamReader(is,"UTF-8"));
                 reader.beginObject();
                 ArrayList<String> postsIds = new ArrayList<>();
+
                 while(reader.hasNext()){
                     String name = reader.nextName();
                     if(!name.equals("postsOfUser")){
@@ -130,6 +134,7 @@ public class ProfileFragment extends Fragment {
                         if(post != null){
                             System.out.println("added");
                             result.add(post);
+                            f.crap();
                         }
                     }catch(FileNotFoundException e){
                         System.out.println("couldn't find file with id " + id);

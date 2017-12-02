@@ -336,7 +336,11 @@ public class NetworkManager extends Thread {
                 urlConnection.connect();
 
                 InputStream is = urlConnection.getInputStream();
-                owner.getPosts().add(parser.parsePost(is));
+                Post p = parser.parsePost(is);
+                if(p != null){
+                    owner.getPosts().add(p);
+                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
