@@ -33,12 +33,10 @@ import profile.RatingParser;
 public class SinglePostFragment extends Fragment {
     private static final String TEXT = "postIndex";
     private int PostIndex;
-    FrameLayout fragmentContainer ;
-    Button myButton;
-    UserSingleton user;
-    Post post;
-    NetworkManager networkManager;
-    // SinglePostFragment.OnFragmentInteractionListener mListener;
+    private Button myButton;
+    private UserSingleton user;
+    private Post post;
+    // private NetworkManager networkManager;
 
     public SinglePostFragment() {
         // Required empty public constructor
@@ -71,11 +69,11 @@ public class SinglePostFragment extends Fragment {
         ImageView profilepic = (ImageView) v.findViewById(R.id.profilepic);
         // ImageView picture = (ImageView) findViewById(R.id.picture);
 
-
+        // all the ui components
         TextView title = (TextView) v.findViewById(R.id.title);
         title.setText(post.getTitle());
         TextView date = (TextView) v.findViewById(R.id.date);
-        date.setText(post.getDate());
+        date.setText(post.getTimeend().substring(0, 8));
         TextView price = (TextView) v.findViewById(R.id.price);
         price.setText(String.valueOf(post.getPrice()));
         TextView description = (TextView) v.findViewById(R.id.description);
@@ -84,10 +82,7 @@ public class SinglePostFragment extends Fragment {
         address.setText(post.getLocation());
         TextView num = (TextView) v.findViewById(R.id.numAvailable);
 
-        //num.setText(String.valueOf(post.getAvailable()));
-
         num.setText(String.valueOf(post.getNumAvailable()));
-
 
         Button request = (Button) v.findViewById(R.id.requestButton);
         if(post.getAvailable() == 0){
@@ -137,15 +132,10 @@ public class SinglePostFragment extends Fragment {
 
 
         // use description for rating
-        RatingParser ratingParser = new RatingParser();
-        ratingParser.getRatingWithID(post.getUser().getId(), this);
+        // RatingParser ratingParser = new RatingParser();
+        // ratingParser.getRatingWithID(post.getUser().getId(), this);
 
         return v;
-    }
-
-    public void setRateOnDesc(float rating) {
-        TextView description = (TextView) getView().findViewById(R.id.description);
-        description.setText("Rating: " + String.format("%.2f", rating));
     }
 
     private class RequestNetwork extends AsyncTask<String,Void,Void>{
