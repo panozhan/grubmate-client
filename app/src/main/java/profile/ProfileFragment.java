@@ -216,13 +216,7 @@ public class ProfileFragment extends Fragment {
         // refresh rating
         ratingParser.getRatingWithID(owner.get_id(), this);
 
-        // adds post if necessary
-        int currNumPosts = owner.getNumPosts();
-        if (numPosts<currNumPosts) {
-            Post newPost = owner.getPosts().get(currNumPosts-1);
-            adapter.addPost(newPost);
-            numPosts+=1;
-        }
+
     }
 
     private class MyAdapterPost extends ArrayAdapter<Post> {
