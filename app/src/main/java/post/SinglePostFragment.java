@@ -85,7 +85,8 @@ public class SinglePostFragment extends Fragment {
         TextView num = (TextView) v.findViewById(R.id.numAvailable);
 
         //num.setText(String.valueOf(post.getAvailable()));
-        num.setText(post.getNumAvailable());
+
+        num.setText(String.valueOf(post.getNumAvailable()));
 
 
         Button request = (Button) v.findViewById(R.id.requestButton);
