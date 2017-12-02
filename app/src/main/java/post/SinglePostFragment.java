@@ -111,6 +111,14 @@ public class SinglePostFragment extends Fragment {
             }
         });
 
+        Button spam = (Button) v.findViewById(R.id.spamButton);
+        spam.setOnClickListener (new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //TODO: set logic for spam clicking
+            }
+        });
+
 //        fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
 
         profilepic.setOnClickListener(new View.OnClickListener(){
