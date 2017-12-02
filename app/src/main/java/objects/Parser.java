@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -205,13 +206,26 @@ public class Parser {
         return result;
     }
 
+    public String readFully(InputStream entityResponse) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while ((length = entityResponse.read(buffer)) != -1) {
+            baos.write(buffer, 0, length);
+        }
+        return baos.toString();
+    }
+
+
     public ArrayList<Subscription> parseSubscriptions(InputStream inputStream) throws JSONException, IOException {
         ArrayList<Subscription> subs = new ArrayList<>();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
         String s = "", temp = "";
         while ((temp = bufferedReader.readLine()) != null) {
             s += temp;
         }
+
         System.out.println(s);
         JSONArray jsonarray = new JSONArray(s);
         for (int i = 0; i < jsonarray.length(); i++) {

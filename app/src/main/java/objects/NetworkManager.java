@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -547,7 +546,6 @@ public class NetworkManager extends Thread {
                     inputStream = urlConnection.getErrorStream();
                 }
 
-                UserSingleton owner = UserSingleton.getUserInstance();
                 ArrayList<Subscription> updates = parser.parseSubscriptions(inputStream);
                 ArrayList<Subscription> newSubs = new ArrayList<>();
                 for (Subscription s : updates) {
@@ -580,13 +578,13 @@ public class NetworkManager extends Thread {
         public DeleteSubscription(int index) {
             this.index = index;
             System.out.println(index);
-            owner.removeSubscription(index);
+            //owner.removeSubscription(index);
         }
 
         @Override
         protected Void doInBackground(String... params) {
             try {
-                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id() + "&index=" + String.valueOf(index + 1));
+                URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id() + "&index=" + String.valueOf(index));
                 // Create the urlConnection
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
                 urlConnection2.setDoOutput(true);
@@ -595,6 +593,8 @@ public class NetworkManager extends Thread {
 
                 InputStream is = urlConnection2.getInputStream();
                 System.out.println(type + " delete subs with put: " + parser.convertStreamToString(is));
+                is.close();
+                urlConnection2.connect();
                 /*
 
                 String address = "https://grubmateteam3.herokuapp.com/api/subs?userid=" + owner.get_id();
@@ -633,145 +633,6 @@ public class NetworkManager extends Thread {
                 }
                 */
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
-
-    //gets a single post from the server
-    public void addNewsPost(String userid, String postId, String location) {
-        AddNewsPost newsPost = new AddNewsPost(userid, postId, location);
-        newsPost.execute();
-    }
-
-    private class AddNewsPost extends AsyncTask<String, Void, Void> {
-        String userid;
-        String postid;
-        String location;
-
-        public AddNewsPost(String userid, String postid, String location) {
-            this.userid = userid;
-            this.postid = postid;
-            this.location = location;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            String urlString = String.format(
-                    "https://grubmateteam3.herokuapp.com/api/posts?personid=%s&postid=%s&type=news&location=%s",
-                    userid, postid, location);
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("PUT");
-                connection.connect();
-                Parser p = new Parser();
-                System.out.println(p.convertStreamToString(connection.getInputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
-
-    public void getSubPost(String postId, String keyword) {
-        GetSubPost getSinglePost = new GetSubPost(postId, keyword);
-        getSinglePost.execute();
-    }
-
-    private class GetSubPost extends AsyncTask<String, Void, Void> {
-        Parser parser = new Parser();
-        UserSingleton owner = UserSingleton.getUserInstance();
-        String postId, category;
-        String keyword;
-
-        public GetSubPost(String id, String keyword) {
-            postId = id;
-            this.keyword = keyword;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-                // This is getting the url from the string we passed in
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid=" + postId);
-                // Create the urlConnection
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.connect();
-
-                InputStream is = urlConnection.getInputStream();
-                Post post = parser.parsePost(is);
-
-                ArrayList<String> list = new ArrayList<String>();
-                list.add(post.getTitle());
-                list.add(post.getDescription());
-                list.add(post.getCategory());
-                list.add(post.getTag());
-                list.add(post.getLocation());
-
-                for (String s : list) {
-                    if (s == null) {
-
-                    } else {
-                        if (s.toLowerCase().contains(keyword.toLowerCase())) {
-                            System.out.println(s);
-                            addNewsPost(owner.get_id(), post.get_id(), post.getLocation());
-                        }
-                    }
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
-    public void searchSubsForUser(String keyword) {
-        UserSingleton.getUserInstance().getPosts().clear();
-        SearchSubsForUser task = new SearchSubsForUser(keyword);
-        task.execute();
-    }
-
-    private class SearchSubsForUser extends AsyncTask<String, Void, Void> {
-        Parser parser = new Parser();
-        UserSingleton owner = UserSingleton.getUserInstance();
-        NetworkManager networkManager;
-        String key;
-
-        public SearchSubsForUser(String keyword) {
-            UserSingleton.getUserInstance().getPosts().clear();
-            networkManager = new NetworkManager(newsfeed);
-            key = keyword;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-                System.out.println("Calling");
-                // This is getting the url from the string we passed in
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?userid=" + owner.get_id());
-                // Create the urlConnection
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                InputStream is = urlConnection.getInputStream();
-                ArrayList<String> postIds = parser.parseStringArrayJson(is);
-                owner.setPostIds(postIds);
-                for (int i = 0; i < postIds.size(); ++i) {
-                    networkManager.getSubPost(postIds.get(i), key);
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

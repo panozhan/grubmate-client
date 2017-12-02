@@ -28,7 +28,6 @@ public class SubCustomAdapter extends ArrayAdapter<SubModel> {
     private static class ViewHolder {
         TextView subName;
         Button deleteButton;
-        Button editButton;
     }
 
     public SubCustomAdapter(ArrayList<SubModel> data, Context context) {
@@ -68,7 +67,7 @@ public class SubCustomAdapter extends ArrayAdapter<SubModel> {
 
         SubModel item = getItem(position);
 
-        viewHolder.subName.setText(item.category);
+        viewHolder.subName.setText(item.name);
         viewHolder.deleteButton.setText(item.deleteTxt);
 
         final int positionToRemove = position;

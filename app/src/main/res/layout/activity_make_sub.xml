@@ -14,10 +14,10 @@
             android:id="@+id/subCategoryLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="name/category/tag"
+            android:hint="name/category/tag/time"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="16dp"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textColor="@color/colorPrimary"
             app:layout_goneMarginBottom="10dp" />
 
