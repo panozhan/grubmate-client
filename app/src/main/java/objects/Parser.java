@@ -64,6 +64,15 @@ public class Parser {
                 case "endTime":
                     result.setTimeend(reader.nextString());
                     break;
+                case "confirmed":
+                    ArrayList<String> confirmed = new ArrayList<>();
+                    reader.beginObject();
+                    while(reader.hasNext()) {
+                        confirmed.add(reader.nextName());
+                    }
+                    reader.endObject();
+                    result.setConfirmed(confirmed);
+                    break;
                 case "location":
                     result.setLocation(reader.nextString());
                     break;
