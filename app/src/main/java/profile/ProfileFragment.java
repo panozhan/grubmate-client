@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.udacity.test.R;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -108,19 +109,29 @@ public class ProfileFragment extends Fragment {
                 reader.endObject();
 
                 for(String id : postsIds){
-                    URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid="
-                        + id);
 
-                    HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();
-                    conn2.setRequestMethod("GET");
-                    conn2.connect();
+                    try {
+                        System.out.println(id);
+                        URL url2 = new URL("https://grubmateteam3.herokuapp.com/api/singlepost?postid="
+                                + id);
 
-                    InputStream is2 = conn2.getInputStream();
+                        HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();
+                        conn2.setRequestMethod("GET");
+                        conn2.connect();
 
-                    Parser p = new Parser();
-                    Post post = p.parsePost(is2);
 
-                    result.add(post);
+                        InputStream is2 = conn2.getInputStream();
+                        Parser p = new Parser();
+
+                        Post post = p.parsePost(is2);
+
+                        if(post != null){
+                            result.add(post);
+                        }
+                    }catch(FileNotFoundException e){
+                        System.out.println("couldn't find file with id " + id);
+                    }
+
                 }
 
             }catch (IOException e){
@@ -271,7 +282,7 @@ public class ProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try{
-                URL url = new URL("https://grubmateteam3.herokuapp.com/api/post?postid="
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/posts?postid="
                         + postid);
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -296,6 +307,12 @@ public class ProfileFragment extends Fragment {
             }else if(b != null && b.equals(1)){
                 f.removeAPostFromCurrentPostsArray(index);
             }else{
+                if(b == null){
+                    System.out.println("fucked up");
+                }else{
+                    System.out.println(b);
+                }
+
                 Toast toast = Toast.makeText(context, "A networking error has occured. Try again.", Toast.LENGTH_SHORT);
                 toast.show();
             }

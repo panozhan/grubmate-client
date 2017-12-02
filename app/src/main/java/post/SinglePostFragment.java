@@ -85,12 +85,12 @@ public class SinglePostFragment extends Fragment {
         TextView num = (TextView) v.findViewById(R.id.numAvailable);
 
         //num.setText(String.valueOf(post.getAvailable()));
-        num.setText("5");
+        num.setText(post.getNumAvailable());
 
 
         Button request = (Button) v.findViewById(R.id.requestButton);
         if(post.getAvailable() == 0){
-            myButton.setEnabled(false);
+            request.setEnabled(false);
         }
         request.setOnClickListener(new View.OnClickListener(){
             @Override
