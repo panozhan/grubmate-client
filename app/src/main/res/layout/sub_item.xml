@@ -19,13 +19,6 @@
         android:id="@+id/deleteViewbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/editViewbutton" />
-
-    <Button
-        android:id="@+id/editViewbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />

@@ -59,7 +59,6 @@ public class SubCustomAdapter extends ArrayAdapter<SubModel> {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.sub_item, parent, false);
             viewHolder.subName = (TextView) convertView.findViewById(R.id.subViewName);
             viewHolder.deleteButton = (Button) convertView.findViewById(R.id.deleteViewbutton);
-            viewHolder.editButton = (Button) convertView.findViewById(R.id.editViewbutton);
             result = convertView;
             convertView.setTag(viewHolder);
         } else {
@@ -71,7 +70,7 @@ public class SubCustomAdapter extends ArrayAdapter<SubModel> {
 
         viewHolder.subName.setText(item.category);
         viewHolder.deleteButton.setText(item.deleteTxt);
-        viewHolder.editButton.setText(item.editTxt);
+
         final int positionToRemove = position;
 
         // add listeners
@@ -82,12 +81,6 @@ public class SubCustomAdapter extends ArrayAdapter<SubModel> {
                 NetworkManager networkManager = new NetworkManager();
                 networkManager.deleteSubscription(positionToRemove);
                 notifyDataSetChanged();
-            }
-        });
-
-        viewHolder.editButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
             }
         });
 
