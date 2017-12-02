@@ -3,55 +3,36 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/heading"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="20dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Which type of notifications do you want to view?" />
+
     <Button
-        android:id="@+id/refresh"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Refresh" />
-
-    <TextView
-        android:id="@+id/requests"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Requests for my posts" />
-
-    <ListView
-        android:id="@+id/requestlist"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
-
-    <TextView
-        android:id="@+id/status"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Status of my requests" />
-
-    <ListView
-        android:id="@+id/statuslist"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
-
-    <TextView
         android:id="@+id/news"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
+        android:backgroundTint="@color/news_notif"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="News" />
+        android:layout_height="70dp"
+        android:text="Show me subscribed posts from my friends!" />
 
-    <ListView
-        android:id="@+id/newslist"
+    <Button
+        android:id="@+id/requests"
+        android:backgroundTint="@color/reqs_notif"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
+        android:layout_height="70dp"
+        android:text="Show me requests for my posts!" />
+
+    <Button
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:backgroundTint="@color/status_notif"
+        android:layout_height="70dp"
+        android:text="Show me the statuses of my requests!" />
 </LinearLayout>

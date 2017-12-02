@@ -18,4 +18,8 @@
     <color name="ak_inputText">#7d97ad</color>
     <color name="ak_statusBar">#00c5a5</color>
     <color name="ak_icon">#09d4b6</color>
+
+    <color name="news_notif">#ff77b300</color>
+    <color name="reqs_notif">#fff4a341</color>
+    <color name="status_notif">#ffff704d</color>
 </resources>
