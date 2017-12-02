@@ -39,7 +39,7 @@ public class MakeSubActivity extends AppCompatActivity {
                 /* send data to server */
                 Subscription sub = new Subscription(subCategory.getText().toString(), subName.getText().toString());
                 networkManager.addSubscription(UserSingleton.getUserInstance().get_id(), sub);
-                networkManager.searchSubsForUser(sub.getType());
+                //networkManager.searchSubsForUser(sub.getType());
                 finish();
             }
         });

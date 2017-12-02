@@ -172,7 +172,7 @@ public class RatingParser {
             } else if (rateActivity == null && profileActivity == null && singlePostFragment == null)  {
                 profileFragment.setRating(rating);
             } else if (rateActivity == null && profileActivity == null && profileFragment == null)  {
-                singlePostFragment.setRateOnDesc(rating);
+                //singlePostFragment.setRateOnDesc(rating);
             }
 
         }catch (JSONException e){

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import objects.Parser;
 import objects.Post;
 import objects.UserSingleton;
+import post.EditPost;
 
 public class ProfileActivity extends AppCompatActivity {
     private RatingBar ratingBar;
@@ -74,9 +75,9 @@ public class ProfileActivity extends AppCompatActivity {
         postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Intent newActivity = new Intent(this.getClass(), EditPost.class);
-                //newActivity.putExtra("Post", (Post)parent.getAdapter().getItem(position));
-                //startActivity(newActivity);
+                Intent newActivity = new Intent(getApplicationContext(), EditPost.class);
+                newActivity.putExtra("Post", (Post)parent.getAdapter().getItem(position));
+                startActivity(newActivity);
             }
         });
 
