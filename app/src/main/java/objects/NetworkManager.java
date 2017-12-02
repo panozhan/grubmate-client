@@ -257,6 +257,18 @@ public class NetworkManager extends Thread {
                 // Send the post body
                 JSONObject postJson = new JSONObject();
                 JSONObject userJson = new JSONObject();
+                postJson.put("location",post.getLocation());
+                postJson.put("title",post.getTitle());
+                postJson.put("category",post.getCategory());
+                postJson.put("tag",post.getTag());
+                postJson.put("numAvailable",post.getNumAvailable());
+                postJson.put("user",userJson);
+                postJson.put("startTime",post.getTimestart());
+                postJson.put("endTime",post.getTimeend());
+                postJson.put("description",post.getDescription());
+                postJson.put("price",post.getPrice());
+                postJson.put("kind",post.getKind());
+                userJson.put("id",owner.get_id());
                 postJson.put("location", post.getLocation());
                 postJson.put("title", post.getTitle());
                 postJson.put("category", post.getCategory());
