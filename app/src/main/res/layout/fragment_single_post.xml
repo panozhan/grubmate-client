@@ -171,7 +171,7 @@
         tools:layout_editor_absoluteY="416dp" />
 
     <Button
-        android:id="@+id/spam"
+        android:id="@+id/spamButton"
         android:layout_width="80dp"
         android:layout_height="36dp"
         android:layout_marginEnd="8dp"
