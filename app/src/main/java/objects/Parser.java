@@ -42,7 +42,7 @@ public class Parser {
 
     public Post parsePost(InputStream in) throws IOException {
         String x = convertStreamToString(in);
-        if(x.equals("null")){
+        if(x.equals("null")) {
             return null;
         }
         InputStream stream = new ByteArrayInputStream(x.getBytes(StandardCharsets.UTF_8.name()));

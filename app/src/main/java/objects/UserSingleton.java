@@ -126,7 +126,7 @@ public class UserSingleton {
 
     public void addPost(Post post) {
         if (post!=null) {
-            this.posts.add(post);
+            this.postObjectsOfUser.add(post);
         }
     }
 

@@ -824,21 +824,24 @@ public class NetworkManager extends Thread {
         @Override
         protected void onPostExecute(Post post) {
             super.onPostExecute(post);
-            ArrayList<String> list = new ArrayList<String>();
-            list.add(post.getTitle());
-            list.add(post.getDescription());
-            list.add(post.getCategory());
-            list.add(post.getTag());
-            list.add(post.getLocation());
+            if (post == null) {}
+            else {
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(post.getTitle());
+                list.add(post.getDescription());
+                list.add(post.getCategory());
+                list.add(post.getTag());
+                list.add(post.getLocation());
 
-            for (String s : list) {
-                if (s == null) {
+                for (String s : list) {
+                    if (s == null) {
 
-                } else {
-                    if (s.toLowerCase().contains(keyword.toLowerCase())) {
-                        System.out.println(s);
-                        owner.getPosts().add(post);
-                        if (newsfeed != null) newsfeed.notifyChange();
+                    } else {
+                        if (s.toLowerCase().contains(keyword.toLowerCase())) {
+                            System.out.println(s);
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) newsfeed.notifyChange();
+                        }
                     }
                 }
             }
@@ -941,9 +944,11 @@ public class NetworkManager extends Thread {
         protected void onPostExecute(Post post) {
             super.onPostExecute(post);
 
-            // filter by category and time
-            if (fromHour != -1 && fromMinute != -1 && toHour != -1 && toMinute != -1) {
-                if (post.getTimestart() == null || post.getTimeend() == null) {
+            if (post == null) { }
+            else {
+                // filter by category and time
+                if (fromHour != -1 && fromMinute != -1 && toHour != -1 && toMinute != -1) {
+                    if ("".equals(post.getTimestart()) || "".equals(post.getTimeend())) {
                     /*
                     if (post.getCategory() == null) {}
                     else {
@@ -955,39 +960,40 @@ public class NetworkManager extends Thread {
                         }
                     }
                     */
-                }
-                else {
-                    String[] splitStart = post.getTimestart().split(":");
-                    int hourStart = Integer.valueOf(splitStart[1]);
-                    int minStart = Integer.valueOf(splitStart[2]);
-
-                    String[] splitEnd = post.getTimeend().split(":");
-                    int hourEnd = Integer.valueOf(splitEnd[1]);
-                    int minEnd = Integer.valueOf(splitEnd[2]);
-
-                    if (post.getCategory() == null) {}
+                    }
                     else {
-                        if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
-                            if ( ((hourStart == fromHour && minStart >= fromMinute) || hourStart > fromHour)
-                                    && ((hourEnd == toHour && minEnd <= toMinute) || hourEnd < toHour) ) {
-                                owner.getPosts().add(post);
-                                if (newsfeed != null) {
-                                    newsfeed.notifyChange();
+                        String[] splitStart = post.getTimestart().split(":");
+                        int hourStart = Integer.valueOf(splitStart[1]);
+                        int minStart = Integer.valueOf(splitStart[2]);
+
+                        String[] splitEnd = post.getTimeend().split(":");
+                        int hourEnd = Integer.valueOf(splitEnd[1]);
+                        int minEnd = Integer.valueOf(splitEnd[2]);
+
+                        if (post.getCategory() == null || "".equals(post.getCategory())) {}
+                        else {
+                            if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
+                                if ( ((hourStart == fromHour && minStart >= fromMinute) || hourStart > fromHour)
+                                        && ((hourEnd == toHour && minEnd <= toMinute) || hourEnd < toHour) ) {
+                                    owner.getPosts().add(post);
+                                    if (newsfeed != null) {
+                                        newsfeed.notifyChange();
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            // filter by category only if there's no time
-            else {
-                if (post.getCategory() == null) {}
+                // filter by category only if there's no time
                 else {
-                    if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
-                        System.out.println(post.getCategory());
-                        owner.getPosts().add(post);
-                        if (newsfeed != null) {
-                            newsfeed.notifyChange();
+                    if (post.getCategory() == null) {}
+                    else {
+                        if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
+                            System.out.println(post.getCategory());
+                            owner.getPosts().add(post);
+                            if (newsfeed != null) {
+                                newsfeed.notifyChange();
+                            }
                         }
                     }
                 }
