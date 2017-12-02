@@ -82,6 +82,30 @@ public class SinglePostFragment extends Fragment {
         address.setText(post.getLocation());
         TextView num = (TextView) v.findViewById(R.id.numAvailable);
 
+
+//        TextView label = (TextView) v.findViewById(R.id.label);
+//        label.setText(String.valueOf(post.getLabel()));
+
+
+        TextView starttime = (TextView) v.findViewById(R.id.starttime);
+        starttime.setText(String.valueOf(post.getTimestart()));
+
+        TextView endtime = (TextView) v.findViewById(R.id.endtime);
+        endtime.setText(String.valueOf(post.getTimeend()));
+
+        TextView categories = (TextView) v.findViewById(R.id.categories);
+        categories.setText(String.valueOf(post.getCategory()));
+        TextView tags = (TextView) v.findViewById(R.id.tags);
+        tags.setText(String.valueOf(post.getTag()));
+
+
+
+//        TextView groups = (TextView) v.findViewById(R.id.groups);
+//        groups.setText(String.valueOf(post.getGroupNames()));
+
+
+
+
         num.setText(String.valueOf(post.getNumAvailable()));
 
         Button request = (Button) v.findViewById(R.id.requestButton);
