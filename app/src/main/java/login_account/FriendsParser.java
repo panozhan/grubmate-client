@@ -48,7 +48,6 @@ public class FriendsParser {
 
     private void parseFriends(InputStream is) throws IOException {
         String jsonString = convertStreamToString(is);
-
         try{
             JSONObject mainObject = new JSONObject(jsonString);
             System.out.println(mainObject);

@@ -1,6 +1,7 @@
 package profile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.udacity.test.R;
 
@@ -24,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import objects.NetworkManager;
 import objects.Parser;
 import objects.Post;
 import objects.UserSingleton;
@@ -46,6 +50,9 @@ public class ProfileFragment extends Fragment {
     private RatingParser ratingParser;
     private TextView currRating;
     private int numPosts;
+    private ArrayList<Post> posts;
+    private final ProfileFragment f = this;
+    private Context context;
 
     public ProfileFragment(){
         this.owner = UserSingleton.getUserInstance();
@@ -127,7 +134,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_profile,container,false);
-
+        context = getActivity();
         ratingBar = (RatingBar) v.findViewById(R.id.ratingBar);
         name = (TextView) v.findViewById(R.id.profilename);
         name.setText(owner.getName());
@@ -174,6 +181,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setPosts(ArrayList<Post> p){
+        this.posts = p;
         postList = (ListView) getView().findViewById(R.id.posts);
         adapter = new MyAdapterPost((p));
         postList.setAdapter(adapter);
@@ -233,8 +241,65 @@ public class ProfileFragment extends Fragment {
             ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
             ((TextView)convertView.findViewById(R.id.date)).setText(current.getDate());
             ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
+            Button removeButton = (Button)convertView.findViewById(R.id.removepostbutton);
+            removeButton.setVisibility(View.VISIBLE);
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new RemovePostNetwork(position,current.get_id()).execute();
+                }
+            });
+
 
             return convertView;
+        }
+    }
+
+    public void removeAPostFromCurrentPostsArray(int index){
+        posts.remove(index);
+        adapter.notifyDataSetChanged();
+    }
+
+    private class RemovePostNetwork extends AsyncTask<String,Void,String>{
+        int index;
+        String postid;
+        public RemovePostNetwork(int index, String postid){
+            this.index = index;
+            this.postid = postid;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try{
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/post?postid="
+                        + postid);
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("DELETE");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                String x = new Parser().convertStreamToString(is);
+                
+                return x;
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String b) {
+            if(b != null && b.equals("0")){
+                Toast toast = Toast.makeText(context, "You can't remove this post because there have been confirmed requests already!", Toast.LENGTH_SHORT);
+                toast.show();
+            }else if(b != null && b.equals(1)){
+                f.removeAPostFromCurrentPostsArray(index);
+            }else{
+                Toast toast = Toast.makeText(context, "A networking error has occured. Try again.", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            super.onPostExecute(b);
         }
     }
 }

@@ -89,6 +89,9 @@ public class SinglePostFragment extends Fragment {
 
 
         Button request = (Button) v.findViewById(R.id.requestButton);
+        if(post.getAvailable() == 0){
+            myButton.setEnabled(false);
+        }
         request.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

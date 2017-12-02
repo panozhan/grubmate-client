@@ -16,6 +16,15 @@ public class Post implements Serializable {
     private Boolean status;
     private String category;
     private String tag;
+    private String kind;
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
 
     public int getAvailable(){return numAvailable;}
     public String getDate() {

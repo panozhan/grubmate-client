@@ -40,7 +40,7 @@ public class MakePost extends AppCompatActivity {
     EditText location;
     Button postNow;
     Spinner groupSpinner;
-
+    Spinner kindSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,7 @@ public class MakePost extends AppCompatActivity {
         postNow = (Button)findViewById(R.id.postnow);
         location = (EditText)findViewById(R.id.editlocation);
         groupSpinner = (Spinner)findViewById(R.id.groupspinner);
+        kindSpinner = (Spinner)findViewById(R.id.kindspinner);
         ArrayList<Group> gs = UserSingleton.getUserInstance().getGroups();
         ArrayList<String> groupNames = new ArrayList<>();
         for(Group g : gs){
@@ -84,6 +85,7 @@ public class MakePost extends AppCompatActivity {
                 post.setLocation(location.getText().toString());
                 post.getGroups().add(UserSingleton.getUserInstance()
                         .getGroups().get(groupSpinner.getSelectedItemPosition()).getId());
+                post.setKind(kindSpinner.getSelectedItem().toString());
                 NetworkManager networkManager = new NetworkManager();
                 networkManager.postPost(post);
 
