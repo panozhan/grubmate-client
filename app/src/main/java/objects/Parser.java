@@ -58,6 +58,12 @@ public class Parser {
                 case "tag":
                     result.setTag(reader.nextString());
                     break;
+                case "startTime":
+                    result.setTimestart(reader.nextString());
+                    break;
+                case "endTime":
+                    result.setTimeend(reader.nextString());
+                    break;
                 case "location":
                     result.setLocation(reader.nextString());
                     break;
