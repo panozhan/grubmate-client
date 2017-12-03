@@ -244,36 +244,37 @@ public class ProfileFragment extends Fragment {
             }
             final Post current = posts.get(position);
 
-            ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
-            ((TextView)convertView.findViewById(R.id.description)).setText(current.getDescription());
-            ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
+            if (current!=null) {
+                ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
+                ((TextView)convertView.findViewById(R.id.description)).setText(current.getDescription());
+                ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
 
-            String enddate = current.getDate();
-            int sepIndex = current.getTimeend().indexOf(":");
-            if (sepIndex>0) {
-                enddate = current.getTimeend().substring(0, sepIndex);
+                String enddate = current.getDate();
+                int sepIndex = current.getTimeend().indexOf(":");
+                if (sepIndex>0) {
+                    enddate = current.getTimeend().substring(0, sepIndex);
+                }
+                ((TextView)convertView.findViewById(R.id.date)).setText(enddate);
+
+                ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
+                Button removeButton = (Button)convertView.findViewById(R.id.removepostbutton);
+                removeButton.setVisibility(View.VISIBLE);
+                removeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new RemovePostNetwork(position,current.get_id()).execute();
+                    }
+                });
+
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent newActivity = new Intent(getActivity(), EditPost.class);
+                        newActivity.putExtra("Post", current);
+                        startActivity(newActivity);
+                    }
+                });
             }
-            ((TextView)convertView.findViewById(R.id.date)).setText(enddate);
-
-            ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
-            Button removeButton = (Button)convertView.findViewById(R.id.removepostbutton);
-            removeButton.setVisibility(View.VISIBLE);
-            removeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new RemovePostNetwork(position,current.get_id()).execute();
-                }
-            });
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent newActivity = new Intent(getActivity(), EditPost.class);
-                    newActivity.putExtra("Post", current);
-                    startActivity(newActivity);
-                }
-            });
-
 
             return convertView;
         }
