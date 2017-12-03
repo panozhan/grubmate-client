@@ -31,10 +31,10 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="250dp"
-        android:layout_height="35dp"
+        android:layout_width="240dp"
+        android:layout_height="38dp"
         android:layout_marginLeft="64dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="10dp"
         android:text="Long text long text long text long text long text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -58,8 +58,8 @@
         android:id="@+id/description"
         android:layout_width="354dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
         android:text="@string/posttext"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price"
@@ -73,7 +73,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -106,7 +106,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="15dp"
         android:text="5"
         app:layout_constraintBottom_toTopOf="@+id/location"
         app:layout_constraintHorizontal_bias="0.023"
@@ -130,7 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintHorizontal_bias="0.0"
@@ -163,9 +163,7 @@
         android:minWidth="0dp"
         android:text="Spam"
         app:layout_constraintBaseline_toBaselineOf="@+id/title"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toRightOf="@+id/title"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintLeft_toRightOf="@+id/title" />
 
     <TextView
         android:id="@+id/kindlabel"
@@ -178,12 +176,16 @@
 
     <TextView
         android:id="@+id/starttime"
-        android:layout_width="wrap_content"
-        android:layout_height="15dp"
-        android:layout_marginEnd="116dp"
+        android:layout_width="91dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:text="12:00"
-        app:layout_constraintBaseline_toBaselineOf="@+id/kindlabel"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.033"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numAvailable" />
 
     <TextView
         android:id="@+id/to"
@@ -196,8 +198,8 @@
 
     <TextView
         android:id="@+id/endtime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="107dp"
+        android:layout_height="20dp"
         android:layout_marginStart="20dp"
         android:text="13:00"
         app:layout_constraintBaseline_toBaselineOf="@+id/to"
@@ -208,8 +210,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:text="Category: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.027"
@@ -221,8 +223,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:text="Tag: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.054"
@@ -254,8 +256,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:text="Visible to: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.04"
