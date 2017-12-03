@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import profile.Transaction;
 
 
 public class Parser {
@@ -114,6 +115,18 @@ public class Parser {
                     reader.endObject();
                     result.setUser(user);
                     break;
+                case "transactions":
+                    System.out.println("in transact case");
+                    result.setEditable(true);
+                    reader.beginArray();
+                    while(reader.hasNext()){
+                        System.out.println("read a transaction rip");
+                        reader.skipValue();
+                        result.setEditable(false);
+                    }
+                    reader.endArray();
+                    System.out.println(result.isEditable());
+                    break;
                 default:
                     reader.skipValue();
                     break;
@@ -147,6 +160,51 @@ public class Parser {
         return result;
     }
 
+
+    public ArrayList<Transaction> parseTransactions(InputStream in){
+        ArrayList<Transaction> result = new ArrayList<>();
+        try {
+            JsonReader reader = new JsonReader(new InputStreamReader(in,"UTF-8"));
+            reader.beginArray();
+            while(reader.hasNext()){
+                Transaction t = new Transaction();
+                reader.beginObject();
+                while(reader.hasNext()){
+                    String name = reader.nextName();
+                    switch (name){
+                        case "type":
+                            t.setType(reader.nextString());
+                            break;
+                        case "timeConfirmed":
+                            t.setTimeConfirmed(reader.nextString());
+                            break;
+                        case "timeRequested":
+                            t.setTimeRequested(reader.nextString());
+                            break;
+                        case "timeEnded":
+                            t.setTimeEnded(reader.nextString());
+                            break;
+                        case "person":
+                            t.setPerson(reader.nextString());
+                            break;
+                        case "postTitle":
+                            t.setPostTitle(reader.nextString());
+                            break;
+                        default:
+                            reader.skipValue();
+                            break;
+                    }
+                }
+                reader.endObject();
+                result.add(t);
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
     public Notification parseNotification(InputStream is) throws IOException{
         String jsonString = convertStreamToString(is);
