@@ -67,53 +67,13 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
 
-        // populate reviews
-        ArrayList<String> reviews = new ArrayList<String>();
-        if (userID.equalsIgnoreCase("2")) {
-            // lauren
-            reviews.add("super sweet");
-            reviews.add("nice person");
-        } else if (userID.equalsIgnoreCase("907460246074182")) {
-            // katherine
-            reviews.add("good food");
-            reviews.add("5 stars");
-        } else if (userID.equalsIgnoreCase("1583333221705311")) {
-            // alex
-            reviews.add("food is ok");
-            reviews.add("meh");
-        } else if (userID.equalsIgnoreCase("1687165621302390")) {
-            // arfan
-            reviews.add("ok food");
-            reviews.add("cool person");
-        } else if (userID.equalsIgnoreCase("1032002353603911")) {
-            // molly
-            reviews.add("food looks great");
-            reviews.add("nice person");
-        }
 
+        // network call for reviews
+        ReviewParser rp = new ReviewParser();
+        rp.getReviewWithID(this.userID, this);
+    }
 
-        // add a review after rating
-        if (owner.hasRated() && userID.equalsIgnoreCase(owner.get_id())) {
-            if (userID.equalsIgnoreCase("2")) {
-                // lauren
-                reviews.add("great");
-            } else if (userID.equalsIgnoreCase("907460246074182")) {
-                // katherine
-                reviews.add("great");
-            } else if (userID.equalsIgnoreCase("1583333221705311")) {
-                // alex
-                reviews.add("cool");
-            } else if (userID.equalsIgnoreCase("1687165621302390")) {
-                // arfan
-                reviews.add("nice");
-            } else if (userID.equalsIgnoreCase("1032002353603911")) {
-                // molly
-                reviews.add("wonderful");
-            }
-
-            owner.setHasRated(false);
-        }
-
+    public void setReviews(ArrayList<String> reviews) {
         adapter = new MyAdapterReview(this, reviews);
         reviewList.setAdapter(adapter);
     }

@@ -166,7 +166,7 @@ public class RatingParser {
 
             // sets curr rating in corresponding view
             if (profileFragment == null && profileActivity == null && singlePostFragment == null) {
-                rateActivity.setRating(rating);
+                //rateActivity.setRating(rating);
             } else if (rateActivity == null && profileFragment == null && singlePostFragment == null)  {
                 profileActivity.setRating(rating);
             } else if (rateActivity == null && profileActivity == null && singlePostFragment == null)  {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ public class RateActivity extends AppCompatActivity {
 
     private RatingParser ratingParser;
     private TextView currRating;
+    private EditText reviewText;
 
     public RateActivity() {
     }
@@ -61,6 +63,7 @@ public class RateActivity extends AppCompatActivity {
         name = (TextView) findViewById(R.id.userToRate);
         name.setText(username);
         currRating = (TextView) findViewById(R.id.currRating);
+        reviewText = (EditText) findViewById(R.id.reviewText);
 
         submit.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -71,13 +74,9 @@ public class RateActivity extends AppCompatActivity {
                 // send new rating to database
                 ratingParser.addRatingByID(userID, newRating);
 
-                // sets new rating by pulling it from database
-                ratingParser.getRatingWithID(userID, self);
-
                 // add in review
-                // to op: nice, great
-                // to requester: cool, wonderful
-                owner.setHasRated(true);
+                ReviewParser reviewParser = new ReviewParser();
+                reviewParser.addRewviewByID(userID, reviewText.getText().toString());
 
                 finish();
             }
