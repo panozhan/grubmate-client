@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
     private RatingParser ratingParser;
     private TextView currRating;
     private int numPosts;
-    final private ArrayList<Post> posts = new ArrayList<>();
+    private ArrayList<Post> posts = new ArrayList<>();
     private final ProfileFragment f = this;
     private Context context;
 
@@ -141,6 +141,8 @@ public class ProfileFragment extends Fragment {
                     }
 
                 }
+                owner.setPostObjectsOfUser(result);
+                numPosts = owner.getNumOwnPosts();
 
             }catch (IOException e){
                 e.printStackTrace();
@@ -202,8 +204,6 @@ public class ProfileFragment extends Fragment {
     private void setPosts(){
         adapter.notifyDataSetChanged();
         System.out.println("done");
-        // updates num posts
-        numPosts = posts.size();
     }
 
     @Override
@@ -215,6 +215,11 @@ public class ProfileFragment extends Fragment {
         ratingParser = new RatingParser();
         ratingParser.getRatingWithID(owner.get_id(), this);
 
+        // updates num posts
+        numPosts = posts.size();
+        if (numPosts<owner.getNumOwnPosts()) {
+            adapter.addPost(owner.getPosts().get(owner.getNumOwnPosts()-1));
+        }
     }
 
     private class MyAdapterPost extends ArrayAdapter<Post> {
@@ -242,7 +247,14 @@ public class ProfileFragment extends Fragment {
             ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
             ((TextView)convertView.findViewById(R.id.description)).setText(current.getDescription());
             ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
-            ((TextView)convertView.findViewById(R.id.date)).setText(current.getDate());
+
+            String enddate = current.getDate();
+            int sepIndex = current.getTimeend().indexOf(":");
+            if (sepIndex>0) {
+                enddate = current.getTimeend().substring(0, sepIndex);
+            }
+            ((TextView)convertView.findViewById(R.id.date)).setText(enddate);
+
             ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
             Button removeButton = (Button)convertView.findViewById(R.id.removepostbutton);
             removeButton.setVisibility(View.VISIBLE);

@@ -1,4 +1,5 @@
 <android.support.constraint.ConstraintLayout
+    android:paddingTop="10dp"
 
     android:id="@+id/single_post"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -39,19 +40,6 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/postdate"
-        app:layout_constraintBottom_toBottomOf="@+id/title"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/title"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/price"
@@ -70,6 +58,7 @@
         android:layout_width="354dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
+        android:layout_marginTop="6dp"
         android:text="@string/posttext"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price"
@@ -154,7 +143,7 @@
         android:layout_marginRight="44dp"
         android:text="Request"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/spGroupLabel" />
 
     <TextView
         android:id="@+id/update"
@@ -165,22 +154,23 @@
 
     <Button
         android:id="@+id/spamButton"
-        android:layout_width="80dp"
-        android:layout_height="36dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="wrap_content"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_height="wrap_content"
         android:text="Spam"
-        app:layout_constraintBaseline_toBaselineOf="@+id/address"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.724"
-        app:layout_constraintStart_toEndOf="@+id/address" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/title"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/title"
+        android:layout_alignParentRight="true"
+        app:layout_constraintHorizontal_bias="0.835" />
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/kindlabel"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginStart="32dp"
-        android:text="Home made"
+        android:text="Homemade"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView3"
         app:layout_constraintStart_toEndOf="@+id/textView3" />
 
@@ -195,7 +185,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.037"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/numAvailable" />
 
     <TextView
         android:id="@+id/to"
@@ -222,7 +212,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
-        android:text="Categories: "
+        android:text="Category: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="parent"
@@ -235,7 +225,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
-        android:text="Tags: "
+        android:text="Tag: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.054"
         app:layout_constraintStart_toStartOf="parent"
@@ -255,12 +245,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:text="pasta, homemade, tasty"
+        android:text="None"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView8"
-        app:layout_constraintStart_toEndOf="@+id/textView8" />
+        tools:layout_editor_absoluteY="400dp"
+        tools:layout_editor_absoluteX="101dp" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/spGroupLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -273,13 +265,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
-        android:id="@+id/groups"
+        android:id="@+id/spGroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
         android:text="310"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView13"
-        app:layout_constraintStart_toEndOf="@+id/textView13" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/spGroupLabel"
+        app:layout_constraintStart_toEndOf="@+id/spGroupLabel" />
 
 
 </android.support.constraint.ConstraintLayout>

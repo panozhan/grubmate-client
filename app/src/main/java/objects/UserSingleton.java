@@ -90,7 +90,16 @@ public class UserSingleton {
     }
 
     public void setPostObjectsOfUser(ArrayList<Post> postObjectsOfUser) {
+        this.postObjectsOfUser.clear();
         this.postObjectsOfUser = postObjectsOfUser;
+    }
+    public int getNumOwnPosts(){
+        return this.postObjectsOfUser.size();
+    }
+    public void addPost(Post post) {
+        if (post!=null) {
+            this.postObjectsOfUser.add(post);
+        }
     }
 
     public ArrayList<String> getPostIds() {
@@ -123,16 +132,6 @@ public class UserSingleton {
 
     public void setPosts(ArrayList<Post> posts) {
         this.posts = posts;
-    }
-
-    public void addPost(Post post) {
-        if (post!=null) {
-            this.postObjectsOfUser.add(post);
-        }
-    }
-
-    public int getNumPosts(){
-        return this.posts.size();
     }
 
     public void setRequests(ArrayList<String> requests) {

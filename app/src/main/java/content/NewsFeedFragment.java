@@ -103,7 +103,15 @@ public class NewsFeedFragment extends android.support.v4.app.Fragment{
             ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
             ((TextView)convertView.findViewById(R.id.description)).setText(current.getDescription());
             ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
-            ((TextView)convertView.findViewById(R.id.date)).setText(current.getDate());
+
+            // add in date
+            String enddate = current.getDate();
+            int sepIndex = current.getTimeend().indexOf(":");
+            if (sepIndex>0) {
+                enddate = current.getTimeend().substring(0, sepIndex);
+            }
+            ((TextView)convertView.findViewById(R.id.date)).setText(enddate);
+
             ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
 
             convertView.setOnClickListener(new View.OnClickListener()

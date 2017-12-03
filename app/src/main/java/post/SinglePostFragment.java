@@ -65,15 +65,15 @@ public class SinglePostFragment extends Fragment {
         user = UserSingleton.getUserInstance();
         post = user.getPosts().get(PostIndex);
 
-        // TODO change image stuff around cuz u know
         ImageView profilepic = (ImageView) v.findViewById(R.id.profilepic);
         // ImageView picture = (ImageView) findViewById(R.id.picture);
 
         // all the ui components
         TextView title = (TextView) v.findViewById(R.id.title);
-        title.setText(post.getTitle());
-        TextView date = (TextView) v.findViewById(R.id.date);
-        date.setText(post.getTimeend().substring(0, 8));
+        title.setText("just why");
+        System.out.println("titlelooksfucked "+post.getTitle());
+        //TextView date = (TextView) v.findViewById(R.id.date);
+        //date.setText(post.getTimeend().substring(0, 8));
         TextView price = (TextView) v.findViewById(R.id.price);
         price.setText(String.valueOf(post.getPrice()));
         TextView description = (TextView) v.findViewById(R.id.description);
@@ -81,10 +81,10 @@ public class SinglePostFragment extends Fragment {
         TextView address = (TextView) v.findViewById(R.id.address);
         address.setText(post.getLocation());
         TextView num = (TextView) v.findViewById(R.id.numAvailable);
+        num.setText(String.valueOf(post.getNumAvailable()));
 
-
-//        TextView label = (TextView) v.findViewById(R.id.label);
-//        label.setText(String.valueOf(post.getLabel()));
+        //TextView label = (TextView) v.findViewById(R.id.kindlabel);
+        //label.setText(String.valueOf(post.getLabel()));
 
 
         TextView starttime = (TextView) v.findViewById(R.id.starttime);
@@ -106,7 +106,6 @@ public class SinglePostFragment extends Fragment {
 
 
 
-        num.setText(String.valueOf(post.getNumAvailable()));
 
         Button request = (Button) v.findViewById(R.id.requestButton);
         if(post.getAvailable() == 0){
@@ -139,6 +138,8 @@ public class SinglePostFragment extends Fragment {
             @Override
             public void onClick(View v){
                 //TODO: set logic for spam clicking
+                System.out.println("titlelooksfucked "+post.getTitle());
+
             }
         });
 
