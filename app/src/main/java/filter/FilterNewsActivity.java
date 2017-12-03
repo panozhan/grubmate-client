@@ -23,6 +23,7 @@ import objects.CustomOnItemSelectedListener;
 import objects.NetworkManager;
 import objects.Post;
 import objects.UserSingleton;
+import profile.RatingParser;
 
 /**
  * Created by Lauren on 10/23/2017.
@@ -184,12 +185,25 @@ public class FilterNewsActivity extends AppCompatActivity implements View.OnClic
         sortButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
                 ArrayList<String> posterUniqueIDs = new ArrayList<>();
 
                 for (Post p: owner.getPosts()) {
+                    if (!posterUniqueIDs.contains(p.getUser().getId())) {
+                        posterUniqueIDs.add(p.getUser().getId());
+                    }
+                }
 
-                }*/
+                // rearrange only if there are more than 1 poster showing up on newsfeed
+                if (posterUniqueIDs.size()>1) {
+                    RatingParser ratingParser = new RatingParser();
+                    ratingParser.rearrangePostsByRatings(posterUniqueIDs);
+                    /*
+                    for (String s: posterUniqueIDs) {
+                        String name = owner.getFriendNameByID(s);
+                        System.out.println("posterid: "+name);
+                    }*/
+                }
+
                 finish();
             }
         });

@@ -688,6 +688,10 @@ public class NetworkManager extends Thread {
                 list.add(post.getCategory());
                 list.add(post.getTag());
                 list.add(post.getLocation());
+                list.add(post.getTimestart());
+                list.add(post.getTimeend());
+                list.add(post.getGroupName());
+                list.add(post.getKind());
 
                 for (String s : list) {
                     if (s == null) {
@@ -695,6 +699,8 @@ public class NetworkManager extends Thread {
                     } else {
                         if (s.toLowerCase().contains(keyword.toLowerCase())) {
                             System.out.println(s);
+
+                            // TODO CHECK FOR DUPLICATED POST
                             owner.getPosts().add(post);
                             if (newsfeed != null) newsfeed.notifyChange();
                         }
@@ -803,6 +809,8 @@ public class NetworkManager extends Thread {
             if (post == null) { }
             else {
                 // filter by category and time
+                //System.out.println("fromfiltertime: ");
+                //System.out.println("tofiltertime: ");
                 if (fromHour != -1 && fromMinute != -1 && toHour != -1 && toMinute != -1) {
                     if ("".equals(post.getTimestart()) || "".equals(post.getTimeend())) {
                     /*

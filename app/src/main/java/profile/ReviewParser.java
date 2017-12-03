@@ -107,7 +107,10 @@ public class ReviewParser {
                 reviews = new ArrayList<>();
                 if (reviewsJArray != null) {
                     for (int i=0; i<reviewsJArray.length(); i++) {
-                        reviews.add(reviewsJArray.get(i).toString());
+                        String r = reviewsJArray.get(i).toString();
+                        if (r!=null && !"".equalsIgnoreCase(r) && !r.equalsIgnoreCase("null")) {
+                            reviews.add(r);
+                        }
                     }
                 }
 

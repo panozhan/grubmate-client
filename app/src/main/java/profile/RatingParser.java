@@ -11,10 +11,17 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import objects.Group;
 import objects.Notification;
@@ -28,6 +35,97 @@ public class RatingParser {
     private ProfileFragment profileFragment;
     private ProfileActivity profileActivity;
     private SinglePostFragment singlePostFragment;
+
+    public void rearrangePostsByRatings(ArrayList<String> posterIDs) {
+        try {
+            this.rateActivity = null;
+            this.profileFragment = null;
+            this.profileActivity = null;
+            this.singlePostFragment = null;
+            GetAllRatings getAllRatings = new GetAllRatings(posterIDs);
+            getAllRatings.execute();
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.println("get rating parser failed");
+        }
+    }
+
+    private class GetAllRatings extends AsyncTask<String, Void, Void> {
+        private ArrayList<String> posterIDs;
+        private HashMap<String, Float> posterRatings;
+        public GetAllRatings(ArrayList<String> posterIDs){
+            this.posterIDs = posterIDs;
+            this.posterRatings = new HashMap<>();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try{
+                for (String userID: posterIDs) {
+                    URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userID);
+
+                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+
+                    InputStream is = urlConnection.getInputStream();
+                    String jsonString = convertStreamToString(is);
+
+                    JSONObject mainObject = new JSONObject(jsonString);
+                    float rating = Float.valueOf(mainObject.getString("rating"));
+
+                    posterRatings.put(userID, rating);
+                }
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Map<String, Float> sortedRatings = sortByValue(posterRatings);
+            if (sortedRatings!=null && sortedRatings.size()>0) {
+                UserSingleton owner = UserSingleton.getUserInstance();
+                ArrayList<Post> sortedPosts = new ArrayList<>();
+
+                for (Map.Entry<String, Float> entry: sortedRatings.entrySet()) {
+                    //System.out.println("ratingssorted: " + entry.getKey() + " " + entry.getValue());
+
+                    // for every userid aka key, grab all the posts with same poster
+                    for (Post p: owner.getPosts()) {
+                        if (p.getUser().getId().equalsIgnoreCase(entry.getKey())) {
+                            sortedPosts.add(p);
+                        }
+                    }
+                }
+
+                owner.getPosts().clear();
+                for (Post p: sortedPosts) {
+                    owner.getPosts().add(p);
+                }
+            }
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
+        Collections.sort( list, new Comparator<Map.Entry<K, V>>() {
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o2.getValue()).compareTo(o1.getValue());
+            }
+        });
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
 
     public boolean getRatingWithID(String userID, RateActivity rateActivity) {
         try {
@@ -165,13 +263,13 @@ public class RatingParser {
             float rating = Float.valueOf(mainObject.getString("rating"));
 
             // sets curr rating in corresponding view
-            if (profileFragment == null && profileActivity == null && singlePostFragment == null) {
+            if (rateActivity!= null && profileFragment == null && profileActivity == null && singlePostFragment == null) {
                 rateActivity.setRating(rating);
-            } else if (rateActivity == null && profileFragment == null && singlePostFragment == null)  {
+            } else if (profileActivity!=null && rateActivity == null && profileFragment == null && singlePostFragment == null)  {
                 profileActivity.setRating(rating);
-            } else if (rateActivity == null && profileActivity == null && singlePostFragment == null)  {
+            } else if (profileFragment!=null && rateActivity == null && profileActivity == null && singlePostFragment == null)  {
                 profileFragment.setRating(rating);
-            } else if (rateActivity == null && profileActivity == null && profileFragment == null)  {
+            } else if (singlePostFragment!=null && rateActivity == null && profileActivity == null && profileFragment == null)  {
                 //singlePostFragment.setRateOnDesc(rating);
             }
 
