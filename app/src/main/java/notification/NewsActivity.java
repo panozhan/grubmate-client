@@ -267,7 +267,7 @@ public class NewsActivity extends AppCompatActivity {
                 confirm.setText("Got It!");
 
                 if(current.getStatus().equals("ended")){
-                    convertView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+                    convertView.findViewById(R.id.transact).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             confirmend(UserSingleton.getUserInstance().get_id(),current.getPostid(),"remove",null);

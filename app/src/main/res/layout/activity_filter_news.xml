@@ -110,6 +110,17 @@
         android:layout_height="wrap_content"
         android:text="Filter Now!"
         android:layout_marginTop="32dp"
-        android:layout_below="@+id/to_time"/>
+        android:layout_below="@+id/to_time"
+        />
+
+    <Button
+        android:id="@+id/sortbutton"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="Sort by provider ratings"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/filterbutton"
+        />
+
 
 </RelativeLayout>

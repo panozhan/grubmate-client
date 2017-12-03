@@ -96,7 +96,7 @@ public class Parser {
                     while(reader.hasNext()){
                         groupID = reader.nextString();
                     }
-                    System.out.println("parsergroupid: "+groupID);
+                    //System.out.println("parsergroupid: "+groupID);
                     reader.endArray();
                     result.setGroupByID(groupID);
                     break;

@@ -134,8 +134,6 @@ public class SinglePostFragment extends Fragment {
             @Override
             public void onClick(View v){
                 //TODO: set logic for spam clicking
-                System.out.println("titlelooksfucked "+post.getTitle());
-
             }
         });
 

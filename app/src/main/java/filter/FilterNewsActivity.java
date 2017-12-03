@@ -16,10 +16,12 @@ import android.widget.Toast;
 
 import com.example.udacity.test.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import objects.CustomOnItemSelectedListener;
 import objects.NetworkManager;
+import objects.Post;
 import objects.UserSingleton;
 
 /**
@@ -29,7 +31,7 @@ import objects.UserSingleton;
 public class FilterNewsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Spinner spinner;
-    private Button button;
+    private Button button, sortButton;
     private String currentspinner;
     private UserSingleton owner;
 
@@ -174,6 +176,20 @@ public class FilterNewsActivity extends AppCompatActivity implements View.OnClic
                         Toast.LENGTH_SHORT).show();
 
                 filterNews();
+                finish();
+            }
+        });
+
+        sortButton = (Button) findViewById(R.id.sortbutton);
+        sortButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                ArrayList<String> posterUniqueIDs = new ArrayList<>();
+
+                for (Post p: owner.getPosts()) {
+
+                }*/
                 finish();
             }
         });

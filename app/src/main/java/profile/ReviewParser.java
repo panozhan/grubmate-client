@@ -89,7 +89,7 @@ public class ReviewParser {
         @Override
         protected Void doInBackground(String... params) {
             try{
-                /*
+
                 URL url = new URL("https://grubmateteam3.herokuapp.com/api/user?userid="+userID);
 
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -109,12 +109,7 @@ public class ReviewParser {
                     for (int i=0; i<reviewsJArray.length(); i++) {
                         reviews.add(reviewsJArray.get(i).toString());
                     }
-                } */
-
-                // to be taken off
-                reviews = new ArrayList<>();
-                reviews.add("cool");
-                reviews.add("hungry af");
+                }
 
             } catch(Exception e){
                 e.printStackTrace();

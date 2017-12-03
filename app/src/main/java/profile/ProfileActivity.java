@@ -190,12 +190,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
             final Post current = posts.get(position);
 
-            ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
-            ((TextView)convertView.findViewById(R.id.description)).setText(current.getDescription());
-            ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
-            ((TextView)convertView.findViewById(R.id.date)).setText(current.getDate());
-            ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
-
+            if (current!=null) {
+                ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
+                ((TextView)convertView.findViewById(R.id.description)).setText(current.getDescription());
+                ((TextView)convertView.findViewById(R.id.price)).setText(current.getPrice());
+                ((TextView)convertView.findViewById(R.id.date)).setText(current.getDate());
+                ((TextView)convertView.findViewById(R.id.address)).setText(current.getLocation());
+            }
+            
             return convertView;
         }
     }
