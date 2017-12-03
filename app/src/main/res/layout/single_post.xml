@@ -36,43 +36,39 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/line1"
-            android:layout_marginStart="66dp"
-            tools:layout_constraintTop_creator="1"
+            android:layout_width="229dp"
+            android:layout_height="37dp"
+            android:layout_marginLeft="66dp"
             android:layout_marginTop="10dp"
-            tools:layout_constraintLeft_creator="1"
+            android:text="@string/line1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="66dp" />
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
             android:text="@string/postdate"
-            android:layout_marginEnd="16dp"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toBottomOf="@+id/title"
+            app:layout_constraintBaseline_toBaselineOf="@+id/title"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/title"
-            android:layout_marginRight="16dp" />
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
 
         <TextView
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="2dp"
             android:text="@string/price"
-            android:layout_marginStart="9dp"
-            tools:layout_constraintTop_creator="1"
-            android:layout_marginTop="17dp"
+            app:layout_constraintLeft_toRightOf="@+id/profilepic"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toRightOf="@+id/profilepic"
-            android:layout_marginLeft="9dp" />
+            tools:layout_constraintTop_creator="1" />
 
         <TextView
             android:id="@+id/description"
@@ -103,17 +99,14 @@
             android:id="@+id/address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="location"
-            android:layout_marginEnd="5dp"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/title"
-            android:layout_marginRight="5dp"
-            app:layout_constraintLeft_toRightOf="@+id/price"
             android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" />
+            android:layout_marginRight="5dp"
+            android:text="location"
+            app:layout_constraintBaseline_toBaselineOf="@+id/price"
+            app:layout_constraintLeft_toRightOf="@+id/price"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
 
         <Button
             android:id="@+id/removepostbutton"
