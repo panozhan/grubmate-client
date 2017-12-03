@@ -66,10 +66,13 @@ public class NewsActivity extends AppCompatActivity {
 
         if(displayInstruction.equals("news")){
             list.setAdapter(newsa);
+            title.setText("News");
         }else if(displayInstruction.equals("req")){
             list.setAdapter(requesta);
+            title.setText("My Requests");
         }else if(displayInstruction.equals("status")){
             list.setAdapter(statusa);
+            title.setText("My Status");
         }
 
         getNotifs();

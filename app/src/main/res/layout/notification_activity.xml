@@ -7,20 +7,21 @@
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:background="@color/colorPrimary"
         android:text="Refresh" />
 
     <TextView
         android:id="@+id/mytext"
-        android:textSize="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="15dp"
-        android:textColor="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:text="TextView"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20dp" />
 
     <ListView
         android:id="@+id/list"
