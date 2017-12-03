@@ -286,7 +286,8 @@ public class NetworkManager extends Thread {
                 //Input stream of bytes is converted to stream of characters
                 //Buffer reading operation to improve efficiency
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
+                Post newPost = new Parser().parsePost(is);
+                post.set_id(newPost.get_id());
                 //Read all characters into String data
                 String line;
                 StringBuilder response = new StringBuilder();
