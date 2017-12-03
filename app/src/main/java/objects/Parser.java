@@ -45,6 +45,8 @@ public class Parser {
         String x = convertStreamToString(in);
         if(x.equals("null")) {
             return null;
+        } else {
+            System.out.println("fullpostobjfromserver: "+x);
         }
         InputStream stream = new ByteArrayInputStream(x.getBytes(StandardCharsets.UTF_8.name()));
 
@@ -87,6 +89,16 @@ public class Parser {
                     break;
                 case "description":
                     result.setDescription(reader.nextString());
+                    break;
+                case "groups":
+                    reader.beginArray();
+                    String groupID = "";
+                    while(reader.hasNext()){
+                        groupID = reader.nextString();
+                    }
+                    System.out.println("parsergroupid: "+groupID);
+                    reader.endArray();
+                    result.setGroupByID(groupID);
                     break;
                 case "user":
                     User user = new User();

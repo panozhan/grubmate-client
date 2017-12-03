@@ -70,8 +70,7 @@ public class SinglePostFragment extends Fragment {
 
         // all the ui components
         TextView title = (TextView) v.findViewById(R.id.title);
-        title.setText("just why");
-        System.out.println("titlelooksfucked "+post.getTitle());
+        title.setText(post.getTitle());
         //TextView date = (TextView) v.findViewById(R.id.date);
         //date.setText(post.getTimeend().substring(0, 8));
         TextView price = (TextView) v.findViewById(R.id.price);
@@ -83,8 +82,8 @@ public class SinglePostFragment extends Fragment {
         TextView num = (TextView) v.findViewById(R.id.numAvailable);
         num.setText(String.valueOf(post.getNumAvailable()));
 
-        //TextView label = (TextView) v.findViewById(R.id.kindlabel);
-        //label.setText(String.valueOf(post.getLabel()));
+        TextView kindlabel = (TextView) v.findViewById(R.id.kindlabel);
+        kindlabel.setText(String.valueOf(post.getKind()));
 
 
         TextView starttime = (TextView) v.findViewById(R.id.starttime);
@@ -99,11 +98,8 @@ public class SinglePostFragment extends Fragment {
         tags.setText(String.valueOf(post.getTag()));
 
 
-
-//        TextView groups = (TextView) v.findViewById(R.id.groups);
-//        groups.setText(String.valueOf(post.getGroupNames()));
-
-
+        TextView groups = (TextView) v.findViewById(R.id.spGroupName);
+        groups.setText(post.getGroupName());
 
 
 

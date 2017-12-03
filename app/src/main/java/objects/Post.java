@@ -16,14 +16,33 @@ public class Post implements Serializable {
     private Boolean status;
     private String category;
     private String tag;
-    private String kind;
+    private String kind = "Restaurant";
+    private String groupName = "everyone";
+    private String groupID;
+
+    public void setGroupByID(String groupID) {
+        if (groupID.length()<1) {
+            return;
+        }
+
+        this.groupID = groupID;
+        for (Group g: UserSingleton.getUserInstance().getGroups()){
+            if (g.getId().equalsIgnoreCase(groupID)) {
+                groupName = g.getName();
+            }
+        }
+    }
+
+    public String getGroupName(){
+        return groupName;
+    }
 
     public String getKind() {
         return kind;
     }
 
     public void setKind(String kind) {
-        this.kind = kind;
+        if (kind!=null) this.kind = kind;
     }
 
     public int getAvailable(){return numAvailable;}
