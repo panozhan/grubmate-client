@@ -227,10 +227,12 @@ public class ProfileFragment extends Fragment {
                 if (historyList.getVisibility() == View.INVISIBLE){  // show History
                     button.setText("Show My Posts");
                     historyList.setVisibility(View.VISIBLE);
+                    postList.setVisibility(View.INVISIBLE);
                 }
                 else{   // show posts
                     button.setText("Transaction History");
                     historyList.setVisibility(View.INVISIBLE);
+                    postList.setVisibility(View.VISIBLE);
                 }
             }
         });
