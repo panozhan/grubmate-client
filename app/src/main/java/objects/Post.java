@@ -19,6 +19,15 @@ public class Post implements Serializable {
     private String kind = "Restaurant";
     private String groupName = "everyone";
     private String groupID;
+    private boolean editable;
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
     public void setGroupByID(String groupID) {
         if (groupID.length()<1) {
