@@ -203,7 +203,10 @@ public class ProfileFragment extends Fragment {
         GetTransactions t = new GetTransactions(this, myTransactions);
         myTransactions = t.transactions;
         historyAdapter = new MyHistoryAdapter(myTransactions);
+        System.out.println("aaaaaaaaaaaaa");
+
         historyList.setAdapter(historyAdapter);
+        System.out.println("bbbbbbbbbbbbbbb");
 
         // for text reviews, click on number rating
         name.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +219,8 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        button = (Button)v.findViewById(R.id.switchview);
+        button.setText("Transaction History");
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -281,15 +285,18 @@ public class ProfileFragment extends Fragment {
         public MyHistoryAdapter(ArrayList<Transaction> transcations){
             super(getActivity(),0,transcations);
             this.transcations = transcations;
+            System.out.println("iiiiiiiinnnnnnnn");
         }
         @Override
         public View getView(final int position, View convertView, ViewGroup parent){
             if(convertView == null){
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.single_trans,null);
+                System.out.println("iiiiinflate");
             }
             final Transaction current = transcations.get(position);
             if (current!=null) {
+                System.out.println("traaaaaaaans");
                 ((TextView) convertView.findViewById(R.id.title)).setText(current.getPostTitle());
                 ((TextView) convertView.findViewById(R.id.rtime)).setText(current.getTimeRequested());
                 ((TextView) convertView.findViewById(R.id.ctime)).setText(current.getTimeConfirmed());
