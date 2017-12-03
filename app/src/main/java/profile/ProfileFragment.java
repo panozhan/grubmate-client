@@ -54,6 +54,9 @@ public class ProfileFragment extends Fragment {
     private ArrayList<Post> posts = new ArrayList<>();
     private final ProfileFragment f = this;
     private Context context;
+    private ListView historyList;
+    private MyHistoryAdapter historyAdapter;
+    private Button button;
 
     public ProfileFragment(){
         this.owner = UserSingleton.getUserInstance();
@@ -193,8 +196,110 @@ public class ProfileFragment extends Fragment {
         postList = (ListView) v.findViewById(R.id.posts);
         adapter = new MyAdapterPost(posts);
         postList.setAdapter(adapter);
+
+
+        historyList = (ListView) v.findViewById(R.id.history);
+        ArrayList<Transaction> myTransactions = new ArrayList<Transaction>();
+        GetTransactions t = new GetTransactions(this, myTransactions);
+        myTransactions = t.transactions;
+        historyAdapter = new MyHistoryAdapter(myTransactions);
+        historyList.setAdapter(historyAdapter);
+
+        // for text reviews, click on number rating
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), ReviewActivity.class);
+                Bundle b = new Bundle();
+                b.putString("userid", owner.get_id());
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (historyList.getVisibility() == View.INVISIBLE){  // show History
+                    button.setText("Show My Posts");
+                    historyList.setVisibility(View.VISIBLE);
+                }
+                else{   // show posts
+                    button.setText("Transaction History");
+                    historyList.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+
         return v;
     }
+
+
+
+
+    private class GetTransactions extends AsyncTask<String,Void,Void>{
+        private ProfileFragment f;
+        private ArrayList<Transaction> transactions;
+        public GetTransactions(ProfileFragment f, ArrayList<Transaction> transactions){
+            this.f = f;
+            this.transactions = transactions;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try{
+                URL url = new URL("https://grubmateteam3.herokuapp.com/api/getTransactions?userid="
+                        + UserSingleton.getUserInstance().get_id());
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream is = urlConnection.getInputStream();
+                ArrayList<Transaction> transactions1 = new Parser().parseTransactions(is);
+                transactions.clear();
+                for(Transaction t : transactions1){
+                    transactions.add(t);
+                }
+
+                return null;
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
+    private class MyHistoryAdapter extends ArrayAdapter<Transaction> {
+        ArrayList<Transaction> transcations;
+        public MyHistoryAdapter(ArrayList<Transaction> transcations){
+            super(getActivity(),0,transcations);
+            this.transcations = transcations;
+        }
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent){
+            if(convertView == null){
+                convertView = getActivity().getLayoutInflater()
+                        .inflate(R.layout.single_trans,null);
+            }
+            final Transaction current = transcations.get(position);
+            if (current!=null) {
+                ((TextView) convertView.findViewById(R.id.title)).setText(current.getPostTitle());
+                ((TextView) convertView.findViewById(R.id.rtime)).setText(current.getTimeRequested());
+                ((TextView) convertView.findViewById(R.id.ctime)).setText(current.getTimeConfirmed());
+                ((TextView) convertView.findViewById(R.id.etime)).setText(current.getTimeEnded());
+                ((TextView) convertView.findViewById(R.id.t5)).setText("You are " + current.getType());
+            }
+            return convertView;
+        }
+    }
+
 
     public void setRating(float rating) {
         ratingBar.setRating(rating);
