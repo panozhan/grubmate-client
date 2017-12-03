@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:orientation="vertical" android:layout_width="match_parent"
-android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/profileCL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="profile.ProfileFragment"
-        app:layout_constraintBottom_toTopOf="@+id/profileScrollView"
         android:background="#ffc9dda8"
-        >
+        app:layout_constraintBottom_toTopOf="@+id/profileScrollView"
+        tools:context="profile.ProfileFragment">
 
         <TextView
             android:id="@+id/profilename"
@@ -24,11 +21,10 @@ android:layout_height="match_parent">
             android:paddingTop="14dp"
             android:text="FirstName LastName"
             android:textSize="24dp"
-            app:layout_constraintRight_toLeftOf="@+id/profileRating"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/ratingBar"
-            />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/profileRating"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/profileRating"
@@ -38,26 +34,30 @@ android:layout_height="match_parent">
 
             android:text="4.9"
             android:textSize="24dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/profilename"
-            />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <RatingBar
             android:id="@+id/ratingBar"
-            android:isIndicator="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:isIndicator="true"
             android:numStars="5"
             android:rating="4"
             android:scaleX="0.7"
             android:scaleY="0.7"
-            app:layout_constraintTop_toBottomOf="@+id/profilename"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/profilename" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/switchview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 
 
     <ListView
@@ -66,6 +66,16 @@ android:layout_height="match_parent">
         android:layout_height="match_parent"
         android:padding="6dp"
 
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <ListView
+        android:id="@+id/history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="6dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="8dp" />
 
