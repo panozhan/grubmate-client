@@ -202,7 +202,10 @@ public class Parser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        for(Transaction t : result){
+            System.out.println(t.getPostTitle());
+            System.out.println(t.getTimeEnded());
+        }
         return result;
     }
 
