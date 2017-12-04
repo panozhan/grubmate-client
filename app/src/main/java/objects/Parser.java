@@ -172,7 +172,7 @@ public class Parser {
                 while(reader.hasNext()){
                     String name = reader.nextName();
                     switch (name){
-                        case "type":
+                        case "types":
                             t.setType(reader.nextString());
                             break;
                         case "timeConfirmed":

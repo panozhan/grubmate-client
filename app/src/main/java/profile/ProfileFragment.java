@@ -200,13 +200,16 @@ public class ProfileFragment extends Fragment {
 
         historyList = (ListView) v.findViewById(R.id.history);
         ArrayList<Transaction> myTransactions = new ArrayList<Transaction>();
-        GetTransactions t = new GetTransactions(this, myTransactions);
-        myTransactions = t.transactions;
-        System.out.println("Transaction Size!!!!!: = "+ myTransactions.size());
         historyAdapter = new MyHistoryAdapter(myTransactions);
+        historyList.setAdapter(historyAdapter);
+        GetTransactions t = new GetTransactions(this, myTransactions);
+        t.execute();
+        //myTransactions = t.transactions;
+        System.out.println("Transaction Size!!!!!: = "+ myTransactions.size());
+
         System.out.println("aaaaaaaaaaaaa");
 
-        historyList.setAdapter(historyAdapter);
+
         System.out.println("bbbbbbbbbbbbbbb");
 
         // for text reviews, click on number rating
@@ -242,7 +245,9 @@ public class ProfileFragment extends Fragment {
         return v;
     }
 
-
+    public void refresh(){
+        historyAdapter.notifyDataSetChanged();
+    }
 
 
     private class GetTransactions extends AsyncTask<String,Void,Void>{
@@ -255,6 +260,7 @@ public class ProfileFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            f.refresh();
         }
 
         @Override
