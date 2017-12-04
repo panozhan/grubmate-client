@@ -750,18 +750,27 @@ public class NetworkManager extends Thread {
     }
 
     //gets a string of post ids for the user with the id
-    public void getFilteredPostsForUser(String category, int fromHour, int fromMin, int toHour, int toMin) {
+    public void getFilteredPostsForUser(String category,
+                                        int fromYear, int fromMonth, int fromDay, int fromHour, int fromMin,
+                                        int toYear, int toMonth, int toDay, int toHour, int toMin) {
+
         UserSingleton.getUserInstance().getPosts().clear();
-        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category, fromHour, fromMin, toHour, toMin);
+        FilterPostsForUsers task = new FilterPostsForUsers(newsfeed, category,
+                fromYear,  fromMonth,  fromDay,  fromHour,  fromMin,
+                toYear,  toMonth,  toDay,  toHour,  toMin);
         task.execute();
     }
 
     //gets a single post from the server
-    public void getFilteredPost(String postId, String category, int fromHour, int fromMin, int toHour, int toMin) {
+    public void getFilteredPost(String postId, String category,
+                                int fromYear, int fromMonth, int fromDay, int fromHour, int fromMin,
+                                int toYear, int toMonth, int toDay, int toHour, int toMin) {
         if (this.newsfeed == null) {
             System.out.println("FUCK NEWSFEED NULL SDFEWREQWRRQWERWQEWQ");
         }
-        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category, fromHour, fromMin, toHour, toMin);
+        GetSingleFilteredPost getSinglePost = new GetSingleFilteredPost(postId, newsfeed, category,
+                fromYear,  fromMonth,  fromDay,  fromHour,  fromMin,
+                toYear,  toMonth,  toDay,  toHour,  toMin);
         getSinglePost.execute();
 
     }
@@ -771,15 +780,28 @@ public class NetworkManager extends Thread {
         Parser parser = new Parser();
         UserSingleton owner = UserSingleton.getUserInstance();
         String postId, category;
-        int fromHour, fromMinute, toHour, toMinute;
+        int fromYear,  fromMonth,  fromDay,  fromHour,  fromMinute;
+        int toYear,  toMonth,  toDay,  toHour,  toMinute;
         Post post;
 
-        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category, int fromHour, int fromMin, int toHour, int toMin) {
+        public GetSingleFilteredPost(String id, NewsFeedFragment f, String category,
+                                     int fromYear, int fromMonth, int fromDay, int fromHour, int fromMin,
+                                     int toYear, int toMonth, int toDay, int toHour, int toMin) {
             postId = id;
             newsfeed = f;
             this.category = category;
+
+            // from
+            this.fromYear = fromYear;
+            this.fromMonth = fromMonth;
+            this.fromDay = fromDay;
             this.fromHour = fromHour;
             this.fromMinute = fromMin;
+
+            // to
+            this.toYear = toYear;
+            this.toMonth = toMonth;
+            this.toDay = toDay;
             this.toHour = toHour;
             this.toMinute = toMin;
         }
@@ -826,6 +848,18 @@ public class NetworkManager extends Thread {
                     */
                     }
                     else {
+                        //String[] dateSplitStart = post.getTimestart().split("/");
+                        System.out.println("post.getTimestart() " +  post.getTimestart());
+                        System.out.println("post.getTimeend() " +  post.getTimeend());
+                        int mStart = Integer.valueOf(post.getTimestart().substring(0,2));
+                        int dStart = Integer.valueOf(post.getTimestart().substring(3,5));
+                        int yStart = Integer.valueOf(post.getTimestart().substring(6,8)) + 2000;
+
+                        //String[] dateSplitEnd = post.getTimeend().split("/");
+                        int mEnd = Integer.valueOf(post.getTimeend().substring(0,2));
+                        int dEnd = Integer.valueOf(post.getTimeend().substring(3,5));
+                        int yEnd = Integer.valueOf(post.getTimeend().substring(6,8)) + 2000;
+
                         String[] splitStart = post.getTimestart().split(":");
                         int hourStart = Integer.valueOf(splitStart[1]);
                         int minStart = Integer.valueOf(splitStart[2]);
@@ -837,8 +871,36 @@ public class NetworkManager extends Thread {
                         if (post.getCategory() == null || "".equals(post.getCategory())) {}
                         else {
                             if (post.getCategory().toLowerCase().equals(category.toLowerCase())) {
-                                if ( ((hourStart == fromHour && minStart >= fromMinute) || hourStart > fromHour)
-                                        && ((hourEnd == toHour && minEnd <= toMinute) || hourEnd < toHour) ) {
+                                // conditions
+                                System.out.println("filtertimestartNWWWW: " + yStart  + " year "+ mStart + " month "+ dStart + " day "
+                                        + hourStart  + " hour "+ minStart + " minute ");
+                                System.out.println("filtertimetoNWWWW: " + yEnd  + " year "+ mEnd + " month "+ dEnd + " day "
+                                        + hourEnd  + " hour "+ minEnd + " minute ");
+
+                                long postStart = (long)yStart*100000000 + (long)mStart*1000000 + (long)dStart*10000
+                                        + (long)hourStart*100 + (long)minStart;
+                                long postEnd = (long)yEnd*100000000 + (long)mEnd*1000000 + (long)dEnd*10000 +
+                                        (long)hourEnd*100 + (long)minEnd;
+
+                                long rangeStart = (long)fromYear*100000000 + (long)fromMonth*1000000 + (long)fromDay*10000
+                                        + (long)fromHour*100 + (long)fromMinute;
+                                long rangeEnd = (long)toYear*100000000 + (long)toMonth*1000000 + (long)toDay*10000
+                                        + (long)toHour*100 + (long)toMinute;
+
+                                System.out.println("rangeStart: " + rangeStart);
+                                System.out.println("rangeEnd: " + rangeEnd);
+                                System.out.println("postStart: " + postStart);
+                                System.out.println("postEnd: " + postEnd);
+
+                                boolean startWithinRange = (postStart>=rangeStart && postStart<=rangeEnd);
+                                boolean endWithinRange = (postEnd>=rangeStart && postEnd<=rangeEnd);
+
+                                System.out.println("startWithinRange: " + startWithinRange);
+                                System.out.println("endWithinRange: " + endWithinRange);
+
+                                // include if either start of end time of post lines within range
+                                if (startWithinRange || endWithinRange) {
+
                                     owner.getPosts().add(post);
                                     if (newsfeed != null) {
                                         newsfeed.notifyChange();
@@ -873,14 +935,27 @@ public class NetworkManager extends Thread {
         NewsFeedFragment newsfeed;
         NetworkManager networkManager;
         String category;
-        int fromHour, fromMinute, toHour, toMinute;
+        int fromYear,  fromMonth,  fromDay,  fromHour,  fromMinute;
+        int toYear,  toMonth,  toDay,  toHour,  toMinute;
 
-        public FilterPostsForUsers(NewsFeedFragment f, String category, int fromHour, int fromMin, int toHour, int toMin) {
+        public FilterPostsForUsers(NewsFeedFragment f, String category,
+                                   int fromYear, int fromMonth, int fromDay, int fromHour, int fromMin,
+                                   int toYear, int toMonth, int toDay, int toHour, int toMin) {
             newsfeed = f;
             networkManager = new NetworkManager(newsfeed);
             this.category = category;
+
+            // from
+            this.fromYear = fromYear;
+            this.fromMonth = fromMonth;
+            this.fromDay = fromDay;
             this.fromHour = fromHour;
             this.fromMinute = fromMin;
+
+            // to
+            this.toYear = toYear;
+            this.toMonth = toMonth;
+            this.toDay = toDay;
             this.toHour = toHour;
             this.toMinute = toMin;
         }
@@ -897,10 +972,14 @@ public class NetworkManager extends Thread {
                 urlConnection.connect();
 
                 InputStream is = urlConnection.getInputStream();
+
+
                 ArrayList<String> postIds = parser.parseStringArrayJson(is);
                 owner.setPostIds(postIds);
                 for (int i = 0; i < postIds.size(); ++i) {
-                    networkManager.getFilteredPost(postIds.get(i), category, fromHour, fromMinute, toHour, toMinute);
+                    networkManager.getFilteredPost(postIds.get(i), category,
+                            fromYear,  fromMonth,  fromDay,  fromHour,  fromMinute,
+                            toYear,  toMonth,  toDay,  toHour,  toMinute);
                 }
 
             } catch (Exception e) {

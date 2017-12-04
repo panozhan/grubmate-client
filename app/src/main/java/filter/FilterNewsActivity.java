@@ -112,8 +112,9 @@ public class FilterNewsActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                     fromDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                    fDay = dayOfMonth;
                 }
-            }, fYear, fMonth, fDay);
+            }, fYear, fMonth++, fDay);
             datePickerDialog.show();
         }
         if (v == fromTimePicker) {
@@ -144,8 +145,9 @@ public class FilterNewsActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                     toDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                    tDay = dayOfMonth;
                 }
-            }, tYear, tMonth, tDay);
+            }, tYear, tMonth++, tDay);
             datePickerDialog.show();
         }
         if (v == toTimePicker) {
@@ -213,8 +215,14 @@ public class FilterNewsActivity extends AppCompatActivity implements View.OnClic
         //get current value of spinner
         currentspinner = String.valueOf(spinner.getSelectedItem());
 
+        System.out.println("filtertimestart: " + fYear  + " year "+ fMonth + " month "+ fDay + " day "
+                + fHour  + " hour "+ fMinute + " minute ");
+        System.out.println("filtertimeto: " + tYear  + " year "+ tMonth + " month "+ tDay + " day "
+                + tHour  + " hour "+ tMinute + " minute ");
+
         NetworkManager networkManager = new NetworkManager();
-        networkManager.getFilteredPostsForUser(currentspinner, fHour, fMinute, tHour, tMinute);
+        networkManager.getFilteredPostsForUser(currentspinner, fYear, fMonth, fDay, fHour, fMinute,
+                tYear, tMonth, tDay, tHour, tMinute);
     }
 
     private static String pad(int c) {
