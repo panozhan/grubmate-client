@@ -387,12 +387,19 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
+
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent newActivity = new Intent(getActivity(), EditPost.class);
-                        newActivity.putExtra("Post", current);
-                        startActivity(newActivity);
+                        if(current.isEditable()){
+                            Intent newActivity = new Intent(getActivity(), EditPost.class);
+                            newActivity.putExtra("Post", current);
+                            startActivity(newActivity);
+                        }else{
+                            Toast toast = Toast.makeText(context, "You can't edit this post because there have been confirmed requests already!", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+
                     }
                 });
             }
