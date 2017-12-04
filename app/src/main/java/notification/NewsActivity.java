@@ -373,36 +373,36 @@ public class NewsActivity extends AppCompatActivity {
 
             if(current.getStatus().equals("confirmed")){
                 reject.setVisibility(View.GONE);
-            }else{
-                reject.setVisibility(View.VISIBLE);
-                confirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(current.getStatus().equals("requested")){
-                            ((Button)v).setText("End");
-                            confirmend(current.getPersonid(),current.getPostid(),"confirm",null);
-                            current.setStatus("confirmed");
-                        }else if(current.getStatus().equals("confirmed")){
-                            confirmend(current.getPersonid(),current.getPostid(),"end",null);
-
-                            Intent intent = new Intent(getApplicationContext(), RateActivity.class);
-                            Bundle b = new Bundle();
-
-                            // TODO: SUB IN POSTER/REQUESTERS IDS INSTEAD OF OWNER'S
-                            b.putString("userid", current.getPersonid());
-                            intent.putExtras(b);
-                            startActivity(intent);
-                        }
-                    }
-                });
-
-                reject.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        confirmend(current.getPersonid(),current.getPostid(),"reject",null);
-                    }
-                });
+                confirm.setText("End");
             }
+
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(current.getStatus().equals("requested")){
+                        ((Button)v).setText("End");
+                        confirmend(current.getPersonid(),current.getPostid(),"confirm",null);
+                        current.setStatus("confirmed");
+                    }else if(current.getStatus().equals("confirmed")){
+                        confirmend(current.getPersonid(),current.getPostid(),"end",null);
+
+                        Intent intent = new Intent(getApplicationContext(), RateActivity.class);
+                        Bundle b = new Bundle();
+
+                        //SUB IN POSTER/REQUESTERS IDS INSTEAD OF OWNER'S
+                        b.putString("userid", current.getPersonid());
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
+                }
+            });
+
+            reject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmend(current.getPersonid(),current.getPostid(),"reject",null);
+                }
+            });
 
 
 
