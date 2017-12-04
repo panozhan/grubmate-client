@@ -262,6 +262,7 @@ public class NewsActivity extends AppCompatActivity {
             System.out.println(current.getTitle());
             ((TextView)convertView.findViewById(R.id.title)).setText(current.getTitle());
             ((TextView)convertView.findViewById(R.id.status)).setText(current.getStatus());
+            // ((TextView)convertView.findViewById(R.id.time)).setText(current.getStatus());
 
             Button confirm = (Button)convertView.findViewById(R.id.transact);
             System.out.println(current.getTitle());

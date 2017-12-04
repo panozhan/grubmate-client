@@ -202,6 +202,7 @@ public class ProfileFragment extends Fragment {
         ArrayList<Transaction> myTransactions = new ArrayList<Transaction>();
         GetTransactions t = new GetTransactions(this, myTransactions);
         myTransactions = t.transactions;
+        System.out.println("Transaction Size!!!!!: = "+ myTransactions.size());
         historyAdapter = new MyHistoryAdapter(myTransactions);
         System.out.println("aaaaaaaaaaaaa");
 
